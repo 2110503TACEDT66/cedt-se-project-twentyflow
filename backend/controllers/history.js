@@ -1,7 +1,7 @@
 //@desc      Get all history
 //@route     GET /api/v1/history
 //@access    Public
-exports.getHistorys=async (req,res,next) =>{
+exports.getHistory=async (req,res,next) =>{
     let query;
     if(req.user.role==='user'){
         query=History.find({user:req.user.id}).populate({
@@ -33,3 +33,20 @@ exports.getHistorys=async (req,res,next) =>{
         return res.status(500).json({success:false,message:"Cannot find History"});
     }
 }
+
+
+//@desc     Add history
+//@route    POST /api/v1/history
+//@access   Private
+exports.addHistory=async (req,res,next)=>{
+    req.body.user=req.user.id;
+    try {
+        const history=await History.create(req.body);
+        res.status(201).json({
+            success:true,
+            data: history
+        });
+    } catch (error) {
+        res.status(400).json({success:false});
+    }
+};

@@ -28,22 +28,13 @@ export default function CouponCard( { couponName,couponPoint }
         }
     }, []);
 
-    const onRedeem = async (couponName:string) => {
+    const onRedeem = async (couponName:string,couponPoint:number) => {
         if(user !== null) {
             let userPoints = user.data.points;
         let newPoints;
-        if(userPoints >= 1000 && couponName == 'Coupon Discount 10 THB') {
+        if(userPoints >= couponPoint){
             alert(`You have redeemed ${couponName}`);
-            newPoints = userPoints - 1000;
-        } else if(userPoints >= 2000 && couponName == 'Coupon Discount 20 THB') {
-            alert(`You have redeemed ${couponName}`);
-            newPoints = userPoints - 2000;
-        } else if(userPoints >= 5000 && couponName == 'Coupon Discount 50 THB') {
-            alert(`You have redeemed ${couponName}`);
-            newPoints = userPoints - 5000;
-        } else if(userPoints >= 10000 && couponName == 'Coupon Discount 100 THB') {
-            alert(`You have redeemed ${couponName}`);
-            newPoints = userPoints - 10000;
+            newPoints = userPoints - couponPoint;
         } else {
             alert(`You do not have enough points to redeem ${couponName}`);
             return;
@@ -80,12 +71,20 @@ export default function CouponCard( { couponName,couponPoint }
                 fill={true}
                 className='object-cover rounded-t-lg'/>
             </div>
-            <div className='w-full h-[10%]  flex justify-center items-center'>{couponName}</div>
-            <div className='h-[10%]  flex justify-center inline '>{couponPoint}</div>
+            <div className='w-full h-[10%]  flex justify-center font-bold'>{couponName}</div>
+            <div className='flex flex-row h-[10%]'>
+                <div className='w-1/5 relative' >
+                    <Image src={ '/img/giftIcon.png'}
+                    alt='GiftIcon Picture'
+                    fill={true}
+                    className='object-contain'/>
+                </div>
+                <h5 className='inline font-bold text-custom-purple mx-[10px] mt-1'>{couponPoint}</h5>
+            </div>
             <div className='flex justify-center items-center h-[20%]'>
-                <button className='w-full text-sm rounded-md bg-purple-600
-                hover:bg-sky-600 mx-2 px-1 py-1 text-white shadow-sm'
-                onClick={ (e) => {e.stopPropagation(); e.preventDefault(); onRedeem(couponName); }}
+                <button className='w-full text-sm rounded-md bg-custom-purple
+                hover:bg-sky-600 mx-2 px-1 py-1 text-white shadow-sm font-bold'
+                onClick={ (e) => {e.stopPropagation(); e.preventDefault(); onRedeem(couponName,couponPoint); }}
                 >Redeem</button>
             </div>
         </InteractiveCard>

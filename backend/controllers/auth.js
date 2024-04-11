@@ -107,3 +107,28 @@ exports.logout = async (req,res,next) => {
         data: {}
     });
 }
+
+// @desc    Update user points
+// @route   PUT /api/v1/auth/updatepoints
+// @access  Private
+exports.updatePoints = async (req, res, next) => {
+    try {
+        const user = await User.findByIdAndUpdate(req.user.id,req.body, {
+            new : true,
+            runValidators : true
+        });
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                error: 'No user found'
+            });
+        }
+        res.status(200).json({
+            success: true,
+            data: user
+        });
+    } catch (err) {
+        res.status(400).json({ success: false });
+    }
+    
+};

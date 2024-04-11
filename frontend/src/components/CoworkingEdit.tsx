@@ -10,8 +10,6 @@ import UpdateReservation from "@/libs/UpdateReservation";
 
 export default function CoworkingEdit({ coworking}: { coworking: Coworking}) {
     
-
-
     const session = useSession()
     const currentUser = session.data?.user
     const [datetime, setDate] = useState<Dayjs|null>(null)

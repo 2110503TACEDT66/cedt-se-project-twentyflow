@@ -16,7 +16,13 @@ export default function Code( {couponName, couponCode}: {couponName:string, coup
 
     const copyText = (entryText:string) => {
         navigator.clipboard.writeText(entryText);
+        setIsButtonClicked(true);
+        setTimeout(defaultButton, 500);
     }
+    const defaultButton = () => {
+        setIsButtonClicked(false);
+    }
+    const [isButtonClicked, setIsButtonClicked] = useState(false);
 
     return(
         <div className='w-full h-[200px] rounded-lg shadow-xl bg-custom-purple flex flex-row'>
@@ -33,8 +39,8 @@ export default function Code( {couponName, couponCode}: {couponName:string, coup
                         <div className="font-bold text-xl text-center p-2 w-[90%]">
                             {isTextVisible && couponCode }
                         </div>
-                        {isTextVisible && <button title="copy" className="p-3" onClick={()=>copyText(couponCode)}>
-                            <FontAwesomeIcon className="h-5 w-6 text-gray-600" icon={faCopy}/>
+                        {isTextVisible && <button title="copy" className="p-3" onClick={()=>{copyText(couponCode);}}>
+                            <FontAwesomeIcon className={`h-5 w-6 text-gray-600 ${isButtonClicked &&"text-gray-400"}`} icon={faCopy}/>
                         </button>}
                     </div>
                     <button onClick={toggleTextVisibility} className='w-[70px] h-[50px] relative bg-white rounded-lg ml-2'>

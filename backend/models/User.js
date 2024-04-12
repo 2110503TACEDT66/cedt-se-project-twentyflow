@@ -42,7 +42,17 @@ const UserSchema = new mongoose.Schema({
     points: {
         type: Number,
         default: 0
-    }
+    },
+    coupons: [{
+        couponName: {
+            type: String,
+            required: true
+        },
+        couponCode: {
+            type: String,
+            required: true
+        }
+    }],
 });
 
 UserSchema.virtual('appointments', {

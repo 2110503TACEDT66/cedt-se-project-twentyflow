@@ -37,7 +37,7 @@ export default function CodeCatalog(){
         <div className=" flex flex-col space-y-5 p-[50px]">
             {user?.data?.coupons?.length > 0 ? (
             user?.data.coupons.map((coupon) => (
-                <Code couponName={coupon.couponName} couponCode={coupon.couponCode}/>
+                <Code key={coupon.couponCode} couponName={coupon.couponName} couponCode={coupon.couponCode}/>
             ))
         ) : (
             <div className='w-full h-[200px] rounded-lg shadow-xl bg-gray-400 flex flex-row'>

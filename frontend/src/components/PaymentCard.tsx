@@ -1,42 +1,39 @@
 "use client"
-
-import DateReserve from "@/components/DateReseve"
-import { Dayjs } from "dayjs";
-import addAppt from "@/libs/addAppt";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-export default function ReservationCard({ coworking }: { coworking: Coworking }) {
+export default function PaymentCard({ reservationId }: { reservationId: string }) {
 
     const router = useRouter();
-
-
-    const [datetime1, setDate1] = useState<Dayjs|null>(null)
-    const [time1, setTime1] = useState<string>("")
-    const [datetime2, setDate2] = useState<Dayjs|null>(null)
-    const [time2, setTime2] = useState<string>("")
-
-    const { data: session, status } = useSession()
-    const [data,setData] = useState<Reservation[]>()
-
-    const [user, setUser] = useState<User|null>(null)
+    const session = useSession()
+    const currentUser = session.data?.user
+    const [currentReservation, setCurrentReservation] = useState<Reservation>()
+    // console.log(reservationId)
+    console.log(currentReservation?.endTime)
 
     useEffect(() => {
 
+        if(currentUser){
+            fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/appointments/${reservationId}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "authorization":`Bearer ${currentUser.token}`
+                },
+            }).then((res) => res.json())
+            .then((data) => {
+              setCurrentReservation(data.data)
+              console.log(data.data)
+            })
 
-        fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/appointments`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                "authorization":`Bearer ${session?.user.token}`
-            },
-        }).then((res) => res.json())
-        .then((data) => {
-          setData(data.data)
-
-        })
+        }
+        
       }, [])
+
+    const hour = currentReservation ? Math.ceil((new Date(currentReservation.endTime).getTime() - new Date(currentReservation?.startTime).getTime())/( 1000*60*60) ): 'Cannot compute hour'
+    const coWorkingName = currentReservation?.coWorking.name
+    const userName = currentUser?.name
     
     const onsubmit = () => {
         //navigate to sripe payment
@@ -55,7 +52,7 @@ export default function ReservationCard({ coworking }: { coworking: Coworking })
                         Name
                     </h1>
                     <h1 className=" font-semibold text-xl border-2 p-3 rounded-md border-gray-300">
-                        {coworking.name}
+                        {coWorkingName}
                     </h1>
                 </div>
 
@@ -66,7 +63,7 @@ export default function ReservationCard({ coworking }: { coworking: Coworking })
                             </h1>
                             <div className=" flex flex-row w-full space-x-7">
                                 <h1 className=" font-semibold text-xl border-2 py-4 px-5 rounded-md border-gray-300">
-                                    25
+                                    {hour}
                                 </h1>
                             </div>
                     </div>
@@ -77,18 +74,18 @@ export default function ReservationCard({ coworking }: { coworking: Coworking })
                             </h1>
                             <div className=" flex flex-row w-full space-x-7">
                                 <h1 className=" font-semibold text-xl border-2 py-4 px-5 rounded-md border-gray-300">
-                                    1000 Baht
+                                cannot pull price per hour data from database
                                 </h1>
                             </div>
                     </div>
 
                     <div className=" flex flex-col w-1/3 space-y-3">
                             <h1 className=" font-bold text-xl">
-                                Username
+                                User
                             </h1>
                             <div className=" flex flex-row w-full space-x-7">
                                 <h1 className=" font-semibold text-xl border-2 py-4 px-5 rounded-md border-gray-300">
-                                    username
+                                    {userName}
                                 </h1>
                             </div>
                             
@@ -97,7 +94,7 @@ export default function ReservationCard({ coworking }: { coworking: Coworking })
                 </div>
 
                 <div className="">
-                    <p className="m-0">*The total cost is calculated by multiplying the hourly rate by the number of hours.</p>
+                    <p className="m-0">***The total cost is calculated by multiplying the hourly rate by the number of hours.</p>
                     <button className= "bg-main-100 text-white text-[20px] py-3 rounded-md font-semibold w-full"
                     onClick={onsubmit}>
                         Confirm Your Payment

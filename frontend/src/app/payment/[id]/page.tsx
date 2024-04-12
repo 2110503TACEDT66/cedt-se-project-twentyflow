@@ -1,12 +1,10 @@
 import PaymentCard from "@/components/PaymentCard";
-import getCoworking from "@/libs/getCoworking";
+import getReservation from "@/libs/getReservation";
+import { useSession } from "next-auth/react";
 
 
 export default async function Page({params} : {params : {id : string}}){
-
-    const coworkingDetail = await getCoworking(params.id)
     return(
-        <PaymentCard coworking={coworkingDetail.data}/>
-        
+        <PaymentCard reservationId={params.id}/> // Use reservationDetail
     )
 }

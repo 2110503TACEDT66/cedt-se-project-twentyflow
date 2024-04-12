@@ -16,18 +16,13 @@ export default function HistoryCard( {reservation} : {reservation : Reservation}
     const rid = reservation._id
 
     const [isOpen, setIsOpen] = useState<boolean>(false);
+    // console.log(reservation.endTime)
     
     
     const handleDeleteButton = () => {
         if(currentUser && rid){
             DeleteReservation(currentUser.token, rid)
             location.reload()
-        }
-    }
-
-    const onPaymentButton = () => {
-        if(currentUser && rid){
-            
         }
     }
 
@@ -116,7 +111,7 @@ export default function HistoryCard( {reservation} : {reservation : Reservation}
                 </div>
 
                 <div className="flex justify-end">
-                    <Link href={`/payment/${reservation.coWorking.id}`} className=" h-[52px] bg-main-100 flex justify-center items-center text-white font-semibold rounded-lg mr-[30px] w-3/5">
+                    <Link href={`/payment/${rid}`} className=" h-[52px] bg-main-100 flex justify-center items-center text-white font-semibold rounded-lg mr-[30px] w-3/5">
                         Pay
                     </Link>
                 </div>

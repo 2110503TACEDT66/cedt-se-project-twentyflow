@@ -1,5 +1,7 @@
 'use client'
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCopy } from "@fortawesome/free-solid-svg-icons";
 import Image from "next/image"
 import { useState } from "react"
 
@@ -12,6 +14,10 @@ export default function Code( {couponName, couponCode}: {couponName:string, coup
         setIsTextVisible(!isTextVisible);
     };
 
+    const copyText = (entryText:string) => {
+        navigator.clipboard.writeText(entryText);
+    }
+
     return(
         <div className='w-full h-[200px] rounded-lg shadow-xl bg-custom-purple flex flex-row'>
             <div className='w-[130px] h-[130px] relative bg-white m-[30px] rounded-lg '>
@@ -23,9 +29,14 @@ export default function Code( {couponName, couponCode}: {couponName:string, coup
             <div className="w-full">
                 <h1 className='text-white font-bold text-3xl m-[30px] mx-0'>{couponName}</h1> 
                 <div className="w-full flex items-center">
-                    <h1 className=" bg-white p-3 rounded-lg font-bold text-xl text-center w-3/4 h-[50px]">
-                        {isTextVisible && couponCode }
-                    </h1>
+                    <div className=" bg-white rounded-lg w-3/4 h-[50px] flex flex-row justify-between items-center">
+                        <div className="font-bold text-xl text-center p-2 w-[90%]">
+                            {isTextVisible && couponCode }
+                        </div>
+                        {isTextVisible && <button title="copy" className="p-3" onClick={()=>copyText(couponCode)}>
+                            <FontAwesomeIcon className="h-5 w-6 text-gray-600" icon={faCopy}/>
+                        </button>}
+                    </div>
                     <button onClick={toggleTextVisibility} className='w-[70px] h-[50px] relative bg-white rounded-lg ml-2'>
                         <Image src={ '/img/showEye.png'}
                         alt='showEye Picture'

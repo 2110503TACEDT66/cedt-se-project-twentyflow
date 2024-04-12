@@ -3,7 +3,7 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import DeleteReservation from "@/libs/DeleteReservation";
-import { faGear, faPenToSquare, faTrash, faX } from "@fortawesome/free-solid-svg-icons"
+import { faGear, faPenToSquare, faTrash, faX, faXmark } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 
@@ -88,7 +88,7 @@ export default function HistoryCard( {reservation} : {reservation : Reservation}
                 <div className="flex justify-end">
                     <button className="bg-main-100 p-3 rounded-lg mr-[30px]" onClick={() => {setIsOpen(!isOpen)}}>
                         {
-                            isOpen ?  <FontAwesomeIcon icon={faX} className="text-white fa-2x"/> 
+                            isOpen ?  <FontAwesomeIcon icon={faXmark} className="text-white fa-2x"/> 
                             : <FontAwesomeIcon icon={faGear} className="text-white fa-2x"/> 
                         }
                         
@@ -116,9 +116,6 @@ export default function HistoryCard( {reservation} : {reservation : Reservation}
                 </div>
 
                 <div className="flex justify-end">
-                        {/* <button className="bg-main-100 p-3 rounded-lg mr-[30px] w-full text-white font-semibold h-16">
-                            Pay
-                        </button> */}
                     <Link href={`/payment/${reservation.coWorking.id}`} className=" h-[52px] bg-main-100 flex justify-center items-center text-white font-semibold rounded-lg mr-[30px] w-3/5">
                         Pay
                     </Link>

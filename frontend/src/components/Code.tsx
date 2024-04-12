@@ -40,7 +40,7 @@ export default function Code( {couponName, couponCode}: {couponName:string, coup
                             {isTextVisible && couponCode }
                         </div>
                         {isTextVisible && <button title="copy" className="p-3" onClick={()=>{copyText(couponCode);}}>
-                            <FontAwesomeIcon className={`h-5 w-6 text-gray-600 ${isButtonClicked &&"text-gray-400"}`} icon={faCopy}/>
+                            <FontAwesomeIcon className={`h-5 w-6 ${isButtonClicked ?"text-gray-400": "text-gray-600"}`} icon={faCopy}/>
                         </button>}
                     </div>
                     <button onClick={toggleTextVisibility} className='w-[70px] h-[50px] relative bg-white rounded-lg ml-2'>

@@ -58,12 +58,13 @@ export default function PaymentCard({ reservationId }: { reservationId: string }
                 <div className="flex flex-row w-full space-x-7">
                     <div className=" flex flex-col w-1/5 space-y-3">
                             <h1 className=" font-bold text-xl">
-                                Hour
+                                Time
                             </h1>
-                            <div className=" flex flex-row w-full space-x-7">
+                            <div className=" flex flex-row w-full space-x-5">
                                 <h1 className=" font-semibold text-xl border-2 py-4 px-5 rounded-md border-gray-300">
                                     {hour}
                                 </h1>
+                                <h1 className=" font-semibold text-xl flex flex-col justify-center">Hour</h1>
                             </div>
                     </div>
 
@@ -71,10 +72,11 @@ export default function PaymentCard({ reservationId }: { reservationId: string }
                             <h1 className=" font-bold text-xl">
                                 Price
                             </h1>
-                            <div className=" flex flex-row w-full space-x-7">
+                            <div className=" flex flex-row w-full space-x-5">
                                 <h1 className=" font-semibold text-xl border-2 py-4 px-5 rounded-md border-gray-300">
-                                 {currentReservation !== undefined ? currentReservation.coWorking.price_hourly * hour : "NaN"}
+                                 {currentReservation !== undefined ? currentReservation.coWorking.price_hourly * hour  : "NaN"}
                                 </h1>
+                                <h1 className=" font-semibold text-xl flex flex-col justify-center">Baht</h1>
                             </div>
                     </div>
 

@@ -10,7 +10,7 @@ export default function PaymentCard({ reservationId }: { reservationId: string }
     const currentUser = session.data?.user
     const [currentReservation, setCurrentReservation] = useState<Reservation>()
     // console.log(reservationId)
-    console.log(currentReservation?.endTime)
+    console.log(currentReservation?.coWorking.price_hourly)
 
     useEffect(() => {
 
@@ -24,14 +24,13 @@ export default function PaymentCard({ reservationId }: { reservationId: string }
             }).then((res) => res.json())
             .then((data) => {
               setCurrentReservation(data.data)
-              console.log(data.data)
             })
 
         }
         
       }, [])
 
-    const hour = currentReservation ? Math.ceil((new Date(currentReservation.endTime).getTime() - new Date(currentReservation?.startTime).getTime())/( 1000*60*60) ): 'Cannot compute hour'
+    const hour : number = currentReservation ? Math.ceil((new Date(currentReservation.endTime).getTime() - new Date(currentReservation?.startTime).getTime())/( 1000*60*60) ): 0
     const coWorkingName = currentReservation?.coWorking.name
     const userName = currentUser?.name
     
@@ -74,7 +73,7 @@ export default function PaymentCard({ reservationId }: { reservationId: string }
                             </h1>
                             <div className=" flex flex-row w-full space-x-7">
                                 <h1 className=" font-semibold text-xl border-2 py-4 px-5 rounded-md border-gray-300">
-                                cannot pull price per hour data from database
+                                 {currentReservation !== undefined ? currentReservation.coWorking.price_hourly * hour : "NaN"}
                                 </h1>
                             </div>
                     </div>

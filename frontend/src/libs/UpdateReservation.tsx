@@ -1,4 +1,6 @@
-export default async function UpdateReservation(apptDate:string,token:string,appId:string ){
+import { start } from "repl";
+
+export default async function UpdateReservation(startTime:string,endTime:string,token:string,appId:string ){
     const url = `${process.env.NEXT_PUBLIC_BACKEND_URL}/appointments/${appId}`
     const response = await fetch(url,{
         method: 'PUT',
@@ -7,7 +9,8 @@ export default async function UpdateReservation(apptDate:string,token:string,app
             "authorization":`Bearer ${token}`
         },
         body: JSON.stringify({ 
-            apptDate:apptDate ,
+            startTime ,
+            endTime ,
         }),
     });
     const body = await response.json()

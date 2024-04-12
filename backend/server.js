@@ -19,7 +19,6 @@ connectDB()
 //Route files
 const coWorking = require('./routes/coWorkings');
 const appointments = require('./routes/appointments');
-const history = require('./routes/history');
 
 const app = express();
 
@@ -56,7 +55,7 @@ app.use(cors());
 app.use('/api/v1/coworkings',coWorking);
 app.use('/api/v1/auth',auth);
 app.use('/api/v1/appointments', appointments)
-app.use('/api/v1/history', history); 
+
 
 
 const PORT = process.env.PORT || 5000;

@@ -4,7 +4,7 @@ import CouponCard from "./CouponCard"
 export default function CouponCatalog() {
 
     return (
-        <>
+        <div>
         <h1 className=" font-bold text-2xl text-white px-[60px]">
             Redeem
         </h1>
@@ -15,6 +15,6 @@ export default function CouponCatalog() {
                <CouponCard couponName="Coupon Discount 50 THB" couponPoint={5000} />
                <CouponCard couponName="Coupon Discount 100 THB" couponPoint={10000} />
             </div>
-        </>
+        </div>
     )
 }

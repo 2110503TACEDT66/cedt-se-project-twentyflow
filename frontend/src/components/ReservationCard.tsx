@@ -22,6 +22,7 @@ export default function ReservationCard({ coworking }: { coworking: Coworking })
     const [time2, setTime2] = useState<string>("")
 
     const { data: session, status } = useSession()
+    
     const [data,setData] = useState<Reservation[]>()
 
     useEffect(() => {
@@ -59,7 +60,11 @@ export default function ReservationCard({ coworking }: { coworking: Coworking })
                         const newDate = new Date(year,month,day,hour,minute)
                         const newDate2 = new Date(year2,month2,day2,hour2,minute2)
                         if(newDate.getTime() < newDate2.getTime()){
-                            addAppt(newDate.toISOString(), newDate2.toISOString(),session.user._id, coworking.id,session.user.token)
+                            //also add price
+                            //price is calculated by hour so we need to calculated hour
+                            const hour = Math.ceil((newDate2.getTime() - newDate.getTime())/(1000*60*60))
+                            const price = hour * coworking.price_hourly
+                            addAppt(newDate.toISOString(), newDate2.toISOString(),session.user._id, coworking.id,session.user.token, price);
                             router.push("/history")
                         }
                         else{
@@ -91,7 +96,11 @@ export default function ReservationCard({ coworking }: { coworking: Coworking })
                         const newDate = new Date(year,month,day,hour,minute)
                         const newDate2 = new Date(year2,month2,day2,hour2,minute2)
                         if(newDate.getTime() < newDate2.getTime()){
-                            addAppt(newDate.toISOString(), newDate2.toISOString(),session.user._id, coworking.id,session.user.token)
+                            const hour = Math.ceil((newDate2.getTime() - newDate.getTime())/(1000*60*60))
+                            console.log('hour: '+ hour)
+                            const price = hour * coworking.price_hourly
+                            console.log('price: '+ price)
+                            addAppt(newDate.toISOString(), newDate2.toISOString(),session.user._id, coworking.id,session.user.token, price)
                             router.push("/history")
                         }
                         else{

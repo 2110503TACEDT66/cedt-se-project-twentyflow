@@ -1,11 +1,11 @@
-const History = require('../models/history');
+const History = require('../models/History');
 
 exports.getHistories = async (req, res, next) => {
     let query;
 
     //General users can see only their histories!
     if (req.user.role !== 'admin') {
-        query = History.find({ user: req.user.id }).populate({
+        query = await History.find({ user: req.user.id }).populate({
             path: 'coWorking',
             select: 'name address tel'
         }
@@ -13,16 +13,13 @@ exports.getHistories = async (req, res, next) => {
             path: 'user',
             select: 'name'
         }).populate({
-            path: 'history',
-            select: 'price'
-        }).populate({
             path: 'appointment',
             select: 'startTime endTime'
         });
     }else{
         //If you are an admin, you can see all!
         if(req.params.coWorkingId) {
-            query=History.find({coWorking:req.params.coWorkingId}).populate({
+            query= await History.find({coWorking:req.params.coWorkingId}).populate({
                 path: 'coWorking' ,
                 select: 'name address tel',
 
@@ -30,22 +27,16 @@ exports.getHistories = async (req, res, next) => {
                 path:'user',
                 select: 'name'
             }).populate({
-                path: 'history',
-                select: 'price'
-            }).populate({
                 path: 'appointment',
                 select: 'startTime endTime'
             });
         }else {
-            query=History.find().populate({
+            query= await History.find().populate({
                 path:'coWorking' ,
                 select: 'name address tel'
             }).populate({
                 path:'user',
                 select: 'name'
-            }).populate({
-                path: 'history',
-                select: 'price'
             }).populate({
                 path: 'appointment',
                 select: 'startTime endTime'
@@ -54,7 +45,7 @@ exports.getHistories = async (req, res, next) => {
 
     }
     try {
-        const histories= await query;
+        const histories=  query;
         res.status(200).json({
             success:true,
             count:histories.length,
@@ -73,9 +64,6 @@ exports.getHistory = async (req, res, next) => {
         }).populate({
             path: 'user',
             select: 'name'
-        }).populate({
-            path: 'history',
-            select: 'price'
         }).populate({
             path: 'appointment',
             select: 'startTime endTime'
@@ -135,9 +123,6 @@ exports.updateHistory = async (req, res, next) => {
         }).populate({
             path: 'user',
             select: 'name'
-        }).populate({
-            path: 'history',
-            select: 'price'
         }).populate({
             path: 'appointment',
             select: 'startTime endTime'

@@ -20,6 +20,7 @@ connectDB()
 const coWorking = require('./routes/coWorkings');
 const appointments = require('./routes/appointments');
 const history = require('./routes/history');
+const dashboard = require('./routes/dashboard');
 
 const app = express();
 
@@ -57,6 +58,7 @@ app.use('/api/v1/coworkings',coWorking);
 app.use('/api/v1/auth',auth);
 app.use('/api/v1/appointments', appointments)
 app.use('/api/v1/history', history)
+app.use('/api/v1/dashboard', dashboard)
 
 
 const PORT = process.env.PORT || 5000;

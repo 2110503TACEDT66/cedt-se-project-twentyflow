@@ -29,5 +29,7 @@ interface Reservation {
     user : User,
     coWorking : Coworking,
     createAt : string,
+    priceId : string,
+    status : string,
     _id : string
 }

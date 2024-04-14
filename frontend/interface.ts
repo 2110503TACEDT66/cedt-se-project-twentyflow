@@ -31,3 +31,11 @@ interface Reservation {
     createAt : string,
     _id : string
 }
+
+interface StatCardProps {
+    icon: string;
+    changePercentage: string;
+    changeDirection: "up" | "down";
+    value: string;
+    label: string;
+  }

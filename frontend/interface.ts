@@ -20,7 +20,7 @@ interface CoworkingJson {
 interface User {
     name: string,
     _id: string,
-    telephone_number: string,
+    tel: string,
 }
 
 interface Reservation {

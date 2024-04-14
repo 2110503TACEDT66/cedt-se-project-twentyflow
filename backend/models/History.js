@@ -10,10 +10,6 @@ const HistorySchema=new mongoose.Schema({
         type:mongoose.Schema.ObjectId,
         ref: 'CoWorking' ,
         required:true
-    },appointment:{
-        type:mongoose.Schema.ObjectId,
-        ref: 'Appointment' ,
-        required:true
     },price:{
         type:Number,
         required:true

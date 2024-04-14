@@ -12,9 +12,6 @@ exports.getHistories = async (req, res, next) => {
         ).populate({
             path: 'user',
             select: 'name'
-        }).populate({
-            path: 'appointment',
-            select: 'startTime endTime'
         });
     }else{
         //If you are an admin, you can see all!
@@ -26,9 +23,6 @@ exports.getHistories = async (req, res, next) => {
             }).populate({
                 path:'user',
                 select: 'name'
-            }).populate({
-                path: 'appointment',
-                select: 'startTime endTime'
             });
         }else {
             query= await History.find().populate({
@@ -37,9 +31,6 @@ exports.getHistories = async (req, res, next) => {
             }).populate({
                 path:'user',
                 select: 'name'
-            }).populate({
-                path: 'appointment',
-                select: 'startTime endTime'
             });
         }
 
@@ -64,9 +55,6 @@ exports.getHistory = async (req, res, next) => {
         }).populate({
             path: 'user',
             select: 'name'
-        }).populate({
-            path: 'appointment',
-            select: 'startTime endTime'
         });
 
         if (!history) {
@@ -123,9 +111,6 @@ exports.updateHistory = async (req, res, next) => {
         }).populate({
             path: 'user',
             select: 'name'
-        }).populate({
-            path: 'appointment',
-            select: 'startTime endTime'
         });
 
         res.status(200).json({

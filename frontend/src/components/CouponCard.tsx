@@ -3,6 +3,7 @@ import InteractiveCard from './InteractiveCard';
 import getUserProfile from '@/libs/getUserProfile';
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
+import createCoupon from '@/libs/createCoupon';
 
 interface UserData {
     points: number;
@@ -20,6 +21,8 @@ export default function CouponCard( { couponName,couponPoint }
     const { data: session } = useSession();    
     const token = session?.user?.token as string;    
     const [user, setUser] = useState<User|null>(null);
+    const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+
 
     // This effect runs once when the component mounts
     useEffect(() => {
@@ -33,14 +36,15 @@ export default function CouponCard( { couponName,couponPoint }
             let userPoints = user.data.points;
         let newPoints;
         if(userPoints >= couponPoint){
-            alert(`You have redeemed ${couponName}`);
+            
+            const res = await createCoupon(token, couponName);
             newPoints = userPoints - couponPoint;
         } else {
             alert(`You do not have enough points to redeem ${couponName}`);
             return;
         }
 
-        // Update the points
+        //Update the points
         const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/updatepoints`, {
             method: 'PUT',
             headers: {
@@ -58,7 +62,7 @@ export default function CouponCard( { couponName,couponPoint }
             return;
         }
 
-        window.location.reload();
+        alert(`You have successfully redeemed ${couponName}!`);
     }
         
     }

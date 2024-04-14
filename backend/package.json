@@ -22,7 +22,8 @@
     "hpp": "^0.2.3",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.4.0",
-    "mongoose": "^8.2.0"
+    "mongoose": "^8.2.0",
+    "stripe": "^15.1.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.0"

@@ -1,4 +1,6 @@
+const { compare } = require('bcryptjs');
 const User = require('../models/User');
+const stripe = require('./Stripe');
 
 //Get token from model, create cookie and send response
 const sendTokenResponse = (user, statusCode, res) => {
@@ -25,13 +27,17 @@ exports.register = async (req,res,next) => {
     try{
         const {name,telephone_number,email,password,role} = req.body;
 
+        //create stripe customer
+        const customer = await stripe.createCustomer(email,name);
+
         //Create user
         const user = await User.create({
-            name,
-            telephone_number,
-            email,
-            password,
-            role
+            name:name,
+            telephone_number:telephone_number,
+            email:email,
+            role:role,
+            customerId:customer.id,
+            password:password,
         });
 
         //Create token

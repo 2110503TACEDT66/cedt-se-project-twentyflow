@@ -1,25 +1,24 @@
-import type { Metadata } from 'next'
-import { Raleway } from 'next/font/google'
-import './globals.css'
-import Header from '@/components/Header'
-import { getServerSession } from 'next-auth'
-import NextAuthProvider from '@/providers/NextAuthProvider'
-import { authOptions } from './api/auth/[...nextauth]/route'
+import type { Metadata } from "next";
+import { Raleway } from "next/font/google";
+import "./globals.css";
+import Header from "@/components/Header";
+import { getServerSession } from "next-auth";
+import NextAuthProvider from "@/providers/NextAuthProvider";
+import { authOptions } from "./api/auth/[...nextauth]/route";
 
-const raleway = Raleway({ subsets: ['latin'] })
+const raleway = Raleway({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'CEDT CoWorking Space',
-  description: 'CoWorking Space for CEDT students',
-}
+  title: "CEDT CoWorking Space",
+  description: "CoWorking Space for CEDT students",
+};
 
 export default async function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
-
-  const session = await getServerSession(authOptions)
+  const session = await getServerSession(authOptions);
 
   return (
     <html lang="en">
@@ -33,5 +32,5 @@ export default async function RootLayout({
         </NextAuthProvider>
       </body>
     </html>
-  )
+  );
 }

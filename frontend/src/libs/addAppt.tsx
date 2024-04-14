@@ -1,4 +1,5 @@
-export default async function addAppt(startTime:string, endTime:string,user:string,cid:string,token:string ){
+export default async function addAppt(startTime:string, endTime:string,user:string,cid:string,token:string, price:number){
+    const priceId = price.toString()
     const url = `${process.env.NEXT_PUBLIC_BACKEND_URL}/coworkings/${cid}/appointments`
     const response = await fetch(url,{
         method: 'POST',
@@ -7,8 +8,9 @@ export default async function addAppt(startTime:string, endTime:string,user:stri
             "authorization":`Bearer ${token}`
         },
         body: JSON.stringify({ 
-            startTime ,
+            startTime,
             endTime,
+            priceId,
             user : user
         }),
     });

@@ -17,6 +17,10 @@ export default function Account() {
     const tranclass2 = (menuChanger === 2) ? "border-b-2" : ""
     const tranclass3 = (menuChanger === 3) ? "border-b-2" : ""
     const tranclass4 = (menuChanger === 4) ? "border-b-2" : ""
+    const tranDiv1 = (menuChanger === 1) ? "flex" : "hidden"
+    const tranDiv2 = (menuChanger === 2) ? "flex" : "hidden"
+    const tranDiv3 = (menuChanger === 3) ? "flex" : "hidden"
+    const tranDiv4 = (menuChanger === 4) ? "flex" : "hidden"
     console.log(currentUser)    
     // console.log(reservationId)
     // console.log(currentReservation?.coWorking.price_hourly)
@@ -59,7 +63,7 @@ export default function Account() {
                     onClick={() => {setMenuChanger(4)}}><FontAwesomeIcon icon={faClockRotateLeft} size="2x" className="py-5 px-9 text-main-100"/></div>
                 </div>
             
-                <div className=" flex flex-col space-y-3">
+                <div className={`${tranDiv1} flex-col space-y-3`}>
                     <h1 className=" font-bold text-xl">
                         Name
                     </h1>
@@ -78,9 +82,29 @@ export default function Account() {
                         Telephone Number
                     </h1>
                     <h1 className="font-semibold text-xl border-2 p-3 rounded-md border-gray-300">
-                        {tel? tel : "Not Provided"}
+                        {tel}
                     </h1>
+                </div>
 
+                <div className={`${tranDiv2} flex-col space-y-3`}>
+                    <h1 className=" font-bold text-xl">
+                        Name
+                    </h1>
+                    <input className=" font-semibold text-xl border-2 p-3 rounded-md border-gray-300" value={userName}></input>
+
+                    {/* <h1 className=" font-bold text-xl">
+                        Email
+                    </h1>
+                    <h1 className=" font-semibold text-xl border-2 p-3 rounded-md border-gray-300">
+                        {userEmail}
+                    </h1> */}
+
+                    <h1 className=" font-bold text-xl">
+                        Telephone Number
+                    </h1>
+                    <h1 className="font-semibold text-xl border-2 p-3 rounded-md border-gray-300">
+                        {tel}
+                    </h1>
 
 
                 </div>

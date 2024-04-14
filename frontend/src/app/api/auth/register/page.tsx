@@ -1,7 +1,6 @@
 import { getServerSession } from 'next-auth';
 import { redirect } from 'next/navigation'
 import { authOptions } from '../[...nextauth]/route';
-import Swal from 'sweetalert2';
 
 const Page = async () => {
     const session = await getServerSession(authOptions)
@@ -26,20 +25,11 @@ const Page = async () => {
         }),
         });
         if(response.ok){
-            Swal.fire({
-                title: 'Register',
-                text: 'Register successful.',
-                timer: 2000
-            });
             
             redirect('/api/auth/signin')
         }else
         {
-            Swal.fire({
-                title: 'Register',
-                text: 'Register unsuccessful.',
-                timer: 2000
-            });
+            
             setTimeout(() => {
                 redirect('/')
             }, 2000);

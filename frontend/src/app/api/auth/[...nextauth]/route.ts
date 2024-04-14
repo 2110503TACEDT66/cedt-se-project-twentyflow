@@ -3,7 +3,6 @@ import { AuthOptions } from "next-auth";
 import  CredentialsProvider from "next-auth/providers/credentials";
 import UserLogin from "@/libs/UserLogin";
 import getUserProfile from "@/libs/getUserProfile";
-import Swal from 'sweetalert2';
 
 
 export const authOptions:AuthOptions = {

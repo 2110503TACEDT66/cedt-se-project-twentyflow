@@ -1,4 +1,5 @@
 "use client"
+import updateUserProfile from "@/libs/updateUserProfile";
 import { faClockRotateLeft, faPenToSquare, faTag, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useSession } from "next-auth/react";
@@ -25,26 +26,27 @@ export default function Account() {
     // console.log(reservationId)
     // console.log(currentReservation?.coWorking.price_hourly)
 
-    // useEffect(() => {
-
-    //     if(currentUser){
-    //         fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/appointments/${reservationId}`, {
-    //             method: "GET",
-    //             headers: {
-    //                 "Content-Type": "application/json",
-    //                 "authorization":`Bearer ${currentUser.token}`
-    //             },
-    //         }).then((res) => res.json())
-    //         .then((data) => {
-    //           setCurrentReservation(data.data)
-    //         })
-
-    //     }
+    useEffect(() => {
         
-    //   }, [])
+        
+        
+      }, [])
     const userName = currentUser?.name
     const userEmail = currentUser?.email
     const tel = currentUser?.telephone_number
+
+    const [changeUsername, setChangeUsername] = useState<string | undefined>(userName);
+    const [changeTel, setChangeTel] = useState<string | undefined>(tel);
+
+    const handleSave = async () => {
+        if(changeUsername && changeTel && currentUser?.token && currentUser?._id){
+            await updateUserProfile(changeUsername, currentUser?.token, currentUser?._id, changeTel);
+            session.update();
+            setMenuChanger(1);
+            router.push("/account")
+        }
+    }
+
     return (
         <div className="flex w-screen flex-col  items-center bg-main-100 min-h-[90vh] p-7">
             <h1 className=" text-5xl py-10 font-semibold text-white">
@@ -86,27 +88,21 @@ export default function Account() {
                     </h1>
                 </div>
 
-                <div className={`${tranDiv2} flex-col space-y-3`}>
+                <div className={`${tranDiv2} flex-col space-y-4`}>
                     <h1 className=" font-bold text-xl">
                         Name
                     </h1>
-                    <input className=" font-semibold text-xl border-2 p-3 rounded-md border-gray-300" value={userName}></input>
-
-                    {/* <h1 className=" font-bold text-xl">
-                        Email
-                    </h1>
-                    <h1 className=" font-semibold text-xl border-2 p-3 rounded-md border-gray-300">
-                        {userEmail}
-                    </h1> */}
+                    <input className=" font-semibold text-xl border-2 p-3 rounded-md border-gray-300" value={changeUsername} onChange={(event) => {setChangeUsername(event?.target.value)}}></input>
 
                     <h1 className=" font-bold text-xl">
                         Telephone Number
                     </h1>
-                    <h1 className="font-semibold text-xl border-2 p-3 rounded-md border-gray-300">
-                        {tel}
-                    </h1>
+                    <input className="font-semibold text-xl border-2 p-3 rounded-md border-gray-300" value={changeTel} onChange={(event) => {setChangeTel(event.target.value)}}></input>
 
-
+                    <button className= "bg-main-100 text-white text-[20px] py-3 rounded-md font-semibold w-full"
+                    onClick={handleSave}>
+                        SAVE
+                    </button>
                 </div>
 
                 

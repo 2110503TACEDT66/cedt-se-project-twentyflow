@@ -2,7 +2,7 @@
 import { signIn, useSession } from "next-auth/react";
 import { redirect } from 'next/navigation'
 import React, { useState } from "react";
-import Swal from 'sweetalert2';
+
 
 const LoginPage = () => {
   
@@ -11,11 +11,6 @@ const LoginPage = () => {
   const { data:session } = useSession();
   if(!session){
   const onSubmit = async () => {
-    Swal.fire({
-      title: 'Login',
-      text: 'Login successful.',
-      timer: 2000
-    });
     const result = await signIn("credentials", {
       email: email,
       password: pass,
@@ -55,11 +50,7 @@ const LoginPage = () => {
     </main>
   );
 }else {
-  Swal.fire({
-    title: 'Login failed',
-    text: 'Login unsuccessful.',
-    timer: 2000
-  });
+  
   redirect('/')
 }
 };

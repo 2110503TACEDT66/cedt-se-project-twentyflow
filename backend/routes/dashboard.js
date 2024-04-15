@@ -10,7 +10,7 @@ router.route('/customer').get(protect, authorize('admin'), getCustomerThisMonth)
 router.route('/customer/monthly').get(protect,authorize('admin'), getCustomerMonthTrend)
 router.route('/customer/daily').get(protect,authorize('admin'), getCustomerDailyTrend)
 router.route('/customer/active').get(protect,authorize('admin'), getActiveUser)
-//router.route('/customer/newReturn').get(protect,authorize('admin'), getNewReturnCustomer)
+router.route('/customer/newReturn').get(protect,authorize('admin'), getNewReturnCustomer)
 router.route('/revenue/yearly').get(protect, authorize('admin'), getYearlyRevenue)
 router.route('/revenue/weekly').get(protect, authorize('admin'), getWeeklyRevenue)
 

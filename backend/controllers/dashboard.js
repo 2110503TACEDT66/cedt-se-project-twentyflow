@@ -4,7 +4,6 @@ const User = require('../models/User');
 const CoWorking = require('../models/CoWorking');
 const History = require('../models/History');
 const Stripe = require('stripe');
-const { getPrices } = require('./Stripe');
 const stripe = new Stripe(String(process.env.STRIPE_SECRET_KEY));
 
 exports.getDashboard = async (req,res,next) => {
@@ -195,36 +194,48 @@ exports.getActiveUser = async (req,res,next) => {
     }
 }
 
-// exports.getNewReturnCustomer = async (req,res,next) => {
-//     try {
-//         const newCustomer = [
-//             ['Sun', 0],
-//             ['Mon', 0],
-//             ['Tue', 0],
-//             ['Wed', 0],
-//             ['Thu', 0],
-//             ['Fri', 0],
-//             ['Sat', 0],  
-//         ]
-//         const ReturnCustomer = [
-//             ['Sun', 0],
-//             ['Mon', 0],
-//             ['Tue', 0],
-//             ['Wed', 0],
-//             ['Thu', 0],
-//             ['Fri', 0],
-//             ['Sat', 0],  
-//         ]
+exports.getNewReturnCustomer = async (req,res,next) => {
+    try {
+        const newCustomer = [
+            ['Sun', 0],
+            ['Mon', 0],
+            ['Tue', 0],
+            ['Wed', 0],
+            ['Thu', 0],
+            ['Fri', 0],
+            ['Sat', 0],  
+        ]
+        const returnCustomer = [
+            ['Sun', 0],
+            ['Mon', 0],
+            ['Tue', 0],
+            ['Wed', 0],
+            ['Thu', 0],
+            ['Fri', 0],
+            ['Sat', 0],  
+        ]
 
-//         const appointments = await Appointment.find();
+        const appointments = await Appointment.find();
 
-//         appointments.forEach(appt => {
-//             const 
-//         })
+        appointments.forEach(appt => {
+
+            const date = new Date(appt.createdAt)
+            date = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+            const dayOfWeek = date.getDate()
+
+            const newOrRe = appointments.filter(user => {
+                return user.user === appt.user
+            })
+            if(newOrRe.length === 1) {
+                newCustomer[dayOfWeek][1]++
+            } else {
+                returnCustomer[dayOfWeek][1]++
+            }
+        })
 
 
-//         res.status(200).json({success:true, data:{New:newCustomer, Return:ReturnCustomer}})
-//     } catch(err) {
-//         res.status(400).json({success:false})
-//     }
-// }
+        res.status(200).json({success:true, data:{New:newCustomer, Return:returnCustomer}})
+    } catch(err) {
+        res.status(400).json({success:false})
+    }
+}

@@ -25,10 +25,13 @@ const UserSchema = new mongoose.Schema({
         enum: ['user','admin'],
         default: 'user'
     },
+    customerId : {
+        type: String,
+        required: [true, 'Please add a customerId']
+    },
     password: {
         type:String,
         required: [true, 'Please add a password'],
-
         minlength: 6,
         select: false
     },
@@ -37,7 +40,12 @@ const UserSchema = new mongoose.Schema({
     createdAt: {
         type: Date,
         default: Date.now
-    }
+    },
+    //add points to user schema
+    points: {
+        type: Number,
+        default: 0
+    },
 });
 
 UserSchema.virtual('appointments', {

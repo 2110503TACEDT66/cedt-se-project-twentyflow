@@ -1,6 +1,8 @@
 import type { Config } from 'tailwindcss'
 
 const { colors: defaultColors } = require('tailwindcss/defaultTheme')
+const plugin = require('tailwindcss/plugin')
+  
 
 const colors = {
   ...defaultColors,
@@ -25,12 +27,25 @@ const config: Config = {
         'gradient-conic':
           'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       },
-      colors: colors,
+      colors: {
+        ...colors,
+        'custom-purple': '#7D5CB5',
+      },
       fontFamily: {
         'kanit': ['Kanit', 'sans-serif'],
       },
     },
   },
-  plugins: [],
+  plugins: [
+    plugin(function ({ addUtilities }: { addUtilities: any }) {
+      addUtilities({
+        '.scrollbar-none': {
+          '&::-webkit-scrollbar': {
+            'display': 'none'
+          }
+        }
+      })
+    })
+  ],
 }
 export default config

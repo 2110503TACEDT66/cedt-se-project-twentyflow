@@ -8,55 +8,56 @@ import Radio from '@mui/material/Radio';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { axisClasses } from '@mui/x-charts/ChartsAxis';
 import { ClassNames } from '@emotion/react';
+import { colors } from '@mui/material';
 
 
 const dataset = [
   {
-    YearlyRevenue: 21,
+    YearlyRevenue: 8000,
     month: 'Jan',
   },
   {
-    YearlyRevenue: 28,
+    YearlyRevenue: 50000,
     month: 'Fev',
   },
   {
-    YearlyRevenue: 41,
+    YearlyRevenue: 12000,
     month: 'Mar',
   },
   {
-    YearlyRevenue: 73,
+    YearlyRevenue: 17000,
     month: 'Apr',
   },
   {
-    YearlyRevenue: 99,
+    YearlyRevenue: 30000,
     month: 'May',
   },
   {
-    YearlyRevenue: 144,
+    YearlyRevenue: 5000,
     month: 'June',
   },
   {
-    YearlyRevenue: 319,
+    YearlyRevenue: 40000,
     month: 'July',
   },
   {
-    YearlyRevenue: 249,
+    YearlyRevenue: 35000,
     month: 'Aug',
   },
   {
-    YearlyRevenue: 131,
+    YearlyRevenue: 23500,
     month: 'Sept',
   },
   {
-    YearlyRevenue: 55,
+    YearlyRevenue: 3000,
     month: 'Oct',
   },
   {
-    YearlyRevenue: 48,
+    YearlyRevenue: 39000,
     month: 'Nov',
   },
   {
-    YearlyRevenue: 25,
+    YearlyRevenue: 40000,
     month: 'Dec',
   },
 ];
@@ -64,13 +65,15 @@ const dataset = [
 const valueFormatter = (value: number | null) => `${value} Bath`;
 
 const chartSetting = {
-  series: [{ dataKey: 'YearlyRevenue', label: 'Yearly Revenue', valueFormatter }],
-  height: 300,
+  series: [{ dataKey: 'YearlyRevenue', valueFormatter }],
+  height: 190,
   sx: {
     [`& .${axisClasses.directionY} .${axisClasses.label}`]: {
       transform: 'translateX(-10px)',
     },
   },
+  colors: ['#7D5CB5'],
+  
 };
 
 export default function YearlyRevenue() {
@@ -82,14 +85,16 @@ export default function YearlyRevenue() {
   >('middle');
 
   return (
-    <div style={{ width: '100%' }}>
-      <BarChart
-        dataset={dataset}
-        xAxis={[
-          { scaleType: 'band', dataKey: 'month', tickPlacement, tickLabelPlacement },
-        ]}
-        {...chartSetting}
-      />
+    <div className='w-[100%] ml-6'>
+      <div>
+        <BarChart
+          dataset={dataset}
+          xAxis={[
+            { scaleType: 'band', dataKey: 'month', tickPlacement, tickLabelPlacement},
+          ]}
+          {...chartSetting}
+        />
+      </div>
     </div>
   );
 }

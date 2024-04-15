@@ -10,7 +10,7 @@ exports.getAppointments=async (req,res,next)=>{
     if(req.user.role !== 'admin'){
         query=Appointment.find({user:req.user.id}).populate({
             path:'coWorking',
-            select: 'name province tel'
+            select: 'name province tel price_hourly'
         }
         ).populate({
             path:'user',
@@ -21,7 +21,7 @@ exports.getAppointments=async (req,res,next)=>{
         if(req.params.coWorkingId) {
             query=Appointment.find({coWorking:req.params.coWorkingId}).populate({
                 path: 'coWorking' ,
-                select: 'name province tel',
+                select: 'name province tel price_hourly',
 
             }).populate({
                 path:'user',
@@ -30,7 +30,7 @@ exports.getAppointments=async (req,res,next)=>{
         }else {
             query=Appointment.find().populate({
                 path:'coWorking' ,
-                select: 'name province tel'
+                select: 'name province tel price_hourly'
             }).populate({
                 path:'user',
                 select: 'name'
@@ -58,7 +58,7 @@ exports.getAppointment=async (req,res,next) =>{
     try {
         const appointment = await Appointment.findById(req.params.id).populate({
             path:'coWorking' ,
-            select: 'name province tel'
+            select: 'name province tel price_hourly'
         });
 
         if (!appointment){

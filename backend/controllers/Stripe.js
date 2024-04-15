@@ -109,6 +109,7 @@ exports.createPaymentSession = async (req, res) => {
                 price: appointment.priceId,
                 quantity: 1,
             }],
+            allow_promotion_codes: true,
             success_url: `http://localhost:3000/payment/${appointment._id}/success`,
             cancel_url: `http://localhost:3000/payment/${appointment._id}/cancel`,
             customer: stripeCustomerId,

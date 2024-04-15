@@ -4,15 +4,41 @@ const Coupon = require('../models/Coupon');
 
 exports.createCoupon = async (req,res,next) => {
     try {
-        const couponStripe = await stripe.coupons.create({
-            duration: 'once',
-            amount_off: req.body.couponAmount,
-            currency: 'thb',
-          });
+        let couponStripe;
+        if (req.body.couponAmount === 10) {
+            couponStripe = await stripe.promotionCodes.create({
+            coupon: 'HIgDW1BU',
+            max_redemptions: 1,
+            });
+        }
+        else if (req.body.couponAmount === 20) {
+            couponStripe = await stripe.promotionCodes.create({
+            coupon: 'fMdNrjZe',
+            max_redemptions: 1,
+            });
+        }
+        else if (req.body.couponAmount === 50) {
+            couponStripe = await stripe.promotionCodes.create({
+            coupon: 'Ut8Mx2H5',
+            max_redemptions
+            });
+        }
+        else if (req.body.couponAmount === 100) {
+            couponStripe = await stripe.promotionCodes.create({
+            coupon: '1yoS4e31',
+            max_redemptions: 1,
+            });
+        }
+        else {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid coupon amount"
+            });
+        }
         const couponModel = await Coupon.create(
             {
                 couponName: req.body.couponName,
-                couponCode: couponStripe.id,
+                couponCode: couponStripe.code,
                 user: req.user.id
             }
         );

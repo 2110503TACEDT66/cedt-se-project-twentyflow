@@ -22,7 +22,16 @@ const AppointmentSchema=new mongoose.Schema({
     createdAt: {
         type: Date,
         default: Date.now
-    }
+    },
+    priceId : {
+        type: String,
+        required: [true, 'Please add a priceId']
+    },
+    status : {
+        type: String,
+        enum: ['finished','unfinished'],
+        default: 'unfinished'
+    },
 });
 
 module.exports=mongoose.model('Appointment' ,AppointmentSchema);

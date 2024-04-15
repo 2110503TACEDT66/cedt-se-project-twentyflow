@@ -3,7 +3,7 @@ const Appointment = require('../models/Appointment');
 const User = require('../models/User');
 const CoWorking = require('../models/CoWorking');
 const History = require('../models/History');
-const { now } = require('mongoose');
+const { default: mongoose } = require('mongoose');
 
 exports.getDashboard = async (req,res,next) => {
     
@@ -88,5 +88,25 @@ exports.getCustomerDailyTrend = async (req,res,next) => {
         res.status(200).json({ success: true, data: { trends:  trend, yesterday: yesterdayUsers, today: todayUsers} });
     } catch (err) {
         res.status(400).json({success:false})
+    }
+}
+
+exports.getYearlyRevenue = async (req,res,next) => {
+    try {
+        const appointments = await Appointment.find();
+        const histories = await History.find();
+
+        const jan = appointments.filter(appt => {
+            const apptCreateAt = appt.createdAt;
+            const status = appt.status;
+            const id = appt._id;
+            
+            console.log(apptCreateAt.getMonth())
+            return status === 'finished' && apptCreateAt.getMonth() === 3;
+        });
+
+        res.status(200).json({success:true, data: {jan, histories}})
+    } catch(err) {
+        res.status(400).json({success:false});
     }
 }

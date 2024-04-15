@@ -20,7 +20,7 @@ exports.createCoupon = async (req,res,next) => {
         else if (req.body.couponAmount === 50) {
             couponStripe = await stripe.promotionCodes.create({
             coupon: 'Ut8Mx2H5',
-            max_redemptions
+            max_redemptions : 1,
             });
         }
         else if (req.body.couponAmount === 100) {

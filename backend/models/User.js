@@ -46,16 +46,6 @@ const UserSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
-    coupons: [{
-        couponName: {
-            type: String,
-            required: true
-        },
-        couponCode: {
-            type: String,
-            required: true
-        }
-    }],
 });
 
 UserSchema.virtual('appointments', {

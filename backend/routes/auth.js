@@ -10,8 +10,8 @@ router.post('/login',login);
 router.get('/me',protect,getMe);
 router.get('/logout',logout);
 // router.put('/updateprofile',(protect, authorize('admin','user'),updateProfile));
-router.route('/:id').get(getMe).put(protect,authorize('user'),updateUserProfile)
 router.put('/updatepoints',protect,updatePoints);
+router.route('/:id').get(getMe).put(protect,authorize('user'),updateUserProfile)
 router.delete('/deletecoupon',protect, deleteCoupon)
 router.put('/addcoupon',protect,addCoupon);
 module.exports = router;

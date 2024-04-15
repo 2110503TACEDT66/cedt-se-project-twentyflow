@@ -40,3 +40,11 @@ interface Reward {
     _id : string
     
 }
+
+interface History {
+    _id: string;
+    coWorking: Coworking;
+    price: number;
+    user : User;
+    
+}

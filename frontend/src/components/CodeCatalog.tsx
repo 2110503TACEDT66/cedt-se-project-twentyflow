@@ -45,15 +45,13 @@ export default function CodeCatalog(){
                 <Code key={coupon.couponCode} couponName={coupon.couponName} couponCode={coupon.couponCode}/>
             ))
         ) : (
-            <div className=' h-[200px] rounded-lg shadow-xl bg-gray-400 flex flex-row'>
-                <div className='w-[130px] h-[130px] relative bg-gray-200 m-[30px] rounded-lg'>
-                <Image src={ '/img/couponIcon.png'}
-                    alt='couponIcon Picture'
-                    fill={true}
-                    className='object-contain rounded-t-lg p-[30px]'/>
+            (
+                <div className=' flex justify-center items-center'>
+                    <h1 className=' text-xl font-semibold'>
+                        No Coupon
+                    </h1>
                 </div>
-                <h1 className='text-3xl font-bold text-gray-700 pt-10'>No Coupons</h1>
-            </div>
+             )
         )}
         </div>
     )

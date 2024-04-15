@@ -32,8 +32,7 @@ const AppointmentSchema=new mongoose.Schema({
         enum: ['finished','unfinished'],
         default: 'unfinished'
     },
-    }
-);
+});
 
 
 module.exports=mongoose.model('Appointment' ,AppointmentSchema);

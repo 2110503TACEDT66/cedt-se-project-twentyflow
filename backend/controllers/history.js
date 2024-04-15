@@ -12,7 +12,7 @@ exports.getHistories = async (req, res, next) => {
         ).populate({
             path: 'user',
             select: 'name'
-        })
+        });
     }else{
         //If you are an admin, you can see all!
         if(req.params.coWorkingId) {
@@ -23,7 +23,8 @@ exports.getHistories = async (req, res, next) => {
             }).populate({
                 path:'user',
                 select: 'name'
-            })
+            });
+
         }else {
             query= await History.find().populate({
                 path:'coWorking' ,
@@ -31,7 +32,8 @@ exports.getHistories = async (req, res, next) => {
             }).populate({
                 path:'user',
                 select: 'name'
-            })
+            });
+
         }
 
     }
@@ -55,7 +57,7 @@ exports.getHistory = async (req, res, next) => {
         }).populate({
             path: 'user',
             select: 'name'
-        })
+        });
 
         if (!history) {
             return res.status(404).json({
@@ -111,7 +113,8 @@ exports.updateHistory = async (req, res, next) => {
         }).populate({
             path: 'user',
             select: 'name'
-        })
+        });
+
 
         res.status(200).json({
             success: true,

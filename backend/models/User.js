@@ -40,7 +40,22 @@ const UserSchema = new mongoose.Schema({
     createdAt: {
         type: Date,
         default: Date.now
-    }
+    },
+    //add points to user schema
+    points: {
+        type: Number,
+        default: 0
+    },
+    coupons: [{
+        couponName: {
+            type: String,
+            required: true
+        },
+        couponCode: {
+            type: String,
+            required: true
+        }
+    }],
 });
 
 UserSchema.virtual('appointments', {

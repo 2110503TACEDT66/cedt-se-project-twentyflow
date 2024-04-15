@@ -21,7 +21,7 @@ const coWorking = require('./routes/coWorkings');
 const appointments = require('./routes/appointments');
 const coupon = require('./routes/coupon');
 const reward = require('./routes/reward');
-
+const payment = require('./routes/stripe');
 const app = express();
 
 //Body parser
@@ -59,11 +59,13 @@ app.use('/api/v1/auth',auth);
 app.use('/api/v1/appointments', appointments)
 app.use('/api/v1/coupon',coupon);
 app.use('/api/v1/reward',reward);
+app.use('/api/v1/payment',payment);
+
 
 
 const PORT = process.env.PORT || 5000;
 
-const server = app.listen(PORT, console.log('Server runnig in ',process.env.NODE_ENV, 'mode on ' + process.env.HOST +  PORT + '/api/v1'));
+const server = app.listen(PORT, console.log('Server runnig in ',process.env.NODE_ENV, 'mode on ' + process.env.HOST + '/api/v1'));
 
 //Handle unhandled promise rejections
 process.on('unhandledRejection',(err,promise)=>{

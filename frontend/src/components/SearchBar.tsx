@@ -1,7 +1,7 @@
 "use client"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faMagnifyingGlass, faArrowUpWideShort , faArrowDownWideShort } from "@fortawesome/free-solid-svg-icons"
+import { faMagnifyingGlass, faArrowUpWideShort , faArrowDownWideShort, } from "@fortawesome/free-solid-svg-icons"
 
 
 export default function SearchBar({search,sort} : {search : Function,sort : Function}) {

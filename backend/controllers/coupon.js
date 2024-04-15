@@ -55,6 +55,22 @@ exports.createCoupon = async (req,res,next) => {
 exports.getCoupons = async (req,res,next) => {
     try {
         const coupons = await Coupon.find({user: req.user.id});
+        const promotionCodes = await stripe.promotionCodes.list({
+            active : false
+        });
+        const couponss = await Coupon.find({user: req.user.id});
+        let couponCodes = [];
+        for (c of promotionCodes.data) {
+            couponCodes.push(c.code);
+        }
+        for (coupon of couponss) {
+            if (couponCodes.includes(coupon.couponCode)) {
+                await Coupon.findByIdAndDelete(coupon._id);
+            }
+        }
+        
+
+
         res.status(200).json({
             success: true,
             data: coupons

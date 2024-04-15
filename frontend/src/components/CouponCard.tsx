@@ -4,6 +4,9 @@ import getUserProfile from '@/libs/getUserProfile';
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import createCoupon from '@/libs/createCoupon';
+import createReward from '@/libs/createReward';
+import Swal from 'sweetalert2'
+
 
 interface UserData {
     points: number;
@@ -15,8 +18,8 @@ interface User {
     // add other properties as needed
 }
 
-export default function CouponCard( { couponName,couponPoint }
-    : { couponName:string, couponPoint:number}) {
+export default function CouponCard( { couponName,couponPoint, couponAmount }
+    : { couponName:string, couponPoint:number , couponAmount:number}) {
 
     const { data: session } = useSession();    
     const token = session?.user?.token as string;    
@@ -31,13 +34,17 @@ export default function CouponCard( { couponName,couponPoint }
         }
     }, []);
 
-    const onRedeem = async (couponName:string,couponPoint:number) => {
+    const onRedeem = async (couponName:string,couponPoint:number, couponAmount : number) => {
         if(user !== null) {
             let userPoints = user.data.points;
         let newPoints;
         if(userPoints >= couponPoint){
             
-            const res = await createCoupon(token, couponName);
+            const res = await createCoupon(token, couponName, couponAmount);
+            if (!res) {
+                alert('Failed to redeem coupon');
+                return;
+            }
             newPoints = userPoints - couponPoint;
         } else {
             alert(`You do not have enough points to redeem ${couponName}`);
@@ -62,21 +69,32 @@ export default function CouponCard( { couponName,couponPoint }
             return;
         }
 
-        alert(`You have successfully redeemed ${couponName}!`);
+        const reward = await createReward(token, couponName,-1 * couponPoint);
+        if (!reward) {
+            alert('Failed to add reward');
+            return;
+        }
+        Swal.fire({
+            title: "Success!",
+            text: `You have successfully redeemed ${couponName}!`,
+            icon: "success"
+          });
+        
+          window.location.reload();
     }
         
     }
     
     return (
         <InteractiveCard contentName={couponName}>
-            <div className='w-full h-[60%] relative rounded-t-lg'>
+            <div className='w-full h-[55%] relative rounded-t-lg'>
                 <Image src={ '/img/coupon.png'}
                 alt='Coupon Picture'
                 fill={true}
                 className='object-cover rounded-t-lg'/>
             </div>
-            <div className='w-full h-[10%]  flex justify-center font-bold'>{couponName}</div>
-            <div className='flex flex-row h-[10%]'>
+            <div className='w-full mt-3 flex ml-4  font-bold'>{couponName}</div>
+            <div className='flex mt-5 flex-row '>
                 <div className='w-1/5 relative' >
                     <Image src={ '/img/giftIcon.png'}
                     alt='GiftIcon Picture'
@@ -87,8 +105,8 @@ export default function CouponCard( { couponName,couponPoint }
             </div>
             <div className='flex justify-center items-center h-[20%]'>
                 <button className='w-full text-sm rounded-md bg-custom-purple
-                hover:bg-sky-600 mx-2 px-1 py-1 text-white shadow-sm font-bold'
-                onClick={ (e) => {e.stopPropagation(); e.preventDefault(); onRedeem(couponName,couponPoint); }}
+                hover:bg-violet-800 mx-2 px-1 py-1 text-white shadow-sm font-bold'
+                onClick={ (e) => {e.stopPropagation(); e.preventDefault(); onRedeem(couponName,couponPoint, couponAmount); }}
                 >Redeem</button>
             </div>
         </InteractiveCard>

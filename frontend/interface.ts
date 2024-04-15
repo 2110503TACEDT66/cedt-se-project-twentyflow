@@ -31,3 +31,10 @@ interface Reservation {
     createAt : string,
     _id : string
 }
+
+interface Reward {
+    rewardName : string,
+    rewardPoint : number,
+    _id : string
+    
+}

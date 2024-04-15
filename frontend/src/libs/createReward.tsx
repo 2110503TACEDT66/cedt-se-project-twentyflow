@@ -1,5 +1,5 @@
-export default async function createCoupon (token:string, couponName:string, couponAmount : number){
-    const url = `${process.env.NEXT_PUBLIC_BACKEND_URL}/coupon`
+export default async function createReward (token:string, rewardName:string, rewardPoint : number){
+    const url = `${process.env.NEXT_PUBLIC_BACKEND_URL}/reward`
     const response = await fetch(url,{
         method: 'POST',
         headers: {
@@ -7,12 +7,12 @@ export default async function createCoupon (token:string, couponName:string, cou
             "authorization":`Bearer ${token}`
         },
         body: JSON.stringify({ 
-            couponName: couponName, 
-            couponAmount: couponAmount
+            rewardName: rewardName, 
+            rewardPoint: rewardPoint
         }),
     });
     if(!response.ok) {
-        throw new Error("Failed to add coupon")
+        throw new Error("Failed to add reward")
     }
     const body = await response.json()
     return body

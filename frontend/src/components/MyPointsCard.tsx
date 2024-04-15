@@ -18,8 +18,8 @@ export default async function MyPointsCard() {
                 fill={true}
                 className='object-contain rounded-t-lg'/>
             </div>
-            <div className='w-full h-[15%] p-[10px] text-center'>{user.data.points}</div>
-            <div className='w-full h-[15%] p-[10px] text-center font-bold'>your balance</div>
+            <div className='w-full  p-[10px] text-main-100 text-5xl font-extrabold text-center'>{user.data.points}</div>
+            <div className='w-full  p-[10px] text-center font-bold'>your balance</div>
         </div>
         </div>
     )

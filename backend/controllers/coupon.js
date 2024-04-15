@@ -6,7 +6,8 @@ exports.createCoupon = async (req,res,next) => {
     try {
         const couponStripe = await stripe.coupons.create({
             duration: 'once',
-            percent_off: 10,
+            amount_off: req.body.couponAmount,
+            currency: 'thb',
           });
         const couponModel = await Coupon.create(
             {

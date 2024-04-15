@@ -1,6 +1,8 @@
 import type { Config } from 'tailwindcss'
 
 const { colors: defaultColors } = require('tailwindcss/defaultTheme')
+const plugin = require('tailwindcss/plugin')
+  
 
 const colors = {
   ...defaultColors,
@@ -34,6 +36,16 @@ const config: Config = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    plugin(function ({ addUtilities }: { addUtilities: any }) {
+      addUtilities({
+        '.scrollbar-none': {
+          '&::-webkit-scrollbar': {
+            'display': 'none'
+          }
+        }
+      })
+    })
+  ],
 }
 export default config

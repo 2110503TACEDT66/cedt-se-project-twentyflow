@@ -1,5 +1,8 @@
 const { compare } = require('bcryptjs');
 const User = require('../models/User');
+const Appointment = require('../models/Appointment');
+const History = require('../models/History');
+const Reward = require('../models/Reward');
 const stripe = require('./Stripe');
 
 //Get token from model, create cookie and send response
@@ -202,3 +205,36 @@ exports.deleteCoupon = async (req, res, next) => {
         res.status(400).json({ success: false });
     }
 };
+
+exports.updateAll = async (req, res, next) => {
+    
+    try{
+        const appointment = await Appointment.findById(req.body.appointmentID).populate({
+            path: 'coWorking',
+            select: 'name'
+        });
+        const createHistory =  await History.create(
+            {
+                user: req.user.id,
+                coWorking: appointment.coWorking,
+                price: req.body.amount ,
+            }
+        )
+        const createReward = await Reward.create(
+            {
+                user: req.user.id,
+                rewardName: appointment.coWorking.name,
+                rewardPoint: req.body.amount ,
+            }
+        )
+        const updatePoint = await User.findByIdAndUpdate(req.user.id, { $inc: { points: req.body.amount / 100 } });
+        const deleteAppointment = await Appointment.findByIdAndDelete(req.body.appointmentID);
+    }
+    catch(err){
+        res.status(400).json({
+            success:false,
+            error: err.message
+        });
+    }
+
+}

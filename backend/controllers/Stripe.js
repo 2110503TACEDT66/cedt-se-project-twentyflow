@@ -2,6 +2,7 @@ const Stripe = require('stripe');
 const dotenv = require('dotenv');
 const Appointment = require('../models/Appointment');
 
+
 dotenv.config({path:'./config/config.env'});
 
 const stripe = new Stripe(String(process.env.STRIPE_SECRET_KEY));
@@ -79,7 +80,10 @@ exports.createPaymentSession = async (req, res) => {
                 message:'Invalid appointment ID'
             });
         
-        const appointment = await Appointment.findById(appointmentId);
+        const appointment = await Appointment.findById(appointmentId).populate({
+            path:'coWorking',
+            select: 'name province tel price_hourly'
+        });
 
         if(!appointment)
             return res.status(400).json({
@@ -94,8 +98,6 @@ exports.createPaymentSession = async (req, res) => {
             });
 
         if(req.user.id !== appointment.user.toString() && req.user.role !== 'admin'){
-            console.log(req.user.id);
-            console.log(appointment.user.id.toString());
             return res.status(400).json({
                 success:false,
                 message:'Not same user'
@@ -111,15 +113,17 @@ exports.createPaymentSession = async (req, res) => {
                 quantity: 1,
             }],
             allow_promotion_codes: true,
-            success_url: `http://localhost:3000/payment/${appId}/success`,
+            success_url: `http://localhost:3000/payment/${appId}&${appointment.coWorking.price_hourly * (Math.ceil((new Date(appointment.endTime).getTime() - new Date(appointment.startTime).getTime())/( 1000*60*60) ))   }/success`,
             cancel_url: `http://localhost:3000/payment/${appId}/cancel`,
             customer: stripeCustomerId,
         });
-  
+      
         res.status(200).json({
             success: true,
             sessionUrl: session.url,
         });
+
+
     } catch (error) {
         console.log(error);
         res.status(500).json({

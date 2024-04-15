@@ -5,6 +5,7 @@ import Code from "./Code"
 import getUserProfile from '@/libs/getUserProfile';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
+import getCoupons from '@/libs/getCopons';
 
 
 interface Coupon {
@@ -25,22 +26,26 @@ interface User {
 export default function CodeCatalog(){
     const [user, setUser] = useState<User>({ data: { coupons: [] } });
     const {data: session} = useSession();
+    const[coupon, setCoupon] = useState<Coupon[]>([]);
     const token = session?.user?.token as string;
 
     useEffect(() => {
         getUserProfile(token).then(userData => {
             setUser(userData);
         });
+        getCoupons(token).then(couponData => {
+            setCoupon(couponData.data);
+        });
     }, []);
 
     return(
-        <div className=" flex flex-col space-y-5 p-[50px]">
-            {user?.data?.coupons?.length > 0 ? (
-            user?.data.coupons.map((coupon) => (
+        <div className=" flex flex-col space-y-5 p-[50px] ">
+            {coupon.length > 0 ? (
+            coupon.map((coupon) => (
                 <Code key={coupon.couponCode} couponName={coupon.couponName} couponCode={coupon.couponCode}/>
             ))
         ) : (
-            <div className='w-full h-[200px] rounded-lg shadow-xl bg-gray-400 flex flex-row'>
+            <div className=' h-[200px] rounded-lg shadow-xl bg-gray-400 flex flex-row'>
                 <div className='w-[130px] h-[130px] relative bg-gray-200 m-[30px] rounded-lg'>
                 <Image src={ '/img/couponIcon.png'}
                     alt='couponIcon Picture'

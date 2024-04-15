@@ -36,7 +36,7 @@ export default function Code( {couponName, couponCode}: {couponName:string, coup
                 <h1 className='text-white font-bold text-3xl m-[30px] mx-0'>{couponName}</h1> 
                 <div className="w-full flex items-center">
                     <div className=" bg-white rounded-lg w-3/4 h-[50px] flex flex-row justify-between items-center">
-                        <div className="font-bold text-xl text-center p-2 w-[90%]">
+                        <div className="font-bold text-xl text-center p-2 w-full">
                             {isTextVisible && couponCode }
                         </div>
                         {isTextVisible && <button title="copy" className="p-3" onClick={()=>{copyText(couponCode);}}>

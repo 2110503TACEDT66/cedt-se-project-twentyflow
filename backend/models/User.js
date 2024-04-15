@@ -32,7 +32,6 @@ const UserSchema = new mongoose.Schema({
     password: {
         type:String,
         required: [true, 'Please add a password'],
-
         minlength: 6,
         select: false
     },
@@ -47,16 +46,6 @@ const UserSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
-    coupons: [{
-        couponName: {
-            type: String,
-            required: true
-        },
-        couponCode: {
-            type: String,
-            required: true
-        }
-    }],
 });
 
 UserSchema.virtual('appointments', {

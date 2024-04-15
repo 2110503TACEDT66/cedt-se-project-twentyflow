@@ -20,7 +20,7 @@ exports.createCoupon = async (req,res,next) => {
         else if (req.body.couponAmount === 50) {
             couponStripe = await stripe.promotionCodes.create({
             coupon: 'Ut8Mx2H5',
-            max_redemptions
+            max_redemptions : 1,
             });
         }
         else if (req.body.couponAmount === 100) {
@@ -45,6 +45,19 @@ exports.createCoupon = async (req,res,next) => {
         res.status(200).json({
             success: true,
             data: couponStripe
+        });
+    } catch (err) {
+        console.log(err);
+        res.status(400).json({ success: false });
+    }
+}
+
+exports.getCoupons = async (req,res,next) => {
+    try {
+        const coupons = await Coupon.find({user: req.user.id});
+        res.status(200).json({
+            success: true,
+            data: coupons
         });
     } catch (err) {
         console.log(err);

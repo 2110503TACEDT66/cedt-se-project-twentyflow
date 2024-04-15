@@ -20,7 +20,7 @@ interface CoworkingJson {
 interface User {
     name: string,
     _id: string,
-
+    tel: string,
 }
 
 interface Reservation {
@@ -38,5 +38,13 @@ interface Reward {
     rewardName : string,
     rewardPoint : number,
     _id : string
+    
+}
+
+interface History {
+    _id: string;
+    coWorking: Coworking;
+    price: number;
+    user : User;
     
 }

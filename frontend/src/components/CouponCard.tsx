@@ -64,7 +64,7 @@ export default function CouponCard( { couponName,couponPoint, couponAmount }
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-                "authorization":`Bearer ${session?.user.token}`
+                authorization: `Bearer ${token}`,
             },
             body: JSON.stringify({
                 points: newPoints,

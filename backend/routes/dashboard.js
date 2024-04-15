@@ -14,4 +14,5 @@ router.route('/customer/newReturn').get(protect,authorize('admin'), getNewReturn
 router.route('/revenue/yearly').get(protect, authorize('admin'), getYearlyRevenue)
 router.route('/revenue/weekly').get(protect, authorize('admin'), getWeeklyRevenue)
 
+
 module.exports = router

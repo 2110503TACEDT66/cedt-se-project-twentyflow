@@ -58,8 +58,14 @@ export default function PaymentCard({
         }),
       });
       const res = await linkRes.json();
-      if (res.sessionUrl) window.location.href = res.sessionUrl;
-      else alert("This session is finished");
+      console.log(res.sessionUrl);
+      if (res.sessionUrl){  
+        window.location.href = res.sessionUrl;
+      }
+        
+      else{
+         alert("This session is finished");
+        }
     } catch (error) {
       console.error("Error creating session:", error);
     }

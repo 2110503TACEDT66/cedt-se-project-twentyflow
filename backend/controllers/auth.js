@@ -229,7 +229,7 @@ exports.updateAll = async (req, res, next) => {
             }
         )
 
-        const updatePoint = await User.findByIdAndUpdate(req.user.id, { $inc: { points: req.body.amount / 100 } });
+        const updatePoint = await User.findByIdAndUpdate(req.user.id, { $inc: { points: req.body.amount } });
         const deleteAppointment = await Appointment.findByIdAndDelete(req.body.appointmentID);
     
     }

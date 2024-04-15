@@ -24,11 +24,7 @@ export default function Account() {
     const tranDiv2 = (menuChanger === 2) ? "flex" : "hidden"
     const tranDiv3 = (menuChanger === 3) ? "flex" : "hidden"
     const tranDiv4 = (menuChanger === 4) ? "flex" : "hidden"  
-    useEffect(() => {
-        
-        
-        
-      }, [])
+
     const userName = currentUser?.name
     const userEmail = currentUser?.email
     const tel = currentUser?.telephone_number
@@ -41,7 +37,7 @@ export default function Account() {
             await updateUserProfile(changeUsername, currentUser?.token, currentUser?._id, changeTel);
             session.update();
             setMenuChanger(1);
-            router.push("/account")
+            window.location.reload();
         }
     }
 

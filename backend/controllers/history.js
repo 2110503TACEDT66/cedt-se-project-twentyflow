@@ -24,6 +24,7 @@ exports.getHistories = async (req, res, next) => {
                 path:'user',
                 select: 'name'
             });
+
         }else {
             query= await History.find().populate({
                 path:'coWorking' ,
@@ -32,6 +33,7 @@ exports.getHistories = async (req, res, next) => {
                 path:'user',
                 select: 'name'
             });
+
         }
 
     }
@@ -112,6 +114,7 @@ exports.updateHistory = async (req, res, next) => {
             path: 'user',
             select: 'name'
         });
+
 
         res.status(200).json({
             success: true,

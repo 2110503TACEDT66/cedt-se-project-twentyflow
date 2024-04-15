@@ -7,8 +7,8 @@ const router = express.Router();
 
 router.route('/').get(protect,authorize('admin'),getDashboard)
 router.route('/customer').get(protect, authorize('admin'), getCustomerThisMonth)
-router.route('/customer/monthly').get(protect,authorize('admin'), getCustomerMonthTrend)
-router.route('/customer/daily').get(protect,authorize('admin'), getCustomerDailyTrend)
-router.route('/revenue/yearly').get(protect, authorize('admin'), getYearlyRevenue)
+                        .get('/monthly',protect,authorize('admin'), getCustomerMonthTrend)
+                        .get('/daily',protect,authorize('admin'), getCustomerDailyTrend)
+router.route('/revenue').get('/yearly',protect, authorize('admin'), getYearlyRevenue)
 
 module.exports = router

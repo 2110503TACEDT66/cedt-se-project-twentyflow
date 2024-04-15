@@ -100,12 +100,12 @@ exports.getYearlyRevenue = async (req,res,next) => {
             const apptCreateAt = appt.createdAt;
             const status = appt.status;
             const id = appt._id;
-            
+            m
             console.log(apptCreateAt.getMonth())
             return status === 'finished' && apptCreateAt.getMonth() === 3;
         });
 
-        res.status(200).json({success:true, data: {jan, histories}})
+        res.status(200).json({success:true, data: {}})
     } catch(err) {
         res.status(400).json({success:false});
     }

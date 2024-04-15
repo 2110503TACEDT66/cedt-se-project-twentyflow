@@ -20,7 +20,9 @@
     "next": "13.5.6",
     "next-auth": "^4.23.2",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "stripe": "^15.1.0",
+    "sweetalert2": "^11.10.7"
   },
   "devDependencies": {
     "@types/node": "^20",

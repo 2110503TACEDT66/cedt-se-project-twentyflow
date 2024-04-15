@@ -113,3 +113,92 @@ exports.logout = async (req,res,next) => {
         data: {}
     });
 }
+
+// @desc    Update user points
+// @route   PUT /api/v1/auth/updatepoints
+// @access  Private
+exports.updatePoints = async (req, res, next) => {
+    try {
+        const user = await User.findByIdAndUpdate(req.user.id,req.body, {
+            new : true,
+            runValidators : true
+        });
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                error: 'No user found'
+            });
+        }
+        res.status(200).json({
+            success: true,
+            data: user
+        });
+    } catch (err) {
+        res.status(400).json({ success: false });
+    }
+    
+};
+
+// @desc    Add coupon to user
+// @route   PUT /api/v1/auth/addcoupon
+// @access  Private
+exports.addCoupon = async (req, res, next) => {
+    try {
+        const user = await User.findByIdAndUpdate(
+            req.user.id,
+            { $push: { coupons: { couponName: req.body.couponName, couponCode: req.body.couponCode } } },
+            {
+                new : true,
+                runValidators : true
+            }
+        ).catch(err => console.log(err));
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                error: 'No user found'
+            });
+        }
+
+        const updatedUser = await User.findById(req.user.id);
+
+        res.status(200).json({
+            success: true,
+            data: updatedUser
+        });
+    } catch (err) {
+        res.status(400).json({ success: false });
+    }
+};
+
+// @desc    Delete coupon from user
+// @route   DELETE /api/v1/auth/deletecoupon
+// @access  Private
+exports.deleteCoupon = async (req, res, next) => {
+    try {
+        const user = await User.findByIdAndUpdate(
+            req.user.id,
+            { $pull: { coupons: { couponCode: req.body.couponCode } } }, // remove coupon from coupons array
+            {
+                new : true,
+                runValidators : true
+            }
+        );
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                error: 'No user found'
+            });
+        }
+
+        const updatedUser = await User.findById(req.user.id);
+
+        res.status(200).json({
+            success: true,
+            data: updatedUser
+        });
+    } catch (err) {
+        res.status(400).json({ success: false });
+    }
+};

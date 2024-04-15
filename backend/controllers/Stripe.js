@@ -102,6 +102,7 @@ exports.createPaymentSession = async (req, res) => {
             });
         }
 
+        const appId = appointment._id
         const session = await stripe.checkout.sessions.create({
             mode: "payment",
             payment_method_types: ["promptpay","card"], 
@@ -110,13 +111,10 @@ exports.createPaymentSession = async (req, res) => {
                 quantity: 1,
             }],
             allow_promotion_codes: true,
-            success_url: `http://localhost:3000/payment/${appointment._id}/success`,
-            cancel_url: `http://localhost:3000/payment/${appointment._id}/cancel`,
+            success_url: `http://localhost:3000/payment/${appId}/success`,
+            cancel_url: `http://localhost:3000/payment/${appId}/cancel`,
             customer: stripeCustomerId,
         });
-
-        appointment.status = 'finished';
-        await appointment.save();
   
         res.status(200).json({
             success: true,

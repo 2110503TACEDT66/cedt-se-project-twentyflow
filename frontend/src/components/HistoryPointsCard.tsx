@@ -37,7 +37,14 @@ export default function HistoryPointCard() {
                             <CircularProgress  color="secondary" />
                         </div>
                     ) :
-                    (
+                    (       
+                        pointHistory.length === 0 ? 
+                        <div className=" flex h-full justify-center items-center">
+                            <h1 className="text-center text-lg font-bold">No history</h1> 
+                        </div>
+                        
+                        :
+
                         pointHistory.map((point, index) => (
                             <HistoryPointSubCard key={index} name={point.rewardName} point={point.rewardPoint}/>
                         ))

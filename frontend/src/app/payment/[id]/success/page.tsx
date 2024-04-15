@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect , useRef } from "react";
 import { useSession } from "next-auth/react";
 
 export default function Success() {
   const { data: session, status } = useSession();
+  const initialized = useRef(false)
 
   let url = "";
   if (typeof window !== "undefined") {
@@ -12,36 +13,27 @@ export default function Success() {
   }
 
   useEffect(() => {
-    if (url) {
-      let appId = url.split("/")[4];
-      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/appointments/${appId}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          authorization: `Bearer ${session?.user.token}`,
-        },
-        body: JSON.stringify({
-          status: "finished",
-        }),
-      })
-        .then((response) => {
-          if (response.ok) {
-            console.log("Appointment status updated successfully.");
-          } else {
-            console.error(
-              "Failed to update appointment status:",
-              response.statusText
-            );
-          }
+      if (!initialized.current) {
+        initialized.current = true
+        if (url) {
+        let appId = (url.split("/")[4]).split("&")[0];
+        let amount = (url.split("/")[4]).split("&")[1];
+        fetch (`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/updateall`, {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+              authorization: `Bearer ${session?.user.token}`,
+          },
+          body: JSON.stringify({
+            appointmentID : appId,
+            amount : amount
+          }),
+      
+          
         })
-        .catch((error) => {
-          console.error(
-            "Error occurred while updating appointment status:",
-            error
-          );
-        });
-    }
-  }, [url]);
+    }}
+    console.log("")
+  }, []);
 
   return (
     <main>

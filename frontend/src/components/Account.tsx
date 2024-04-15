@@ -6,6 +6,8 @@ import { useSession } from "next-auth/react";
 import { Telemetry } from "next/dist/telemetry/storage";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import CodeCatalog from "./CodeCatalog";
+import HistoryAccountCatalog from "./HistoryAccountCatalog";
 
 
 export default function Account() {
@@ -21,11 +23,7 @@ export default function Account() {
     const tranDiv1 = (menuChanger === 1) ? "flex" : "hidden"
     const tranDiv2 = (menuChanger === 2) ? "flex" : "hidden"
     const tranDiv3 = (menuChanger === 3) ? "flex" : "hidden"
-    const tranDiv4 = (menuChanger === 4) ? "flex" : "hidden"
-    console.log(currentUser)    
-    // console.log(reservationId)
-    // console.log(currentReservation?.coWorking.price_hourly)
-
+    const tranDiv4 = (menuChanger === 4) ? "flex" : "hidden"  
     useEffect(() => {
         
         
@@ -48,7 +46,7 @@ export default function Account() {
     }
 
     return (
-        <div className="flex w-screen flex-col  items-center bg-main-100 min-h-[90vh] p-7">
+        <div className="flex w-full  scrollbar-none flex-col  items-center bg-main-100 min-h-[90vh] p-7">
             <h1 className=" text-5xl py-10 font-semibold text-white">
                 ACCOUNT
             </h1>
@@ -104,11 +102,12 @@ export default function Account() {
                         SAVE
                     </button>
                 </div>
-
-                
-
-                
-            
+                <div className={`${tranDiv3} flex-col space-y-4 `}>
+                    <CodeCatalog/>
+                </div>  
+                <div className={`${tranDiv4} flex-col space-y-4 `}>
+                    <HistoryAccountCatalog  />
+                </div>  
         </div>
 
         </div>

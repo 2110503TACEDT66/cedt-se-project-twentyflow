@@ -1,5 +1,5 @@
 export { default } from 'next-auth/middleware'
 
 export const config = {
-    matcher: ['/coworkings','/coworkings/:path*','/history', '/coupon','/mycoupon'],
+    matcher: ['/coworkings','/coworkings/:path*','/history', '/coupon','/account'],
 };

@@ -188,7 +188,20 @@ exports.getActiveUser = async (req,res,next) => {
             
             return (datedif <= 7 && datedif >= 0) && appt.status === 'finished';
         });
-        res.status(200).json({success:true, ActiveUser: activeUser.length});
+
+        const yesterdayActiveUser = appointments.filter(appt => {
+            const dateBook = new Date(appt.createdAt);
+            const yesterDay = new Date();
+            yesterDay.setDate(yesterDay.getDate() - 1);
+            const timeDifference = currentDate - dateBook; 
+            const datedif = timeDifference / (1000 * 60 * 60 * 24);
+            
+            return (datedif <= 7 && datedif >= 0) && appt.status === 'finished';
+        });
+
+        const trend = Math.round((activeUser.length - yesterdayActiveUser.length) / yesterdayActiveUser.length * 100)
+
+        res.status(200).json({success:true, ActiveUser: activeUser.length, trend:trend});
     } catch(err) {
         res.status(400).json({success:false})
     }

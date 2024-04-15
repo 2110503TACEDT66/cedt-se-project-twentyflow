@@ -42,12 +42,20 @@ export default function CouponCard( { couponName,couponPoint, couponAmount }
             
             const res = await createCoupon(token, couponName, couponAmount);
             if (!res) {
-                alert('Failed to redeem coupon');
+                Swal.fire({
+                    title: "Error!",
+                    text: `Failed to redeem ${couponName}!`,
+                    icon: "error"
+                  });
                 return;
             }
             newPoints = userPoints - couponPoint;
         } else {
-            alert(`You do not have enough points to redeem ${couponName}`);
+            Swal.fire({
+                title: "Error!",
+                text: `You do not have enough points to redeem ${couponName}!`,
+                icon: "error"
+              });
             return;
         }
 
@@ -65,13 +73,21 @@ export default function CouponCard( { couponName,couponPoint, couponAmount }
 
         if (!response.ok) {
             // Handle error
-            console.error('Failed to update points');
+            Swal.fire({
+                title: "Error!",
+                text: `Failed to update points!`,
+                icon: "error"
+              });
             return;
         }
 
         const reward = await createReward(token, couponName,-1 * couponPoint);
         if (!reward) {
-            alert('Failed to add reward');
+            Swal.fire({
+                title: "Error!",
+                text: `Failed to create reward!`,
+                icon: "error"
+              });
             return;
         }
         Swal.fire({

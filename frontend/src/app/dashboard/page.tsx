@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import {
   faPerson,
   faPeopleLine,
@@ -65,11 +65,13 @@ export default function DashBoard() {
         {/* week and customers */}
         <div className="w-full h-[180px] flex flex-row gap-8">
           <div className="bg-white rounded-md h-full flex-grow relative">
-          <p className="mt-2 ml-5 text-main-100 font-bold">Weekly Revenue</p>
+            <p className="mt-2 ml-5 text-main-100 font-bold">Weekly Revenue</p>
             <WeeklyRevenue />
           </div>
           <div className="bg-white rounded-md h-full flex-grow relative">
-          <p className="mt-2 ml-5 text-main-100 font-bold relative">Customers</p>
+            <p className="mt-2 ml-5 text-main-100 font-bold relative">
+              Customers
+            </p>
             <Customers />
           </div>
         </div>

@@ -1,34 +1,22 @@
-import { color } from 'framer-motion';
-import React from 'react';
-import ReactApexChart from 'react-apexcharts';
+import React from "react";
+import { LineChart } from "@mui/x-charts";
 
 interface MyComponentProps {}
 
 const MyComponent: React.FC<MyComponentProps> = () => {
-  const chartOptions = {
-    // Define your chart options here
-    chart: {
-      type: 'line',
-    },
-    series: [
-      {
-        name: 'Revenue',
-        data: [30, 40, 35, 50, 49, 60, 70],
-      },
-    ],
-    xaxis: {
-      categories: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-    },
-    colors: ['#7D5CB5'],
-  };
-
   return (
-    <div className=' ml-10 absolute w-[88%]'>
-      <ReactApexChart
-        options={{ ...chartOptions, chart: { type: 'line' } }}
-        series={chartOptions.series}
-        type="line"
-        height={150}
+    <div className="mt-[-30px] ml-10 absolute w-[88%]">
+      <LineChart
+        xAxis={[{ data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] }]}
+        series={[
+          {
+            data: [2, 5.5, 2, 8.5, 1.5, 5],
+            color: "#7D5CB5",
+            showMark: true,
+          },
+        ]}
+        grid={{ vertical: true, horizontal: true }}
+        height={180}
       />
     </div>
   );

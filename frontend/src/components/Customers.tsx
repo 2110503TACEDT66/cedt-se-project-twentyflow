@@ -6,7 +6,8 @@ import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 
 export default function Customers() {
-  const [item, setItem] = useState<Array<[string, number]>>([]);
+  const [New, setNew] = useState<Array<[string, number]>>([]);
+  const [Return, setReturn] = useState<Array<[string, number]>>([]);
   const session = useSession();
   const currentUser = session.data?.user;
 
@@ -29,14 +30,19 @@ export default function Customers() {
           return res.json();
         })
         .then((data) => {
-          setItem(data.data.yearlyRevenue);
+          setNew(data.data.New);
+          setReturn(data.data.Return);
         })
         .catch((error) => {
           console.error("Error fetching customer this month:", error);
-          setItem([]);
+          setNew([]);
+          setReturn([]);
         });
     }
   }, [currentUser]);
+
+  const data1 = New.slice(0, 7).map((item) => item[1]);
+  const data2 = Return.slice(0, 7).map((item) => item[1]);
 
   return (
     <div className="w-[100%] absolute ml-3">
@@ -48,8 +54,8 @@ export default function Customers() {
           },
         ]}
         series={[
-          { data: [4, 3, 5, 4, 5, 3, 2], label: "New", color: "#7D5CB5" },
-          { data: [1, 6, 3, 1, 5, 4, 5], label: "Returning", color: "#D5C4F1" },
+          { data: data1, label: "New", color: "#7D5CB5" },
+          { data: data2, label: "Returning", color: "#D5C4F1" },
         ]}
         height={170}
       />

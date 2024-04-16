@@ -146,7 +146,3 @@ exports.getCreditCard = async (req,res) => {
         credit: user.card
     })
 };
-
-// exports.creatCredit = async (req,res) => {
-//     const 
-// }

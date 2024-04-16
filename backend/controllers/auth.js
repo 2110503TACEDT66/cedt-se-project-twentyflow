@@ -4,6 +4,7 @@ const Appointment = require('../models/Appointment');
 const History = require('../models/History');
 const Reward = require('../models/Reward');
 const stripe = require('./Stripe');
+const Coupon = require('../models/Coupon');
 
 //Get token from model, create cookie and send response
 const sendTokenResponse = (user, statusCode, res) => {
@@ -227,8 +228,10 @@ exports.updateAll = async (req, res, next) => {
                 rewardPoint: req.body.amount ,
             }
         )
-        const updatePoint = await User.findByIdAndUpdate(req.user.id, { $inc: { points: req.body.amount / 100 } });
+
+        const updatePoint = await User.findByIdAndUpdate(req.user.id, { $inc: { points: req.body.amount } });
         const deleteAppointment = await Appointment.findByIdAndDelete(req.body.appointmentID);
+    
     }
     catch(err){
         res.status(400).json({

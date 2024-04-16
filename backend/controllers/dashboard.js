@@ -62,7 +62,7 @@ exports.getCustomerMonthTrend = async (req,res,next) => {
         });
         
         const trend = Math.round((thisMonthUsers.length - lastMonthUsers.length)/lastMonthUsers.length * 100)
-        res.status(200).json({ success: true, data: { trends:  trend} });
+        res.status(200).json({ success: true, trends:trend });
     } catch (err) {
         res.status(400).json({success:false})
     }
@@ -71,11 +71,13 @@ exports.getCustomerMonthTrend = async (req,res,next) => {
 exports.getCustomerDailyTrend = async (req,res,next) => {
     try {
         const users = await User.find();
-
+        
         // Filter users created this year
         const todayUsers = users.filter(user => {
+            
             const userCreatedAt = new Date(user.createdAt);
             const currentDay = new Date();
+            console.log(currentDay)
             return userCreatedAt.getDate() === currentDay.getDate() && userCreatedAt.getMonth() === currentDay.getMonth && userCreatedAt.getFullYear() === currentDay.getFullYear();
         });
         const yesterdayUsers = users.filter(user => {
@@ -109,25 +111,21 @@ exports.getYearlyRevenue = async (req,res,next) => {
             ['Dec', 0],  
         ]
         
-        const appointments = await Appointment.find();
+        const histories = await History.find();
 
         //getPrices
         //const products = await stripe.products.list();
-        const prices = await stripe.prices.list();
+        //const prices = await stripe.prices.list();
 
-        appointments.forEach(appt => {
+        //  ***** success false => most history in database doesn't have createdAt field
+        histories.forEach(appt => {
             const date = new Date(appt.createdAt);
-            if(appt.status === 'finished') {
-                const price = prices.data.find(element => element.id === appt.priceId);
-        
-                if (price) {
-                    const month = date.getMonth();
-                    yearlyRevenue[month][1] += price.unit_amount/100;
-                }
+            if(date.getFullYear() == new Date().getFullYear()) {
+                yearlyRevenue[date.getMonth()][1] += appt.price;
             }
         })
-
         res.status(200).json({success:true, data: {yearlyRevenue}})
+
     } catch(err) {
         res.status(400).json({success:false});
     }
@@ -145,22 +143,27 @@ exports.getWeeklyRevenue = async (req,res,next) => {
             ['Sat', 0],  
         ]
         
-        const appointments = await Appointment.find();
+        const histories = await History.find();
 
         //getPrices
         //const products = await stripe.products.list();
-        const prices = await stripe.prices.list();
+        //const prices = await stripe.prices.list();
 
-        appointments.forEach(appt => {
+        histories.forEach(appt => {
             const date = new Date(appt.createdAt)
-            if(appt.status === 'finished') {
-                const price = prices.data.find(element => element.id === appt.priceId);
-        
-                if (price) {
-                    const dayOfWeeks = getDayOfWeek(date.getFullYear(), date.getMonth(), date.getDate())
+            const today = new Date();
+            const timeDifference = today - date; 
+            const datedif = timeDifference / (1000 * 60 * 60 * 24);
 
-                    weeklyRevenue[dayOfWeeks][1] += price.unit_amount/100;
-                }
+            const todayOfWeek = getDayOfWeek(today.getFullYear(), today.getMonth(), today.getDate());
+            const dayOfWeeks = getDayOfWeek(date.getFullYear(), date.getMonth(), date.getDate());
+
+            // ** if today is wednesday it will show only sunday, monday, tuesday
+            // condition is on "dayOfWeeks <= todayOfWeek"
+            if(today.getFullYear() === date.getFullYear() && (0 <= datedif && datedif <= 7) && (dayOfWeeks <= todayOfWeek)) {
+                // console.log(date + " : " + appt.user)
+                // console.log(today + " \n")
+                weeklyRevenue[dayOfWeeks][1] += appt.price;
             }
         })
 
@@ -178,32 +181,47 @@ exports.getWeeklyRevenue = async (req,res,next) => {
 
 exports.getActiveUser = async (req,res,next) => {
     try {
-        const appointments = await Appointment.find();
-
-        const activeUser = appointments.filter(appt => {
+        const histories = await History.find();
+    
+        let activeUser = histories.filter(appt => {
             const dateBook = new Date(appt.createdAt);
             const currentDate = new Date();
             const timeDifference = currentDate - dateBook; 
             const datedif = timeDifference / (1000 * 60 * 60 * 24);
             
-            return (datedif <= 7 && datedif >= 0) && appt.status === 'finished';
+            return datedif <= 7 && datedif >= 0;
         });
-
-        const yesterdayActiveUser = appointments.filter(appt => {
+        let yesterdayActiveUser = histories.filter(appt => {
             const dateBook = new Date(appt.createdAt);
-            const yesterDay = new Date();
+            let yesterDay = new Date();
             yesterDay.setDate(yesterDay.getDate() - 1);
-            const timeDifference = currentDate - dateBook; 
+            const timeDifference = yesterDay - dateBook; 
             const datedif = timeDifference / (1000 * 60 * 60 * 24);
-            
-            return (datedif <= 7 && datedif >= 0) && appt.status === 'finished';
+            return datedif <= 7 && datedif >= 0;
         });
 
-        const trend = Math.round((activeUser.length - yesterdayActiveUser.length) / yesterdayActiveUser.length * 100)
+        activeUser = removeDuplicates(activeUser)
 
-        res.status(200).json({success:true, ActiveUser: activeUser.length, trend:trend});
+        let trend = 0;
+        yesterdayActiveUser.length == 0 ? trend = 100 : trend = Math.round((activeUser.length - yesterdayActiveUser.length) / yesterdayActiveUser.length * 100);
+        res.status(200).json({success:true, data:{ActiveUser: activeUser, trends:trend}});
     } catch(err) {
         res.status(400).json({success:false, error:err.message})
+    }
+
+
+    function removeDuplicates(arr) {
+        let nonDup = []
+        arr.forEach(element => {
+            const find = nonDup.find(el => {
+                el.user === element.user
+            })
+            if(find.length === 0) {
+                nonDup.push(element)
+            }
+        })
+        console.log(nonDup);
+        return nonDup
     }
 }
 
@@ -227,25 +245,28 @@ exports.getNewReturnCustomer = async (req,res,next) => {
             ['Fri', 0],
             ['Sat', 0],  
         ]
+        const histories = await History.find();
 
-        const appointments = await Appointment.find();
-
-        appointments.forEach(appt => {
+        histories.forEach(appt => {
 
             const date = new Date(appt.createdAt)
-            date = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-            const dayOfWeek = date.getDate()
+            const dayOfWeek = getDayOfWeek(date.getFullYear(), date.getMonth(), date.getDate())
 
-            const newOrRe = appointments.filter(user => {
+            const newOrRe = histories.filter(user => {
                 return user.user === appt.user
             })
             if(newOrRe.length === 1) {
-                newCustomer[dayOfWeek][1]++
+                newCustomer[dayOfWeek][1]++;
             } else {
-                returnCustomer[dayOfWeek][1]++
+                returnCustomer[dayOfWeek][1]++;
             }
         })
 
+        function getDayOfWeek(year, month, day) {
+            const date = new Date(year, month, day);
+            const dayOfWeeks = date.getDay();
+            return dayOfWeeks;
+        }
 
         res.status(200).json({success:true, data:{New:newCustomer, Return:returnCustomer}})
     } catch(err) {

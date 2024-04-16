@@ -1,6 +1,8 @@
 import Image from "next/image"
 import Link from "next/link"
 
+const stripe = require('stripe')('sk_test_51P4L2C2NqrtyQnX9WZ7JspaAWNVj5WTDwOpxMh7V3ZBi3eaHbodtPfwvtjun5zyoS0blwnPBYHeWMFRvVgeg7UWZ00AmmuAl1d');
+
 export default function Main() {
     return(
         <div className=" w-full flex flex-row h-[90vh]">

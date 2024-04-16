@@ -1,6 +1,7 @@
 const Stripe = require('stripe');
 const dotenv = require('dotenv');
 const Appointment = require('../models/Appointment');
+const User = require('../models/User')
 
 
 dotenv.config({path:'./config/config.env'});
@@ -132,3 +133,20 @@ exports.createPaymentSession = async (req, res) => {
         });
     }
 };
+
+exports.getCreditCard = async (req,res) => {
+    const user = await User.findById(req.params.id);
+
+    if(!user) {
+        return res.status(404).json({success:false, message:`User id ${req.params.id} not found`});
+    }
+
+    res.status(200).json({
+        success:true,
+        credit: user.card
+    })
+};
+
+// exports.creatCredit = async (req,res) => {
+//     const 
+// }

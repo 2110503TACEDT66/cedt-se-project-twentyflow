@@ -62,7 +62,7 @@ exports.getAppointment=async (req,res,next) =>{
         });
 
         if (!appointment){
-            return res.status(404).json({success:false,message:`No appoitment with the id of ${req.params.id}`});
+            return res.status(404).json({success:false,message:`No appointment with the id of ${req.params.id}`});
         }
 
         res.status(200).json({

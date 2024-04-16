@@ -13,7 +13,11 @@ const HistorySchema=new mongoose.Schema({
     },price:{
         type:Number,
         required:true
-    },
+    },createdAt:{
+        type:Date,
+        default: Date.now,
+        required:true
+    }
 });
 
 module.exports=mongoose.model('History' ,HistorySchema);

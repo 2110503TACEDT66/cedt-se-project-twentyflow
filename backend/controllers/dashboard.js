@@ -231,26 +231,13 @@ exports.getActiveUser = async (req,res,next) => {
 
 exports.getNewReturnCustomer = async (req,res,next) => {
     try {
-        const newCustomer = [
-            ['Sun', 0],
-            ['Mon', 0],
-            ['Tue', 0],
-            ['Wed', 0],
-            ['Thu', 0],
-            ['Fri', 0],
-            ['Sat', 0],  
+        const customer = [
+            ['New', 0],
+            ['Return', 0]
         ]
-        const returnCustomer = [
-            ['Sun', 0],
-            ['Mon', 0],
-            ['Tue', 0],
-            ['Wed', 0],
-            ['Thu', 0],
-            ['Fri', 0],
-            ['Sat', 0],  
-        ]
+
         const histories = await History.find();
-        console.log(histories);      
+        // console.log(histories);      
 
         const userBookings = {};
 
@@ -258,17 +245,18 @@ exports.getNewReturnCustomer = async (req,res,next) => {
             const userId = booking.user.toString(); // Convert ObjectId to string
             const createdAt = booking.createdAt; // Get the createdAt timestamp
 
-        if (userBookings[userId]) {
-            userBookings[userId].bookings++;
-            userBookings[userId].createdAt.push(createdAt);
-        } else {
-            userBookings[userId] = {
-            bookings: 1,
-            createdAt: [createdAt]
-            };
-        }
+            if (userBookings[userId]) {
+                userBookings[userId].bookings++;
+                userBookings[userId].createdAt.push(createdAt);
+            } else {
+                userBookings[userId] = {
+                bookings: 1,
+                createdAt: [createdAt]
+                };
+            }
         });
 
+        //console.log(userBookings);
         // Convert the object to an array of objects
         const result = Object.keys(userBookings).map(userId => ({
             user: userId,
@@ -276,7 +264,19 @@ exports.getNewReturnCustomer = async (req,res,next) => {
             createdAt: userBookings[userId].createdAt
         }));
 
-        console.log(result);
+        //console.log(result);
+        
+
+        result.forEach(element => {
+            if(element.bookings > 1) {
+                customer[1][1]++;
+            } else {
+                customer[0][1]++;
+            }
+        });
+        
+
+        console.log(customer)
 
         function getDayOfWeek(year, month, day) {
             const date = new Date(year, month, day);
@@ -284,7 +284,7 @@ exports.getNewReturnCustomer = async (req,res,next) => {
             return dayOfWeeks;
         }
 
-        res.status(200).json({success:true, data:{New:newCustomer, Return:returnCustomer}})
+        res.status(200).json({success:true, data:{customer}})
     } catch(err) {
         res.status(400).json({success:false,error:err.message})
     }

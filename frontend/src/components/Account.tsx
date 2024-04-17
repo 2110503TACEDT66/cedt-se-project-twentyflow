@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import CodeCatalog from "./CodeCatalog";
 import HistoryAccountCatalog from "./HistoryAccountCatalog";
+import CreditCard from "./CreditCard";
 
 
 export default function Account() {
@@ -104,6 +105,7 @@ export default function Account() {
                     </button>
                 </div>
                 <div className={`${tranDiv3} flex-col space-y-4 `}>
+                    <CreditCard/>
                 </div>
                 <div className={`${tranDiv4} flex-col space-y-4 `}>
                     <CodeCatalog/>

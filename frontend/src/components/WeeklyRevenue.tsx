@@ -28,7 +28,8 @@ const MyComponent: React.FC<MyComponentProps> = () => {
           return res.json();
         })
         .then((data) => {
-          setItem(data.data.yearlyRevenue);
+          setItem(data.data.weeklyRevenue);
+          console.log(data.data.weeklyRevenue);
         })
         .catch((error) => {
           console.error("Error fetching customer this month:", error);
@@ -43,12 +44,12 @@ const MyComponent: React.FC<MyComponentProps> = () => {
   return (
     <div className="mt-[-30px] ml-10 absolute w-[88%]">
       <LineChart
-        xAxis={[{ data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] }]}
+        xAxis={[{ scaleType: "band", data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"] }]}
         series={[
           {
-            data: dataset,
-            color: "#7D5CB5",
-            showMark: true,
+        data: dataset,
+        color: "#7D5CB5",
+        showMark: true,
           },
         ]}
         grid={{ vertical: true, horizontal: true }}

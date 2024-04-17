@@ -5,7 +5,7 @@ import {
   faChildReaching,
   faMoneyBill1Wave,
 } from "@fortawesome/free-solid-svg-icons";
-import Calendar from "react-calendar";
+import Calendar from "@/components/Calendar";
 import "react-calendar/dist/Calendar.css";
 import FinancialData from "@/components/FinancialData";
 import YearlyRevenue from "@/components/YearlyRevenue";
@@ -132,15 +132,16 @@ export default function DashBoard() {
           ></FinancialData>
         </div>
         {/* yearly revanue and calendar */}
-        <div className="w-full h-[200px] flex flex-row gap-8">
-          <div className="bg-white rounded-md h-full flex-grow w-[49vw] relative">
+        <div className="w-full h-[336px]  flex flex-row gap-8">
+          <div className="bg-white justify-center rounded-md h-full flex flex-col flex-grow  relative">
             <p className="mt-2 ml-5 text-main-100 font-bold">Yearly Revenue</p>
             <YearlyRevenue />
           </div>
           <div className="bg-white rounded-md h-full flex-grow relative">
-            <div className="absolute inset-0 bg-white rounded-md overflow-hidden shadow-md">
+            {/* <div className="absolute flex justify-center inset-0 bg-white h-full rounded-md overflow-hidden shadow-md">
               <Calendar className="w-full h-full " locale="en-US" />
-            </div>
+            </div> */}
+            <Calendar  />
           </div>
         </div>
         {/* week and customers */}

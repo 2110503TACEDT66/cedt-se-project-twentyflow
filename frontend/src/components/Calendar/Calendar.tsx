@@ -13,7 +13,7 @@ interface ICalendarProps {
 const CustomCalendar = (props: ICalendarProps) => {
   const { setDate, date, selectRange, setSelectRange } = props;
   return (
-    <div style={{ width: "80vw", display: "grid", placeItems: "center" }}>
+    <div style={{ width: "100vw", display: "grid", placeItems: "center" }}>
       <CalendarComponent
         setDate={setDate}
         date={date}

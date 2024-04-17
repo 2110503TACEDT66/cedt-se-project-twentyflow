@@ -1,6 +1,7 @@
 import { getServerSession } from 'next-auth';
 import { redirect } from 'next/navigation'
 import { authOptions } from '../[...nextauth]/route';
+
 const Page = async () => {
     const session = await getServerSession(authOptions)
     if(!session){
@@ -24,10 +25,14 @@ const Page = async () => {
         }),
         });
         if(response.ok){
+            
             redirect('/api/auth/signin')
         }else
         {
-            redirect('/')
+            
+            setTimeout(() => {
+                redirect('/')
+            }, 2000);
         }
     };
 

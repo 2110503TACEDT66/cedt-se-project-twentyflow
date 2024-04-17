@@ -22,7 +22,7 @@ export default async function Header() {
             HOME
           </Link>
           <Link href="/coworkings" className=" text-xl font-bold">
-            RESERVE
+            COWORKING
           </Link>
           {!session ? (
             <div className="flex space-x-7 justify-center items-center">
@@ -38,8 +38,8 @@ export default async function Header() {
             </div>
           ) : (
             <div className="flex space-x-7 justify-center items-center">
-              <Link href="/history" className=" text-xl font-bold">
-                HISTORY
+              <Link href="/booking" className=" text-xl font-bold">
+                BOOKING
               </Link>
               {session.user.role === "admin" ? (
                 <Link href={"/dashboard"} className=" text-xl font-bold">

@@ -24,6 +24,9 @@ export default function DashBoard() {
   const [totalRevenue, settotalRevenue] = useState<number>();
   const [customerMonth, setcustomerMonth] = useState<number>();
   const [activeCustomer, setactiveCustome] = useState<number>();
+  const [trendActive, settrendActive] = useState<number>();
+  const [trendUser, settrendUser] = useState<number>();
+  const [trendMonth, settrendMonth] = useState<number>();
 
   useEffect(() => {
     if (currentUser) {
@@ -88,11 +91,57 @@ export default function DashBoard() {
           return res.json();
         })
         .then((data) => {
-          setactiveCustome(data.data.ActiveUser);
+          setactiveCustome(data.data.count);
+          settrendActive(data.data.trends);
         })
         .catch((error) => {
           console.error("Error fetching customer this month:", error);
           setactiveCustome(0);
+        });
+
+      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/dashboard/customer/daily`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${currentUser.token}`,
+        },
+      })
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return res.json();
+        })
+        .then((data) => {
+          settrendUser(data.data.trends);
+        })
+        .catch((error) => {
+          console.error("Error fetching customer this month:", error);
+          settrendUser(0);
+        });
+
+      fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/dashboard/customer/monthly`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            authorization: `Bearer ${currentUser.token}`,
+          },
+        }
+      )
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return res.json();
+        })
+        .then((data) => {
+          settrendMonth(data.trends);
+        })
+        .catch((error) => {
+          console.error("Error fetching customer this month:", error);
+          settrendMonth(0);
         });
     }
   }, [currentUser]);
@@ -104,21 +153,21 @@ export default function DashBoard() {
         <div className="w-full h-[150px] flex flex-row gap-8">
           <FinancialData
             amount={String(totalCustomers)}
-            description="+11% today"
+            description={trendUser + "% today"}
             label="Total Customers"
             icon={faPerson}
             textColor={bullColor}
           ></FinancialData>
           <FinancialData
             amount={String(customerMonth)}
-            description="+11% today"
+            description={trendMonth + "% today"}
             label="Customers This Month"
             icon={faPeopleLine}
             textColor={bullColor}
           ></FinancialData>
           <FinancialData
             amount={String(activeCustomer)}
-            description="+11% today"
+            description={trendActive + "% today"}
             label="Active Customers"
             icon={faChildReaching}
             textColor={bullColor}
@@ -141,7 +190,7 @@ export default function DashBoard() {
             {/* <div className="absolute flex justify-center inset-0 bg-white h-full rounded-md overflow-hidden shadow-md">
               <Calendar className="w-full h-full " locale="en-US" />
             </div> */}
-            <Calendar  />
+            <Calendar />
           </div>
         </div>
         {/* week and customers */}

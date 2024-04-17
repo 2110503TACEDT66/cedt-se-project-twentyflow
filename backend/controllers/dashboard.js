@@ -276,8 +276,6 @@ exports.getNewReturnCustomer = async (req,res,next) => {
         });
         
 
-        console.log(customer)
-
         function getDayOfWeek(year, month, day) {
             const date = new Date(year, month, day);
             const dayOfWeeks = date.getDay();

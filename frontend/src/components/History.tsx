@@ -21,6 +21,7 @@ export default function History() {
         .then((data) => {
           setLoading(false)
           setData(data.data)
+        //   console.log(data.data)
 
         })
       },[data])

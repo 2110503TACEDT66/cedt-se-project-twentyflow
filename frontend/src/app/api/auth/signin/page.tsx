@@ -3,6 +3,7 @@ import { signIn, useSession } from "next-auth/react";
 import { redirect } from 'next/navigation'
 import React, { useState } from "react";
 
+
 const LoginPage = () => {
   
   const [email, setEmail] = useState("");
@@ -49,6 +50,7 @@ const LoginPage = () => {
     </main>
   );
 }else {
+  
   redirect('/')
 }
 };

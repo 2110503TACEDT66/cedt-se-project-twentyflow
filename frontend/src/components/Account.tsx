@@ -1,6 +1,6 @@
 "use client"
 import updateUserProfile from "@/libs/updateUserProfile";
-import { faClockRotateLeft, faPenToSquare, faTag, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faClockRotateLeft, faPenToSquare, faTag, faUser, faCreditCard } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useSession } from "next-auth/react";
 import { Telemetry } from "next/dist/telemetry/storage";
@@ -20,10 +20,12 @@ export default function Account() {
     const tranclass2 = (menuChanger === 2) ? "border-b-2" : ""
     const tranclass3 = (menuChanger === 3) ? "border-b-2" : ""
     const tranclass4 = (menuChanger === 4) ? "border-b-2" : ""
+    const tranclass5 = (menuChanger === 5) ? "border-b-2" : ""
     const tranDiv1 = (menuChanger === 1) ? "flex" : "hidden"
     const tranDiv2 = (menuChanger === 2) ? "flex" : "hidden"
     const tranDiv3 = (menuChanger === 3) ? "flex" : "hidden"
     const tranDiv4 = (menuChanger === 4) ? "flex" : "hidden"  
+    const tranDiv5 = (menuChanger === 5) ? "flex" : "hidden"  
 
     const userName = currentUser?.name
     const userEmail = currentUser?.email
@@ -49,14 +51,17 @@ export default function Account() {
             
             <div className=" w-10/12 space-y-10 h-full p-10 pt-0 bg-white rounded-md flex flex-col">
                 <div className="w-3/5 mx-auto bg-grey-100 flex">
-                    <div className={`w-1/4 flex justify-center rounded-t-lg ${tranclass1} border-main-100 hover:bg-slate-300 hover:cursor-pointer`}
+                    <div className={`w-1/5 flex justify-center rounded-t-lg ${tranclass1} border-main-100 hover:bg-slate-300 hover:cursor-pointer`}
                     onClick={() => {setMenuChanger(1)}}><FontAwesomeIcon icon={faUser} size="2x" className="py-5 px-9 text-main-100"/></div>
-                    <div className={`w-1/4 flex justify-center rounded-t-lg ${tranclass2} border-main-100 hover:bg-slate-300 hover:cursor-pointer`}
+                    <div className={`w-1/5 flex justify-center rounded-t-lg ${tranclass2} border-main-100 hover:bg-slate-300 hover:cursor-pointer`}
                     onClick={() => {setMenuChanger(2)}}><FontAwesomeIcon icon={faPenToSquare} size="2x" className="py-5 px-9 text-main-100"/></div>
-                    <div className={`w-1/4 flex justify-center rounded-t-lg ${tranclass3}  border-main-100 hover:bg-slate-300 hover:cursor-pointer`}
-                    onClick={() => {setMenuChanger(3)}}><FontAwesomeIcon icon={faTag} size="2x" className="py-5 px-9 text-main-100"/></div>
-                    <div className={`w-1/4 flex justify-center rounded-t-lg ${tranclass4}  border-main-100 hover:bg-slate-300 hover:cursor-pointer`}
-                    onClick={() => {setMenuChanger(4)}}><FontAwesomeIcon icon={faClockRotateLeft} size="2x" className="py-5 px-9 text-main-100"/></div>
+                   <div className={`w-1/5 flex justify-center rounded-t-lg ${tranclass3}  border-main-100 hover:bg-slate-300 hover:cursor-pointer`}
+                    onClick={() => {setMenuChanger(3)}}><FontAwesomeIcon icon={faCreditCard} size="2x" className="py-5 px-9 text-main-100"/></div>
+                    <div className={`w-1/5 flex justify-center rounded-t-lg ${tranclass4}  border-main-100 hover:bg-slate-300 hover:cursor-pointer`}
+                    onClick={() => {setMenuChanger(4)}}><FontAwesomeIcon icon={faTag} size="2x" className="py-5 px-9 text-main-100"/></div>
+                    <div className={`w-1/5 flex justify-center rounded-t-lg ${tranclass5}  border-main-100 hover:bg-slate-300 hover:cursor-pointer`}
+                    onClick={() => {setMenuChanger(5)}}><FontAwesomeIcon icon={faClockRotateLeft} size="2x" className="py-5 px-9 text-main-100"/></div>
+                    
                 </div>
             
                 <div className={`${tranDiv1} flex-col space-y-3`}>
@@ -99,9 +104,11 @@ export default function Account() {
                     </button>
                 </div>
                 <div className={`${tranDiv3} flex-col space-y-4 `}>
+                </div>
+                <div className={`${tranDiv4} flex-col space-y-4 `}>
                     <CodeCatalog/>
                 </div>  
-                <div className={`${tranDiv4} flex-col space-y-4 `}>
+                <div className={`${tranDiv5} flex-col space-y-4 `}>
                     <HistoryAccountCatalog  />
                 </div>  
         </div>

@@ -204,24 +204,28 @@ exports.getActiveUser = async (req,res,next) => {
 
         let trend = 0;
         yesterdayActiveUser.length == 0 ? trend = 100 : trend = Math.round((activeUser.length - yesterdayActiveUser.length) / yesterdayActiveUser.length * 100);
-        res.status(200).json({success:true, data:{ActiveUser: activeUser, trends:trend}});
+        res.status(200).json({success:true, data:{
+            ActiveUser: activeUser,
+            count: activeUser.length,
+            trends: trend
+        }});
     } catch(err) {
         res.status(400).json({success:false})
     }
 
 
     function removeDuplicates(arr) {
-        let nonDup = []
-        arr.forEach(element => {
-            const find = nonDup.find(el => {
-                el.user === element.user
-            })
-            if(find.length === 0) {
-                nonDup.push(element)
-            }
-        })
-        console.log(nonDup);
-        return nonDup
+        let newArray = [];
+        let uniqueObject = {};
+        for (let i in arr) {
+            objName = arr[i]['user'];
+            uniqueObject[objName] = arr[i];
+        }
+        for (i in uniqueObject) {
+            newArray.push(uniqueObject[i]);
+        }
+
+        return newArray;
     }
 }
 
@@ -246,21 +250,33 @@ exports.getNewReturnCustomer = async (req,res,next) => {
             ['Sat', 0],  
         ]
         const histories = await History.find();
+        console.log(histories);      
 
-        histories.forEach(appt => {
+        const userBookings = {};
 
-            const date = new Date(appt.createdAt)
-            const dayOfWeek = getDayOfWeek(date.getFullYear(), date.getMonth(), date.getDate())
+        histories.forEach(booking => {
+            const userId = booking.user.toString(); // Convert ObjectId to string
+            const createdAt = booking.createdAt; // Get the createdAt timestamp
 
-            const newOrRe = histories.filter(user => {
-                return user.user === appt.user
-            })
-            if(newOrRe.length === 1) {
-                newCustomer[dayOfWeek][1]++;
-            } else {
-                returnCustomer[dayOfWeek][1]++;
-            }
-        })
+        if (userBookings[userId]) {
+            userBookings[userId].bookings++;
+            userBookings[userId].createdAt.push(createdAt);
+        } else {
+            userBookings[userId] = {
+            bookings: 1,
+            createdAt: [createdAt]
+            };
+        }
+        });
+
+        // Convert the object to an array of objects
+        const result = Object.keys(userBookings).map(userId => ({
+            user: userId,
+            bookings: userBookings[userId].bookings,
+            createdAt: userBookings[userId].createdAt
+        }));
+
+        console.log(result);
 
         function getDayOfWeek(year, month, day) {
             const date = new Date(year, month, day);

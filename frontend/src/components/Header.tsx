@@ -43,10 +43,12 @@ export default async function Header() {
               </Link>
               {session.user.role === "admin" ? (
                 <Link href={"/dashboard"} className=" text-xl font-bold">
-                  Dashboard
+                  DASHBOARD
                 </Link>
               ) : (
-                ""
+                <Link href={"/coupon"} className=" text-xl font-bold">
+                  COUPON
+                </Link>
               )}
               <Link
                 className="text-xl flex flex-row font-bold space-x-2 text-white p-2 bg-main-100 rounded-md"

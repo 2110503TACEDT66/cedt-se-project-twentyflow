@@ -48,3 +48,11 @@ interface History {
     user : User;
     
 }
+
+interface StatCardProps {
+    icon: string;
+    changePercentage: string;
+    changeDirection: "up" | "down";
+    value: string;
+    label: string;
+  }

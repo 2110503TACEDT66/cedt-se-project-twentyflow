@@ -210,7 +210,7 @@ exports.getActiveUser = async (req,res,next) => {
             trends: trend
         }});
     } catch(err) {
-        res.status(400).json({success:false})
+        res.status(400).json({success:false, error:err.message})
     }
 
 
@@ -286,6 +286,6 @@ exports.getNewReturnCustomer = async (req,res,next) => {
 
         res.status(200).json({success:true, data:{New:newCustomer, Return:returnCustomer}})
     } catch(err) {
-        res.status(400).json({success:false})
+        res.status(400).json({success:false,error:err.message})
     }
 }

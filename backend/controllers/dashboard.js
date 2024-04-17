@@ -61,7 +61,13 @@ exports.getCustomerMonthTrend = async (req,res,next) => {
             return userCreatedAt.getMonth() === lastMonth.getMonth() && userCreatedAt.getFullYear() === lastMonth.getFullYear();
         });
         
-        const trend = Math.round((thisMonthUsers.length - lastMonthUsers.length)/lastMonthUsers.length * 100)
+        let trend;
+        if(lastMonthUsers.length === 0) {
+            trend = 100
+        } else {
+            trend = Math.round((thisMonthUsers.length - lastMonthUsers.length)/lastMonthUsers.length * 100);
+        }
+        
         res.status(200).json({ success: true, trends:trend });
     } catch (err) {
         res.status(400).json({success:false})
@@ -87,7 +93,13 @@ exports.getCustomerDailyTrend = async (req,res,next) => {
             return userCreatedAt.getDate() === yesterDay.getDate() && userCreatedAt.getMonth() === yesterDay.getMonth() && userCreatedAt.getFullYear() === yesterDay.getFullYear();
         });
         
-        const trend = Math.round((todayUsers.length - yesterdayUsers.length)/yesterdayUsers.length * 100)
+        let trend;
+
+        if(yesterdayUsers.length === 0) {
+            trend = 100;
+        } else {
+            trend = Math.round((todayUsers.length - yesterdayUsers.length)/yesterdayUsers.length * 100)
+        }
         res.status(200).json({ success: true, data: { trends:  trend, yesterday: yesterdayUsers, today: todayUsers} });
     } catch (err) {
         res.status(400).json({success:false})

@@ -94,9 +94,14 @@ export default function CouponCard( { couponName,couponPoint, couponAmount }
             title: "Success!",
             text: `You have successfully redeemed ${couponName}!`,
             icon: "success"
-          });
+          }).then((result)=>{
+            if(result.isConfirmed){
+                window.location.reload();
+            }
+            }
+            );
         
-          window.location.reload();
+
     }
         
     }

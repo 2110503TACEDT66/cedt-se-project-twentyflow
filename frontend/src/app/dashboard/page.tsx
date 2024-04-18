@@ -165,28 +165,35 @@ export default function DashBoard() {
             description={trendUser + "% today"}
             label="Total Customers"
             icon={faPerson}
-            textColor={bullColor}
+            textColor={ 
+              trendUser ? (trendUser > 0 ? bullColor : bearColor) : ""}
           ></FinancialData>
           <FinancialData
             amount={String(customerMonth)}
             description={trendMonth + "% today"}
             label="Customers This Month"
             icon={faPeopleLine}
-            textColor={bullColor}
+            textColor={
+              trendMonth ? (trendMonth > 0 ? bullColor : bearColor) : ""
+            }
           ></FinancialData>
           <FinancialData
             amount={String(activeCustomer)}
             description={trendActive + "% today"}
             label="Active Customers"
             icon={faChildReaching}
-            textColor={bullColor}
+            textColor={
+              trendActive ? (trendActive > 0 ? bullColor : bearColor) : ""
+            }
           ></FinancialData>
           <FinancialData
             amount={String(totalRevenue)}
-            description="-11% today"
+            description={totalRevenue + "% today"}
             label="Total Revenue"
             icon={faMoneyBill1Wave}
-            textColor={bearColor}
+            textColor={
+              totalRevenue ? (totalRevenue > 0 ? bullColor : bearColor) : ""
+            }
           ></FinancialData>
         </div>
         {/* yearly revanue and calendar */}

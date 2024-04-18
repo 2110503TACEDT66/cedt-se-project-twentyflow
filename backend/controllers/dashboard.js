@@ -63,7 +63,7 @@ exports.getCustomerMonthTrend = async (req,res,next) => {
         
         let trend;
         if(lastMonthUsers.length === 0) {
-            trend = 100
+            thisMonthUsers == 0 ? trend = 0 : trend = 100;
         } else {
             trend = Math.round((thisMonthUsers.length - lastMonthUsers.length)/lastMonthUsers.length * 100);
         }
@@ -96,7 +96,7 @@ exports.getCustomerDailyTrend = async (req,res,next) => {
         let trend;
 
         if(yesterdayUsers.length === 0) {
-            trend = 100;
+            todayUsers == 0 ? trend = 0 : trend = 100;
         } else {
             trend = Math.round((todayUsers.length - yesterdayUsers.length)/yesterdayUsers.length * 100)
         }
@@ -215,7 +215,11 @@ exports.getActiveUser = async (req,res,next) => {
         activeUser = removeDuplicates(activeUser)
 
         let trend = 0;
-        yesterdayActiveUser.length == 0 ? trend = 100 : trend = Math.round((activeUser.length - yesterdayActiveUser.length) / yesterdayActiveUser.length * 100);
+        if(yesterdayActiveUser.length == 0) {
+            todayUsers == 0 ? trend = 0 : trend = 100; 
+        } else {
+            trend = Math.round((activeUser.length - yesterdayActiveUser.length) / yesterdayActiveUser.length * 100);
+        }
         res.status(200).json({success:true, data:{
             ActiveUser: activeUser,
             count: activeUser.length,

@@ -46,12 +46,6 @@ const UserSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
-    card: {
-        type:String,
-        minlength:16,
-        maxlength:16,
-        default:'',
-    }
 });
 
 UserSchema.virtual('appointments', {

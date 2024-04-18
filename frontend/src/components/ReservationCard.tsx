@@ -7,6 +7,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import GetpriceId from "@/libs/getPriceId";
+import Swal from "sweetalert2";
 
 export default function ReservationCard({
   coworking,
@@ -75,16 +76,36 @@ export default function ReservationCard({
                 session.user.token,
                 priceId
               );
-              router.push("/booking");
+              Swal.fire({
+                title: "Reservation Successful",
+                icon: "success",
+              }).then((result)=>{
+                if(result.isConfirmed){
+                  router.push("/booking");
+                }
+              });
             } else {
-              alert("Start time must be less than end time");
+              Swal.fire({
+                title: "Start time must be less than end time",
+                icon: "error",
+              });
             }
           } else {
-            alert("Invalid time format");
+            Swal.fire({
+              title: "Invalid time format",
+              icon: "error",
+            })
+            ;
           }
         } else {
-          alert("You have more than 3 reservations");
-          router.push("/");
+          Swal.fire({
+            title: "You have reached the maximum number of reservations",
+            icon: "error",
+          }).then((result)=>{
+            if(result.isConfirmed){
+              router.push("/");
+            }
+          });
         }
       } else {
         const year = new Date(datetime1.toISOString()).getFullYear();

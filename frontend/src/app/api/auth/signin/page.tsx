@@ -12,19 +12,12 @@ const LoginPage = () => {
   const { data:session } = useSession();
   if(!session){
   const onSubmit = async () => {
-    Swal.fire({
-      title: "Log in",
-      text: "Do you want to log in?",
-      icon: "question"
-    }).then(async (result) => {
-      if (result.isConfirmed) {
+
         const result = await signIn("credentials", {
           email: email, 
           password: pass,
           redirect: true,
           callbackUrl: "/",
-        });
-      }
     });
     
   };

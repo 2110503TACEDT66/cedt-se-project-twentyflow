@@ -1,5 +1,6 @@
 "use client";
 import getCustomerCard from "@/libs/getCustomerCard";
+import { CircularProgress } from "@mui/material";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -14,6 +15,7 @@ export default function PaymentCard({
   const currentUser = session.data?.user;
   const [currentReservation, setCurrentReservation] = useState<Reservation>();
   const [cardNumber, setCardNumber] = useState<number>();
+  const[isLoading, setIsLoading] = useState<boolean>(true);
 
 
   useEffect(() => {
@@ -45,7 +47,14 @@ export default function PaymentCard({
       )
         .then((res) => res.json())
         .then((data) => {
-          setCardNumber(data.data.last4);
+          try{
+            setCardNumber(data.data.last4);
+            setIsLoading(false);
+          }
+          catch (error){
+            setCardNumber(undefined);
+            setIsLoading(false);
+          }
         }
       );
     }
@@ -139,20 +148,22 @@ export default function PaymentCard({
             <h1 className=" font-bold text-xl">Credit Card (Last4)</h1>
             <div className=" flex flex-row w-full space-x-7">
               {
-                cardNumber === undefined
-                ? 
-                  <div className="flex flex-row w-full space-x-2">
+                isLoading ?
+                  <CircularProgress /> :
+                (cardNumber === undefined
+                  ? 
+                    <div className="flex flex-row w-full space-x-2">
+                      <h1 className=" font-semibold text-xl border-2 py-4 px-5 rounded-md border-gray-300">
+                        You have never added the card.
+                      </h1>
+                      <button className="text-white bg-main-100 font-semibold text-xl border-2 py-4 px-5 rounded-md border-gray-300
+                      hover:text-main-100 hover:bg-white"
+                      onClick={(e) => router.push('/account')}> Add Card Here </button>
+                    </div>
+                  :
                     <h1 className=" font-semibold text-xl border-2 py-4 px-5 rounded-md border-gray-300">
-                      You have never added the card.
-                    </h1>
-                    <button className="text-white bg-main-100 font-semibold text-xl border-2 py-4 px-5 rounded-md border-gray-300
-                    hover:text-main-100 hover:bg-white"
-                    onClick={(e) => router.push('/account')}> Add Card Here </button>
-                  </div>
-                :
-                  <h1 className=" font-semibold text-xl border-2 py-4 px-5 rounded-md border-gray-300">
-                    {"•••• •••• •••• " + cardNumber}
-                  </h1>
+                      {"•••• •••• •••• " + cardNumber}
+                    </h1>)
               }
             </div>
           </div>

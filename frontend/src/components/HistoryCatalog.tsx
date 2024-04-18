@@ -27,7 +27,7 @@ export default function HistoryCatalog({reservation, isLoading}: {reservation: R
                 (
                     <div className=" flex justify-center items-center h-full py-20">
                         <h1 className=" text-3xl font-bold">
-                            No History Found
+                            No Booking Found
                         </h1>
                     </div>
                 )

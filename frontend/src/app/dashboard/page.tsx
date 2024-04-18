@@ -213,7 +213,7 @@ export default function DashBoard() {
           ></FinancialData>
           <FinancialData
             amount={String(totalRevenue)}
-            description={revenueTrend + "% today"}
+            description={revenueTrend?.toFixed(2) + "% today"}
             label="Total Revenue"
             icon={faMoneyBill1Wave}
             textColor={

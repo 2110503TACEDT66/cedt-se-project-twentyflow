@@ -31,6 +31,8 @@ exports.getUserInfo = async (req,res,next) => {
 
         const number = await stripe.paymentMethods.retrieve(cardID);
 
+        
+
         res.status(200).json({
             success:true, 
             data:number.card

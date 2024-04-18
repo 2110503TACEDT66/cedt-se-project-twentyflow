@@ -58,7 +58,7 @@ export default function CreditCard() {
                     <h1 className=" font-bold text-xl">
                         Expiry Date
                     </h1>
-                    <input value={expiryDate} onChange={(e)=>{setExpiryDate(e.target.value)}} id="date" type="number" placeholder="MM/YY" className=" w-full font-semibold text-xl border-2 p-3 rounded-md border-gray-300" ></input>
+                    <input value={expiryDate} onChange={(e)=>{setExpiryDate(e.target.value)}} id="date"  placeholder="MM/YY" className=" w-full font-semibold text-xl border-2 p-3 rounded-md border-gray-300" ></input>
                 </div>
                 <div className=" w-1/2">
                     <h1 className=" font-bold text-xl">

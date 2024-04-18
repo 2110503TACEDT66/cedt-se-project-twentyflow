@@ -23,39 +23,48 @@ exports.createCustomer = async (email,name,id_mongo)=>{
 
 exports.getUserInfo = async (req,res,next) => {
     try {
-        const customer = await User.findById(req.params.id); //id mongo
+        const customer = await User.findById(req.params.id);
         const customerId = customer.customerId;
-        let customers = await stripe.customers.list();
 
-        customers = customers.data;
-        let targetCustomer;
+        const cus = await stripe.customers.retrieve(customerId)
+        const cardID = cus.default_source
 
-        // console.log(customer);
-        // console.log(customers);
-        // console.log(customerId);
-        
-        for(let i in customers) {
-            const tempId = customers[i]['id'];
-            console.log(tempId);
-
-            if(customerId === tempId) {
-                targetCustomer = customers[i];
-                console.log(targetCustomer);
-                break;
-            }
-        }
+        const number = await stripe.paymentMethods.retrieve(cardID);
 
         res.status(200).json({
             success:true, 
-            data:{
-                name: targetCustomer.name,
-                id: targetCustomer.id,
-                // customer:customers
-            }})
+            data:number.card
+            })
     } catch(err) {
         res.status(404).json({success:false, error:err.message});
     }
 }
+
+exports.updateCustomer = async (req, res, next) => {
+    try {
+        const customer = await User.findById(req.params.id);
+
+        if (!customer) {
+            return res.status(400).json({ success: false, message: "Customer not found" });
+        }
+
+        const { token } = req.body;
+
+        const updatedCustomer = await stripe.customers.update(
+            customer.customerId,
+            { source: token }
+        );
+
+        return res.status(200).json({ success: true, message: "Customer payment source updated successfully" });
+    } catch (err) {
+        return res.status(500).json({
+            success: false,
+            message: err.message
+        });
+    }
+};
+
+
 
 exports.getPrices = async (req,res,next)=>{
     try{
@@ -109,42 +118,52 @@ exports.createPrice = async (req,res,next)=>{
 exports.createPaymentSession = async (req, res) => {
     try {
         const stripeCustomerId = req.user.customerId;
-        const {appointmentId} = req.body;
+        const { appointmentId } = req.body;
 
-        if(!appointmentId)
+        if (!appointmentId)
             return res.status(400).json({
-                success:false,
-                message:'Invalid appointment ID'
+                success: false,
+                message: 'Invalid appointment ID'
             });
-        
+
         const appointment = await Appointment.findById(appointmentId).populate({
-            path:'coWorking',
+            path: 'coWorking',
             select: 'name province tel price_hourly'
         });
 
-        if(!appointment)
+        if (!appointment)
             return res.status(400).json({
-                success:false,
-                message:'Not found appointment'
+                success: false,
+                message: 'Appointment not found'
             });
 
-        if(appointment.status === 'finished')
+        if (appointment.status === 'finished')
             return res.status(400).json({
-                success:false,
-                message:'This appointment is paid'
+                success: false,
+                message: 'This appointment is already paid'
             });
 
-        if(req.user.id !== appointment.user.toString() && req.user.role !== 'admin'){
+        if (req.user.id !== appointment.user.toString() && req.user.role !== 'admin') {
             return res.status(400).json({
-                success:false,
-                message:'Not same user'
+                success: false,
+                message: 'Unauthorized: Not the same user'
             });
         }
 
-        const appId = appointment._id
+        const appId = appointment._id;
+
+        const customer = await stripe.customers.retrieve(stripeCustomerId);
+
+        if (!customer || !customer.default_source) {
+            return res.status(400).json({
+                success: false,
+                message: 'Customer has no default payment method'
+            });
+        }
+
         const session = await stripe.checkout.sessions.create({
             mode: "payment",
-            payment_method_types: ["promptpay","card"], 
+            payment_method_types: ["card","promptpay"],
             line_items: [{
                 price: appointment.priceId,
                 quantity: 1,
@@ -154,15 +173,13 @@ exports.createPaymentSession = async (req, res) => {
             cancel_url: `http://localhost:3000/payment/${appId}/cancel`,
             customer: stripeCustomerId,
         });
-      
+
         res.status(200).json({
             success: true,
             sessionUrl: session.url,
         });
-
-
     } catch (error) {
-        console.log(error);
+        console.error(error);
         res.status(500).json({
             success: false,
             error: error.message,

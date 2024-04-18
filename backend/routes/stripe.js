@@ -1,5 +1,5 @@
 const express = require('express');
-const {createPaymentSession, createPrice, getPrices, getUserInfo} = require('../controllers/Stripe');
+const {createPaymentSession, createPrice, getPrices, getUserInfo, updateCustomer} = require('../controllers/Stripe');
 const {protect,authorize} = require('../middleware/auth');
 
 const router = express.Router();
@@ -13,5 +13,9 @@ router.route('/session')
 
 router.route('/user/:id')
     .get(protect, authorize('admin','user'), getUserInfo)
+    .put(protect, authorize('admin','user'), updateCustomer);
+
+   
+
 
 module.exports = router

@@ -13,10 +13,8 @@ export default function PaymentCard({
   const session = useSession();
   const currentUser = session.data?.user;
   const [currentReservation, setCurrentReservation] = useState<Reservation>();
-  const [cardNumber, setCardNumber] = useState<string | undefined>();
+  const [cardNumber, setCardNumber] = useState<number>();
 
-  // console.log(reservationId)
-  //console.log(currentReservation?.coWorking.price_hourly);
 
   useEffect(() => {
     if (currentUser) {
@@ -47,8 +45,7 @@ export default function PaymentCard({
       )
         .then((res) => res.json())
         .then((data) => {
-          setCardNumber(data.name);
-          // setExp(data.)
+          setCardNumber(data.data.last4);
         }
       );
     }
@@ -139,7 +136,7 @@ export default function PaymentCard({
           </div>
           
           <div className=" flex flex-col w-full space-y-3">
-            <h1 className=" font-bold text-xl">Credit Card</h1>
+            <h1 className=" font-bold text-xl">Credit Card (Last4)</h1>
             <div className=" flex flex-row w-full space-x-7">
               {
                 cardNumber === undefined
@@ -154,7 +151,7 @@ export default function PaymentCard({
                   </div>
                 :
                   <h1 className=" font-semibold text-xl border-2 py-4 px-5 rounded-md border-gray-300">
-                    {cardNumber}
+                    {"•••• •••• •••• " + cardNumber}
                   </h1>
               }
             </div>

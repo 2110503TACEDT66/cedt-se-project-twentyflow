@@ -83,7 +83,6 @@ exports.getCustomerDailyTrend = async (req,res,next) => {
             
             const userCreatedAt = new Date(user.createdAt);
             const currentDay = new Date();
-            console.log(currentDay)
             return userCreatedAt.getDate() === currentDay.getDate() && userCreatedAt.getMonth() === currentDay.getMonth && userCreatedAt.getFullYear() === currentDay.getFullYear();
         });
         const yesterdayUsers = users.filter(user => {
@@ -173,8 +172,6 @@ exports.getWeeklyRevenue = async (req,res,next) => {
             // ** if today is wednesday it will show only sunday, monday, tuesday
             // condition is on "dayOfWeeks <= todayOfWeek"
             if(today.getFullYear() === date.getFullYear() && (0 <= datedif && datedif <= 7) && (dayOfWeeks <= todayOfWeek)) {
-                // console.log(date + " : " + appt.user)
-                // console.log(today + " \n")
                 weeklyRevenue[dayOfWeeks][1] += appt.price;
             }
         })
@@ -252,8 +249,7 @@ exports.getNewReturnCustomer = async (req,res,next) => {
             ['Return', 0]
         ]
 
-        const histories = await History.find();
-        // console.log(histories);      
+        const histories = await History.find();    
 
         const userBookings = {};
 
@@ -272,16 +268,12 @@ exports.getNewReturnCustomer = async (req,res,next) => {
             }
         });
 
-        //console.log(userBookings);
         // Convert the object to an array of objects
         const result = Object.keys(userBookings).map(userId => ({
             user: userId,
             bookings: userBookings[userId].bookings,
             createdAt: userBookings[userId].createdAt
         }));
-
-        //console.log(result);
-        
 
         result.forEach(element => {
             if(element.bookings > 1) {
@@ -290,16 +282,41 @@ exports.getNewReturnCustomer = async (req,res,next) => {
                 customer[0][1]++;
             }
         });
-        
-
-        function getDayOfWeek(year, month, day) {
-            const date = new Date(year, month, day);
-            const dayOfWeeks = date.getDay();
-            return dayOfWeeks;
-        }
 
         res.status(200).json({success:true, data:{customer}})
     } catch(err) {
         res.status(400).json({success:false,error:err.message})
     }
+}
+
+exports.getRevenueTrend = async (req,res,next) => {
+    try {
+        const histories = await History.find();
+        const histories2 = histories;
+
+        let todayRevenue = 0;
+        const totalPrice = histories2.reduce((total, history) => total + history.price, 0);
+        histories.forEach(element => {
+            if(element.createdAt == new Date()) {
+                todayRevenue += element.price;
+            }
+        })
+
+        const totalFromPastToYesterday = totalPrice - todayRevenue;
+        
+        let trend = 0;
+        if(totalFromPastToYesterday === 0) {
+            todayRevenue === 0 ? trend = 0 : trend = 100;
+        } else {
+            trend = (todayRevenue/totalFromPastToYesterday) * 100;
+        }
+        
+        console.log(trend);
+
+        res.status(200).json({success:true, trends: trend});
+
+    } catch(err) {
+        res.status(400).json({successfalse, error:err.message})
+    }
+
 }

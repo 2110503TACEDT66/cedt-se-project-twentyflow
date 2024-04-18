@@ -1,4 +1,5 @@
 "use client";
+import getCustomerCard from "@/libs/getCustomerCard";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -12,6 +13,8 @@ export default function PaymentCard({
   const session = useSession();
   const currentUser = session.data?.user;
   const [currentReservation, setCurrentReservation] = useState<Reservation>();
+  const [cardNumber, setCardNumber] = useState<string | undefined>();
+
   // console.log(reservationId)
   //console.log(currentReservation?.coWorking.price_hourly);
 
@@ -31,16 +34,26 @@ export default function PaymentCard({
         .then((data) => {
           setCurrentReservation(data.data);
         });
+
+      fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/payment/user/${currentUser._id}`, 
+        {
+          method: 'GET',
+          headers: {
+            "Content-Type": "application/json",
+            authorization: `Bearer ${currentUser.token}`,
+          },
+        }
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          setCardNumber(data.name);
+          // setExp(data.)
+        }
+      );
     }
   }, []);
 
-<<<<<<< HEAD
-  useEffect(() => {
-
-  })
-
-=======
->>>>>>> 5cd072a50aa6a83ac5f48b9277829cef70626b9f
   const hour: number = currentReservation
     ? Math.ceil(
         (new Date(currentReservation.endTime).getTime() -
@@ -116,11 +129,7 @@ export default function PaymentCard({
             </div>
           </div>
 
-<<<<<<< HEAD
           <div className=" flex flex-col w-1/5 space-y-3">
-=======
-          <div className=" flex flex-col w-1/3 space-y-3">
->>>>>>> 5cd072a50aa6a83ac5f48b9277829cef70626b9f
             <h1 className=" font-bold text-xl">User</h1>
             <div className=" flex flex-row w-full space-x-7">
               <h1 className=" font-semibold text-xl border-2 py-4 px-5 rounded-md border-gray-300">
@@ -128,21 +137,29 @@ export default function PaymentCard({
               </h1>
             </div>
           </div>
-<<<<<<< HEAD
           
-          <div className=" flex flex-col w-1/2 space-y-3">
+          <div className=" flex flex-col w-full space-y-3">
             <h1 className=" font-bold text-xl">Credit Card</h1>
             <div className=" flex flex-row w-full space-x-7">
-              <div className=" font-semibold text-xl border-2 py-4 px-5 rounded-md border-gray-300">
-              
-              </div>
-            
-              <input name="CardInput" className="font-semibold text-xl border-2 py-4 px-5 rounded-md border-gray-300" />
+              {
+                cardNumber === undefined
+                ? 
+                  <div className="flex flex-row w-full space-x-2">
+                    <h1 className=" font-semibold text-xl border-2 py-4 px-5 rounded-md border-gray-300">
+                      You have never added the card.
+                    </h1>
+                    <button className="text-white bg-main-100 font-semibold text-xl border-2 py-4 px-5 rounded-md border-gray-300
+                    hover:text-main-100 hover:bg-white"
+                    onClick={(e) => router.push('/account')}> Add Card Here </button>
+                  </div>
+                :
+                  <h1 className=" font-semibold text-xl border-2 py-4 px-5 rounded-md border-gray-300">
+                    {cardNumber}
+                  </h1>
+              }
             </div>
           </div>
 
-=======
->>>>>>> 5cd072a50aa6a83ac5f48b9277829cef70626b9f
         </div>
 
         <div className="">
@@ -160,8 +177,4 @@ export default function PaymentCard({
       </div>
     </div>
   );
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 5cd072a50aa6a83ac5f48b9277829cef70626b9f

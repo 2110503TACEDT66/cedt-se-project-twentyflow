@@ -8,7 +8,7 @@ dotenv.config({path:'./config/config.env'});
 
 const stripe = new Stripe(String(process.env.STRIPE_SECRET_KEY));
 
-exports.createCustomer = async (email,name)=>{
+exports.createCustomer = async (email,name,id_mongo)=>{
     try {
         const customer = await stripe.customers.create({
           email: email,
@@ -18,6 +18,42 @@ exports.createCustomer = async (email,name)=>{
     } catch (err) {
         console.error(err.message);
         return null;
+    }
+}
+
+exports.getUserInfo = async (req,res,next) => {
+    try {
+        const customer = await User.findById(req.params.id); //id mongo
+        const customerId = customer.customerId;
+        let customers = await stripe.customers.list();
+
+        customers = customers.data;
+        let targetCustomer;
+
+        // console.log(customer);
+        // console.log(customers);
+        // console.log(customerId);
+        
+        for(let i in customers) {
+            const tempId = customers[i]['id'];
+            console.log(tempId);
+
+            if(customerId === tempId) {
+                targetCustomer = customers[i];
+                console.log(targetCustomer);
+                break;
+            }
+        }
+
+        res.status(200).json({
+            success:true, 
+            data:{
+                name: targetCustomer.name,
+                id: targetCustomer.id,
+                // customer:customers
+            }})
+    } catch(err) {
+        res.status(404).json({success:false, error:err.message});
     }
 }
 
@@ -132,17 +168,4 @@ exports.createPaymentSession = async (req, res) => {
             error: error.message,
         });
     }
-};
-
-exports.getCreditCard = async (req,res) => {
-    const user = await User.findById(req.params.id);
-
-    if(!user) {
-        return res.status(404).json({success:false, message:`User id ${req.params.id} not found`});
-    }
-
-    res.status(200).json({
-        success:true,
-        credit: user.card
-    })
 };

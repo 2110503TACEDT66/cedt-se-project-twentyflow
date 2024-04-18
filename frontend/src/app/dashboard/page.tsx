@@ -27,6 +27,7 @@ export default function DashBoard() {
   const [trendActive, settrendActive] = useState<number>();
   const [trendUser, settrendUser] = useState<number>();
   const [trendMonth, settrendMonth] = useState<number>();
+  const [revenueTrend, setRevenueTrend] = useState<number>();
 
   useEffect(() => {
     if (currentUser) {
@@ -143,6 +144,30 @@ export default function DashBoard() {
           console.error("Error fetching customer this month:", error);
           settrendMonth(0);
         });
+      
+        fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/dashboard/revenue/trend`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              authorization: `Bearer ${currentUser.token}`,
+            },
+          }
+        )
+          .then((res) => {
+            if (!res.ok) {
+              throw new Error("Network response was not ok");
+            }
+            return res.json();
+          })
+          .then((data) => {
+            setRevenueTrend(data.trends);
+          })
+          .catch((error) => {
+            console.error("Error fetching customer this month:", error);
+            setRevenueTrend(0);
+          });
     }
   }, [currentUser]);
 
@@ -174,7 +199,7 @@ export default function DashBoard() {
           ></FinancialData>
           <FinancialData
             amount={String(totalRevenue)}
-            description="-11% today"
+            description={revenueTrend + "% today"}
             label="Total Revenue"
             icon={faMoneyBill1Wave}
             textColor={bearColor}

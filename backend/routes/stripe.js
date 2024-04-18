@@ -1,5 +1,5 @@
 const express = require('express');
-const {createPaymentSession, createPrice, getPrices, getCreditCard} = require('../controllers/Stripe');
+const {createPaymentSession, createPrice, getPrices, getUserInfo} = require('../controllers/Stripe');
 const {protect,authorize} = require('../middleware/auth');
 
 const router = express.Router();
@@ -11,8 +11,7 @@ router.route('/')
 router.route('/session')
     .post(protect, authorize('admin','user'), createPaymentSession);
 
-router.route('/:id')
-    .get(protect, authorize('user'), getCreditCard);
-    // .post(protect, authorize('user', createCredit))
+router.route('/user/:id')
+    .get(protect, authorize('admin','user'), getUserInfo)
 
 module.exports = router

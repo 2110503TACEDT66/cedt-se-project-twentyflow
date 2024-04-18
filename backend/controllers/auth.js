@@ -32,7 +32,7 @@ exports.register = async (req,res,next) => {
         const {name,telephone_number,email,password,role} = req.body;
 
         //create stripe customer
-        const customer = await stripe.createCustomer(email,name);
+        const customer = await stripe.createCustomer(email,name);        
 
         //Create user
         const user = await User.create({

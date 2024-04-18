@@ -23,7 +23,7 @@ const FinancialData = ({
       />
       <small
         className="absolute top-0 right-0 mt-5 mr-5 text-xl"
-        style={{ color: textColor }}
+        style={{ color: textColor , fontWeight: "bold"}}
       >
         {description}
       </small>

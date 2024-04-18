@@ -2,6 +2,7 @@
 import { signIn, useSession } from "next-auth/react";
 import { redirect } from 'next/navigation'
 import React, { useState } from "react";
+import Swal from "sweetalert2";
 
 
 const LoginPage = () => {
@@ -11,12 +12,21 @@ const LoginPage = () => {
   const { data:session } = useSession();
   if(!session){
   const onSubmit = async () => {
-    const result = await signIn("credentials", {
-      email: email,
-      password: pass,
-      redirect: true,
-      callbackUrl: "/",
+    Swal.fire({
+      title: "Log in",
+      text: "Do you want to log in?",
+      icon: "question"
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const result = await signIn("credentials", {
+          email: email, 
+          password: pass,
+          redirect: true,
+          callbackUrl: "/",
+        });
+      }
     });
+    
   };
   return (
     <main className="flex w-screen flex-col  items-center bg-main-100 min-h-[90vh] p-7">

@@ -13,6 +13,8 @@ import WeeklyRevenue from "@/components/WeeklyRevenue";
 import Customers from "@/components/Customers";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+
 
 const bullColor = "green";
 const bearColor = "red";
@@ -171,6 +173,13 @@ export default function DashBoard() {
     }
   }, [currentUser]);
 
+
+  const router = useRouter();
+
+  if (currentUser?.role !== 'admin')
+    router.push('/');
+  else
+
   return (
     <main className="p-7 min-h-[90vh] bg-main-100">
       <div className="flex flex-col gap-8">
@@ -181,28 +190,35 @@ export default function DashBoard() {
             description={trendUser + "% today"}
             label="Total Customers"
             icon={faPerson}
-            textColor={bullColor}
+            textColor={ 
+              trendUser ? (trendUser > 0 ? bullColor : bearColor) : ""}
           ></FinancialData>
           <FinancialData
             amount={String(customerMonth)}
             description={trendMonth + "% today"}
             label="Customers This Month"
             icon={faPeopleLine}
-            textColor={bullColor}
+            textColor={
+              trendMonth ? (trendMonth > 0 ? bullColor : bearColor) : ""
+            }
           ></FinancialData>
           <FinancialData
             amount={String(activeCustomer)}
             description={trendActive + "% today"}
             label="Active Customers"
             icon={faChildReaching}
-            textColor={bullColor}
+            textColor={
+              trendActive ? (trendActive > 0 ? bullColor : bearColor) : ""
+            }
           ></FinancialData>
           <FinancialData
             amount={String(totalRevenue)}
             description={revenueTrend + "% today"}
             label="Total Revenue"
             icon={faMoneyBill1Wave}
-            textColor={bearColor}
+            textColor={
+              totalRevenue ? (totalRevenue > 0 ? bullColor : bearColor) : ""
+            }
           ></FinancialData>
         </div>
         {/* yearly revanue and calendar */}

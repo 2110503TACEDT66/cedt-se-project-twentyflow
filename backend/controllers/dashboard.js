@@ -297,14 +297,16 @@ exports.getRevenueTrend = async (req,res,next) => {
         let todayRevenue = 0;
         const totalPrice = histories2.reduce((total, history) => total + history.price, 0);
         histories.forEach(element => {
-            if(element.createdAt == new Date()) {
+            const today = new Date();
+            const purchaseDate = element.createdAt;
+            if(purchaseDate.getDate() === today.getDate() && purchaseDate.getMonth() === today.getMonth() && purchaseDate.getFullYear() === today.getFullYear()) {
                 todayRevenue += element.price;
             }
         })
 
         const totalFromPastToYesterday = totalPrice - todayRevenue;
         
-        let trend = 0;
+        let trend;
         if(totalFromPastToYesterday === 0) {
             todayRevenue === 0 ? trend = 0 : trend = 100;
         } else {
@@ -312,6 +314,9 @@ exports.getRevenueTrend = async (req,res,next) => {
         }
         
         console.log(trend);
+        console.log(todayRevenue);
+        console.log(totalPrice);
+        console.log(totalFromPastToYesterday);
 
         res.status(200).json({success:true, trends: trend});
 

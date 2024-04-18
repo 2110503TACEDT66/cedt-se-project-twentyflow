@@ -34,13 +34,6 @@ export default function PaymentCard({
     }
   }, []);
 
-<<<<<<< HEAD
-  useEffect(() => {
-
-  })
-
-=======
->>>>>>> 5cd072a50aa6a83ac5f48b9277829cef70626b9f
   const hour: number = currentReservation
     ? Math.ceil(
         (new Date(currentReservation.endTime).getTime() -
@@ -116,11 +109,7 @@ export default function PaymentCard({
             </div>
           </div>
 
-<<<<<<< HEAD
-          <div className=" flex flex-col w-1/5 space-y-3">
-=======
           <div className=" flex flex-col w-1/3 space-y-3">
->>>>>>> 5cd072a50aa6a83ac5f48b9277829cef70626b9f
             <h1 className=" font-bold text-xl">User</h1>
             <div className=" flex flex-row w-full space-x-7">
               <h1 className=" font-semibold text-xl border-2 py-4 px-5 rounded-md border-gray-300">
@@ -128,21 +117,6 @@ export default function PaymentCard({
               </h1>
             </div>
           </div>
-<<<<<<< HEAD
-          
-          <div className=" flex flex-col w-1/2 space-y-3">
-            <h1 className=" font-bold text-xl">Credit Card</h1>
-            <div className=" flex flex-row w-full space-x-7">
-              <div className=" font-semibold text-xl border-2 py-4 px-5 rounded-md border-gray-300">
-              
-              </div>
-            
-              <input name="CardInput" className="font-semibold text-xl border-2 py-4 px-5 rounded-md border-gray-300" />
-            </div>
-          </div>
-
-=======
->>>>>>> 5cd072a50aa6a83ac5f48b9277829cef70626b9f
         </div>
 
         <div className="">
@@ -160,8 +134,4 @@ export default function PaymentCard({
       </div>
     </div>
   );
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 5cd072a50aa6a83ac5f48b9277829cef70626b9f

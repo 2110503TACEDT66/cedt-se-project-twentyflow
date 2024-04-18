@@ -13,6 +13,8 @@ import WeeklyRevenue from "@/components/WeeklyRevenue";
 import Customers from "@/components/Customers";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+
 
 const bullColor = "green";
 const bearColor = "red";
@@ -145,6 +147,13 @@ export default function DashBoard() {
         });
     }
   }, [currentUser]);
+
+
+  const router = useRouter();
+
+  if (currentUser?.role !== 'admin')
+    router.push('/');
+  else
 
   return (
     <main className="p-7 min-h-[90vh] bg-main-100">

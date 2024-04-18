@@ -181,7 +181,7 @@ exports.createPaymentSession = async (req, res) => {
             sessionUrl: session.url,
         });
     } catch (error) {
-        console.error(error);
+        console.log(error.message);
         res.status(500).json({
             success: false,
             error: error.message,

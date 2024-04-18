@@ -2,6 +2,7 @@
 
 import { useEffect , useRef } from "react";
 import { useSession } from "next-auth/react";
+import Swal from "sweetalert2";
 
 export default function Success() {
   const { data: session, status } = useSession();
@@ -28,16 +29,21 @@ export default function Success() {
             appointmentID : appId,
             amount : amount
           }),
-      
-          
         })
+        Swal.fire({
+          title: "Payment Success",
+          icon: "success" 
+      }).then((result)=>{
+        if (result.isConfirmed) {
+          window.location.href='/'
+        }
+      });
     }}
     console.log("")
   }, []);
 
   return (
     <main>
-      <h1 className="text-center m-3 font-semibold">Success Payment</h1>
     </main>
   );
 }

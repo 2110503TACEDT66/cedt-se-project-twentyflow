@@ -4,6 +4,7 @@ import { CircularProgress } from "@mui/material";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import Swal from "sweetalert2";
 
 export default function PaymentCard({
   reservationId,
@@ -90,7 +91,11 @@ export default function PaymentCard({
       }
         
       else{
-         alert("This session is finished");
+        //  alert("This session is finished");
+        Swal.fire({
+          title: "Cannot process the payment",
+          icon: "error" 
+      });
         }
     } catch (error) {
       console.error("Error creating session:", error);

@@ -75,7 +75,7 @@ export default function ReservationCard({
                 session.user.token,
                 priceId
               );
-              router.push("/history");
+              router.push("/booking");
             } else {
               alert("Start time must be less than end time");
             }
@@ -121,7 +121,7 @@ export default function ReservationCard({
               session.user.token,
               priceId
             );
-            router.push("/history");
+            router.push("/booking");
           } else {
             alert("Start time must be less than end time");
           }

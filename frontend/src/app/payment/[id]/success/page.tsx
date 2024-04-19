@@ -4,12 +4,16 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleCheck } from "@fortawesome/free-solid-svg-icons";
 import { useEffect , useRef,  } from "react";
 import { useSession } from "next-auth/react";
+<<<<<<< HEAD
 import Link from "next/link";
 import { useState } from "react";
 import { CircularProgress } from "@mui/material";
 import sleep from "sleep-promise";
 
 
+=======
+import Swal from "sweetalert2";
+>>>>>>> 5ac3d57fd44db89f8b1c01135c504a38ae491a0f
 
 export default function Success() {
   const { data: session, status } = useSession();
@@ -36,17 +40,30 @@ export default function Success() {
           body: JSON.stringify({
             appointmentID : appId,
             amount : amount
+<<<<<<< HEAD
           })
         })
         .then((res) => {
           sleep(2000)
           setIsLoaded(true)
+=======
+          }),
+>>>>>>> 5ac3d57fd44db89f8b1c01135c504a38ae491a0f
         })
+        Swal.fire({
+          title: "Payment Success",
+          icon: "success" 
+      }).then((result)=>{
+        if (result.isConfirmed) {
+          window.location.href='/'
+        }
+      });
     }}
     console.log("")
   }, []);
 
   return (
+<<<<<<< HEAD
     <main className=" flex justify-center items-center">
       {isLoading ? 
       (
@@ -68,6 +85,9 @@ export default function Success() {
             </Link>
         </button>
       </div>)}
+=======
+    <main>
+>>>>>>> 5ac3d57fd44db89f8b1c01135c504a38ae491a0f
     </main>
   );
 }

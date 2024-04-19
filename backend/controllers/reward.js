@@ -21,7 +21,7 @@ exports.createReward = async (req,res,next) => {
 
 exports.getRewards = async (req,res,next) => {
     try {
-        const rewards = await Reward.find({ user: req.user.id});
+        const rewards = await Reward.find({ user: req.user.id}).sort({createdAt: -1});
         res.status(200).json({
             success: true,
             count: rewards.length,

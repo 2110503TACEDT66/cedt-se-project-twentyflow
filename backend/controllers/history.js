@@ -12,7 +12,8 @@ exports.getHistories = async (req, res, next) => {
         ).populate({
             path: 'user',
             select: 'name'
-        });
+        })
+        .sort({createdAt: -1});
     }else{
         //If you are an admin, you can see all!
         if(req.params.coWorkingId) {
@@ -23,7 +24,8 @@ exports.getHistories = async (req, res, next) => {
             }).populate({
                 path:'user',
                 select: 'name'
-            });
+            })
+            .sort({createdAt: -1});
 
         }else {
             query= await History.find().populate({
@@ -32,13 +34,14 @@ exports.getHistories = async (req, res, next) => {
             }).populate({
                 path:'user',
                 select: 'name'
-            });
+            })
+            .sort({createdAt: -1});
 
         }
 
     }
     try {
-        const histories=  query;
+        const histories= query;
         res.status(200).json({
             success:true,
             count:histories.length,
@@ -57,7 +60,8 @@ exports.getHistory = async (req, res, next) => {
         }).populate({
             path: 'user',
             select: 'name'
-        });
+        })
+        .sort({createdAt: -1});
 
         if (!history) {
             return res.status(404).json({

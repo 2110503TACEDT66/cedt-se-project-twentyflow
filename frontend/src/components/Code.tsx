@@ -2,6 +2,7 @@
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCopy } from "@fortawesome/free-solid-svg-icons";
+import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import Image from "next/image"
 import { useState } from "react"
 
@@ -17,7 +18,7 @@ export default function Code( {couponName, couponCode}: {couponName:string, coup
     const copyText = (entryText:string) => {
         navigator.clipboard.writeText(entryText);
         setIsButtonClicked(true);
-        setTimeout(defaultButton, 500);
+        setTimeout(defaultButton, 1500);
     }
     const defaultButton = () => {
         setIsButtonClicked(false);
@@ -39,8 +40,8 @@ export default function Code( {couponName, couponCode}: {couponName:string, coup
                         <div className="font-bold text-xl text-center p-2 w-full">
                             {isTextVisible && couponCode }
                         </div>
-                        {isTextVisible && <button title="copy" className="p-3" onClick={()=>{copyText(couponCode);}}>
-                            <FontAwesomeIcon className={`h-5 w-6 ${isButtonClicked ?"text-gray-400": "text-gray-600"}`} icon={faCopy}/>
+                        {isTextVisible && <button title="copy" className="mx-3" onClick={()=>{copyText(couponCode);}}>
+                            <FontAwesomeIcon className={`h-5 w-6 p-1 rounded-lg hover:bg-gray-200 ${isButtonClicked ?"text-green-500": "text-gray-600"}`} icon={isButtonClicked? faCheck : faCopy}/>
                         </button>}
                     </div>
                     <button onClick={toggleTextVisibility} className='w-[70px] h-[50px] relative bg-white rounded-lg ml-2'>

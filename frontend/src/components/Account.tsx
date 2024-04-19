@@ -104,7 +104,7 @@ export default function Account() {
                     <h1 className=" font-bold text-xl">
                         Telephone Number
                     </h1>
-                    <input className="font-semibold text-xl border-2 p-3 rounded-md border-gray-300" value={changeTel} onChange={(event) => {setChangeTel(event.target.value)}}></input>
+                    <input type="number" className="font-semibold text-xl border-2 p-3 rounded-md border-gray-300" value={changeTel} onChange={(event) => {setChangeTel(event.target.value)}}></input>
 
                     <button className= "bg-main-100 text-white text-[20px] py-3 rounded-md font-semibold w-full"
                     onClick={handleSave}>

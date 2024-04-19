@@ -4,7 +4,8 @@ import { useSession } from "next-auth/react";
 import Swal from "sweetalert2";
 import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCreditCard } from "@fortawesome/free-solid-svg-icons";
+import { faCreditCardAlt } from "@fortawesome/free-solid-svg-icons";
+import {faCcVisa} from "@fortawesome/free-brands-svg-icons";
 
 export default function CreditCard() {
 
@@ -15,6 +16,7 @@ export default function CreditCard() {
     const [expiryDate, setExpiryDate] = useState('');
     const [cvc, setCvc] = useState('');
     const [cardNumberFetch, setCardNumberFetch] = useState();
+    const [cardDetails, setCardDetails] = useState<string>("");
 
     const saveCreditCard = async () => {
         if (currentUser && cvc && cardNumber && expiryDate) {
@@ -63,9 +65,11 @@ export default function CreditCard() {
                 .then((data) => {
                     try{
                         setCardNumberFetch(data.data.last4);
+                        setCardDetails(data.data.exp_month + "/" + data.data.exp_year);
                     }
                     catch (error){
                         setCardNumberFetch(undefined);
+                        setCardDetails("");
                     }
                 }
             );
@@ -78,9 +82,47 @@ export default function CreditCard() {
                 (cardNumberFetch === undefined
                     ? ""
                     :
-                      <h1 className=" font-semibold text-xl border-2 py-4 px-5 rounded-md border-gray-300">
-                       <FontAwesomeIcon icon={faCreditCard}/> Your credit card : {"•••• •••• •••• " + cardNumberFetch}
-                      </h1>)
+                    (
+                        <div className=" flex flex-col  items-center w-full">
+                            <div className=" w-[24rem] bg-gradient-to-r from-main-100 to-indigo-300 rounded-md h-[16rem] relative">
+                                <div className=" absolute top-3 left-6">
+                                    <FontAwesomeIcon icon={faCreditCardAlt} size="2x" className="text-white"/>
+                                </div>
+                                <div className=" absolute top-3 right-6">
+                                    <FontAwesomeIcon icon={faCcVisa} size="2x" className="text-white"/>
+                                </div>
+                                <div className=" absolute flex w-full flex-col space-y-3 top-14 left-6">
+                                    <div>
+                                        <h1 className=" text-white text-lg ">Name</h1>
+                                        <h1 className=" text-white text-xl font-bold ">
+                                            {currentUser?.name}
+                                        </h1>
+                                    </div>
+                                    <div>
+                                        <h1 className=" text-white text-lg ">Card Number</h1>
+                                        <h1 className=" text-white text-xl font-bold ">
+                                            •••• •••• •••• {cardNumberFetch}
+                                        </h1>
+                                    </div>
+                                    <div className=" flex flex-row w-[20rem] justify-between">
+                                        <div>
+                                            <h1 className=" text-white text-lg ">Expiry Date</h1>
+                                            <h1 className=" text-white text-xl font-bold ">
+                                                {cardDetails}
+                                            </h1>
+                                        </div>
+                                        <div>
+                                            <h1 className=" text-white text-lg ">CVC</h1>
+                                            <h1 className=" text-white text-xl font-bold ">
+                                                •••
+                                            </h1>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    ))
+
             }
             <div>
                 <h1 className=" font-bold text-xl">

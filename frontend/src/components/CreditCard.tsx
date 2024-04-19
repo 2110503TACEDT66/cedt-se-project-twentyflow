@@ -16,6 +16,7 @@ export default function CreditCard() {
     const [expiryDate, setExpiryDate] = useState('');
     const [cvc, setCvc] = useState('');
     const [cardNumberFetch, setCardNumberFetch] = useState();
+    const [cardDetails, setCardDetails] = useState<string>("");
 
     const saveCreditCard = async () => {
         if (currentUser && cvc && cardNumber && expiryDate) {
@@ -64,9 +65,11 @@ export default function CreditCard() {
                 .then((data) => {
                     try{
                         setCardNumberFetch(data.data.last4);
+                        setCardDetails(data.data.exp_month + "/" + data.data.exp_year);
                     }
                     catch (error){
                         setCardNumberFetch(undefined);
+                        setCardDetails("");
                     }
                 }
             );
@@ -105,7 +108,7 @@ export default function CreditCard() {
                                         <div>
                                             <h1 className=" text-white text-lg ">Expiry Date</h1>
                                             <h1 className=" text-white text-xl font-bold ">
-                                                12/85
+                                                {cardDetails}
                                             </h1>
                                         </div>
                                         <div>

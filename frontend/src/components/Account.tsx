@@ -36,6 +36,13 @@ export default function Account() {
     const [changeTel, setChangeTel] = useState<string | undefined>(tel);
 
     const handleSave = async () => {
+        const telRegex = /^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/;
+
+        if(!changeTel || !telRegex.test(changeTel)) {
+            alert('Invalid telephone number');
+            return;
+        }
+
         if(changeUsername && changeTel && currentUser?.token && currentUser?._id){
             await updateUserProfile(changeUsername, currentUser?.token, currentUser?._id, changeTel);
             session.update();

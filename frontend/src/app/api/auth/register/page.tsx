@@ -47,7 +47,7 @@ const Page = async () => {
                     Email
                 </h1>
                 <input required id="email" name="email"
-                placeholder="johndoe@gmail.com" className=" text-xl text-blck font-semibold placeholder:text-xl border-2 focus:outline-none py-2 px-5 border-gray-300 h-full rounded-md" type="email" />
+                placeholder="johndoe@gmail.com" className=" text-xl text-black font-semibold placeholder:text-xl border-2 focus:outline-none py-2 px-5 border-gray-300 h-full rounded-md" type="email" />
             </div>
         </div>
         <div className=" flex flex-row w-full ">
@@ -56,7 +56,7 @@ const Page = async () => {
                     Password
                 </h1>
                 <input  required id="password" name="password" 
-                placeholder="Password" className=" text-xl text-blck font-semibold placeholder:text-xl border-2 focus:outline-none py-2 px-5 border-gray-300 h-full rounded-md" type="password" />
+                placeholder="Password" className=" text-xl text-black font-semibold placeholder:text-xl border-2 focus:outline-none py-2 px-5 border-gray-300 h-full rounded-md" type="password" />
             </div>
         </div>
         <div className=" flex flex-row w-full space-x-5">
@@ -65,14 +65,14 @@ const Page = async () => {
                     Name
                 </h1>
                 <input required id="name" name="name" 
-                placeholder="John Doe" className=" text-xl text-blck font-semibold placeholder:text-xl border-2 focus:outline-none py-2 px-5 border-gray-300 h-full rounded-md" type="text" />
+                placeholder="John Doe" className=" text-xl text-black font-semibold placeholder:text-xl border-2 focus:outline-none py-2 px-5 border-gray-300 h-full rounded-md" type="text" />
             </div>
             <div className=" flex flex-col space-y-3 w-1/2">
                 <h1 className=" font-bold text-xl">
                     Telephone
                 </h1>
-                <input required id="telephone" name="telephone"
-                placeholder="0800000000" className=" text-xl text-blck font-semibold placeholder:text-xl border-2 focus:outline-none py-2 px-5 border-gray-300 h-full rounded-md" type="text" />
+                <input required id="telephone" name="telephone" type='number'
+                placeholder="0800000000" className=" text-xl text-black font-semibold placeholder:text-xl border-2 focus:outline-none py-2 px-5 border-gray-300 h-full rounded-md"  />
             </div>
         </div>
         <button type="submit" className=" bg-main-100 text-white  text-center py-3 rounded-md font-semibold" >

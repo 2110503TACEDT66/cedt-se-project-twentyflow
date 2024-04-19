@@ -12,7 +12,7 @@ router.get('/logout',logout);
 // router.put('/updateprofile',(protect, authorize('admin','user'),updateProfile));
 router.put('/updatepoints',protect,updatePoints);
 router.post('/updateall',protect, updateAll);
-router.route('/:id').get(getMe).put(protect,authorize('user'),updateUserProfile)
+router.route('/:id').get(getMe).put(protect,authorize('user','admin'),updateUserProfile)
 router.delete('/deletecoupon',protect, deleteCoupon)
 router.put('/addcoupon',protect,addCoupon);
 module.exports = router;

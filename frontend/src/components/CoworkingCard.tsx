@@ -13,6 +13,12 @@ export default function CoworkingCard( {coworking} : {coworking : Coworking}){
                     <h1 className=" bg-white p-3 rounded-lg font-bold text-xl">
                         {coworking.name}
                     </h1>
+                    <h1 className=" font-bold text-xl">
+                        Price : 
+                    </h1>
+                    <h1 className=" bg-white p-3 rounded-lg font-bold text-xl">
+                        {coworking.price_hourly} THB / Hour
+                    </h1>
                 </div>
                 <div className=" flex flex-row  items-center space-x-3">
                     <h1 className=" font-bold text-xl">
@@ -41,6 +47,7 @@ export default function CoworkingCard( {coworking} : {coworking : Coworking}){
                     <h1 className=" bg-white p-3 rounded-lg font-bold text-xl">
                         {coworking.address} {coworking.district} {coworking.province} {coworking.postalcode}
                     </h1>
+                    
                 </div>
             </div>
             <Link href={`/coworkings/${coworking.id}`} className=" bg-main-100 my-5 w-2/12 text-white flex justify-center items-center font-bold rounded-md">

@@ -19,7 +19,7 @@ export default function HistoryAccount( {historyName, historyPrice}: {historyNam
                     {historyName}
                 </h1>
                 <h1 className=" text-3xl text-white font-bold ">
-                    $ {historyPrice} THB
+                    {historyPrice} THB
                 </h1>
                 
             </div>

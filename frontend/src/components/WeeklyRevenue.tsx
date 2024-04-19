@@ -44,7 +44,7 @@ const MyComponent: React.FC<MyComponentProps> = () => {
   return (
     <div className="mt-[-30px] ml-10 absolute w-[88%]">
       <LineChart
-        xAxis={[{ scaleType: "band", data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"] }]}
+        xAxis={[{ scaleType: "band", data: ["Sun","Mon", "Tue", "Wed", "Thu", "Fri", "Sat"] }]}
         series={[
           {
         data: dataset,

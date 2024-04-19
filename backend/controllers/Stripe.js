@@ -156,13 +156,6 @@ exports.createPaymentSession = async (req, res) => {
 
         const customer = await stripe.customers.retrieve(stripeCustomerId);
 
-        if (!customer || !customer.default_source) {
-            return res.status(400).json({
-                success: false,
-                message: 'Customer has no default payment method'
-            });
-        }
-
         const session = await stripe.checkout.sessions.create({
             mode: "payment",
             payment_method_types: ["card","promptpay"],

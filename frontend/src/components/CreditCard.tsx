@@ -2,7 +2,9 @@
 
 import { useSession } from "next-auth/react";
 import Swal from "sweetalert2";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCreditCard } from "@fortawesome/free-solid-svg-icons";
 
 export default function CreditCard() {
 
@@ -12,6 +14,7 @@ export default function CreditCard() {
     const [cardNumber, setCardNumber] = useState('');
     const [expiryDate, setExpiryDate] = useState('');
     const [cvc, setCvc] = useState('');
+    const [cardNumberFetch, setCardNumberFetch] = useState();
 
     const saveCreditCard = async () => {
         if (currentUser && cvc && cardNumber && expiryDate) {
@@ -29,6 +32,7 @@ export default function CreditCard() {
                   }),
                 }
             )
+            
 
             Swal.fire({
                 title: "Card Saved",
@@ -43,9 +47,41 @@ export default function CreditCard() {
         }
     }
 
+    useEffect(() => {
+        if (currentUser) {
+            fetch(
+                `${process.env.NEXT_PUBLIC_BACKEND_URL}/payment/user/${currentUser._id}`, 
+                {
+                  method: 'GET',
+                  headers: {
+                    "Content-Type": "application/json",
+                    authorization: `Bearer ${currentUser.token}`,
+                  },
+                }
+            )
+                .then((res) => res.json())
+                .then((data) => {
+                    try{
+                        setCardNumberFetch(data.data.last4);
+                    }
+                    catch (error){
+                        setCardNumberFetch(undefined);
+                    }
+                }
+            );
+        }
+    }, []);
 
     return(
         <div className=" w-full flex flex-col space-y-4">
+            {
+                (cardNumberFetch === undefined
+                    ? ""
+                    :
+                      <h1 className=" font-semibold text-xl border-2 py-4 px-5 rounded-md border-gray-300">
+                       <FontAwesomeIcon icon={faCreditCard}/> Your credit card : {"•••• •••• •••• " + cardNumberFetch}
+                      </h1>)
+            }
             <div>
                 <h1 className=" font-bold text-xl">
                     Card Number

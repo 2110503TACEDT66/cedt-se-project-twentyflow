@@ -6,6 +6,8 @@ import { faUser, faScrewdriverWrench } from "@fortawesome/free-solid-svg-icons";
 import getUserProfile from "@/libs/getUserProfile";
 import LogOutButton from "./LogOutButton";
 import { useRouter } from "next/navigation";
+import Swal from "sweetalert2";
+import LogInButton from "./LogInButton";
 
 export default async function Header() {
   const session = await getServerSession(authOptions);
@@ -13,15 +15,18 @@ export default async function Header() {
   // if (session) {
   //     var profile = await getUserProfile(session.user.token)
   // }
+  
   return (
     <header className="flex items-center justify-between py-7 px-10 h-[10vh]">
-      <h1 className="text-5xl font-black text-main-100">CEDT</h1>
+      <Link href="/" className="text-5xl font-black text-main-100">
+      CEDT
+      </Link>
       <nav>
         <div className="flex space-x-7 justify-center items-center">
-          <Link href="/" className=" text-xl font-bold">
+          <Link href="/" className=" text-xl font-bold hover:text-main-100">
             HOME
           </Link>
-          <Link href="/coworkings" className=" text-xl font-bold">
+          <Link href="/coworkings" className=" text-xl font-bold hover:text-main-100">
             COWORKING
           </Link>
           {!session ? (
@@ -29,24 +34,26 @@ export default async function Header() {
               <Link href="/api/auth/register" className=" text-xl font-bold">
                 REGISTER
               </Link>
-              <Link
+              {/* <Link
                 href="/api/auth/signin"
                 className=" text-xl font-bold text-white p-2 bg-main-100 rounded-md"
+                onClick={handleLogin}
               >
                 LOGIN
-              </Link>
+              </Link> */}
+              <LogInButton />
             </div>
           ) : (
             <div className="flex space-x-7 justify-center items-center">
-              <Link href="/booking" className=" text-xl font-bold">
+              <Link href="/booking" className=" text-xl font-bold hover:text-main-100">
                 BOOKING
               </Link>
               {session.user.role === "admin" ? (
-                <Link href={"/dashboard"} className=" text-xl font-bold">
+                <Link href={"/dashboard"} className=" text-xl font-bold hover:text-main-100">
                   DASHBOARD
                 </Link>
               ) : (
-                <Link href={"/coupon"} className=" text-xl font-bold">
+                <Link href={"/coupon"} className=" text-xl font-bold hover:text-main-100">
                   COUPON
                 </Link>
               )}

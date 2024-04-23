@@ -1,16 +1,39 @@
+"use client"
 import * as React from "react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
+
+
+ 
 const RankItem: React.FC<RankItemProps> = ({ rank, name, price }) => (
-  <div className="flex items-center justify-between px-4 py-3 bg-white rounded-3xl">
-    <div className="flex items-center space-x-4">
-      <div>{rank}</div>
+  <div className="flex items-center justify-between px-4 py-3 bg-white rounded-3xl w-[90%] m-3">
+    <div className="flex items-center space-x-10">
+      <div className="ml-5">{rank}</div>
       <div>{name}</div>
     </div>
     <div>{price}</div>
   </div>
 );
 
-const LeaderBoard: React.FC = () => {
+function LeaderBoard() {
+  const router = useRouter();
+    const session = useSession()
+    const currentUser = session.data?.user
+    const [menuChanger, setMenuChanger] = useState<number>(1)
+    const tranclass1 = (menuChanger === 1) ? "border-b-2" : ""
+    const tranclass2 = (menuChanger === 2) ? "border-b-2" : ""
+    const tranclass3 = (menuChanger === 3) ? "border-b-2" : ""
+    const tranclass4 = (menuChanger === 4) ? "border-b-2" : ""
+    const tranclass5 = (menuChanger === 5) ? "border-b-2" : ""
+    const tranDiv1 = (menuChanger === 1) ? "flex" : "hidden"
+    const tranDiv2 = (menuChanger === 2) ? "flex" : "hidden"
+    const tranDiv3 = (menuChanger === 3) ? "flex" : "hidden"
+    const tranDiv4 = (menuChanger === 4) ? "flex" : "hidden"  
+    const tranDiv5 = (menuChanger === 5) ? "flex" : "hidden" 
+    
   const rankData: RankItemProps[] = [
     { rank: 1, name: "Item 1", price: "$10" },
     { rank: 2, name: "Item 2", price: "$20" },
@@ -20,7 +43,9 @@ const LeaderBoard: React.FC = () => {
   ];
 
   return (
-    <div className="flex flex-col px-12 pt-6 pb-10 mt-20 max-w-full bg-white rounded-3xl w-[80%] max-md:px-5 max-md:mt-10 items-center">
+    <div className="flex w-screen flex-col  items-center bg-main-100 min-h-[90vh] p-7">
+      <h1 className=" text-5xl py-10 font-semibold text-white">LEADER BOARD</h1>
+    <div className="flex flex-col px-12 pt-6 pb-10 mt-20 max-w-full bg-white rounded-3xl w-[80%] max-md:px-5 max-md:mt-10">
       <header className="flex gap-5 justify-between self-center max-w-full w-[307px]">
         <div className="flex flex-col items-center">
           <img
@@ -44,12 +69,12 @@ const LeaderBoard: React.FC = () => {
         />
       </header>
       <main className="flex flex-col items-center pt-6 pb-20 mt-3.5 text-2xl font-bold text-center whitespace-nowrap rounded-3xl bg-zinc-300 text-stone-500 max-md:max-w-full">
-        <div className="flex gap-5 justify-between max-w-full w-[605px] max-md:flex-wrap">
+        <div className="flex gap-5 justify-between max-w-full w-full max-md:flex-wrap">
           <div className="flex gap-5 justify-between">
-            <div>Rank</div>
+            <div className="ml-16">Rank</div>
             <div>Name</div>
           </div>
-          <div>Price</div>
+          <div className="mr-16">Price</div>
         </div>
         <hr className="self-stretch mt-5 w-full border border-solid border-zinc-300 stroke-[1px] stroke-zinc-300 max-md:max-w-full" />
         {rankData.map((item, index) => (
@@ -57,6 +82,7 @@ const LeaderBoard: React.FC = () => {
         ))}
       </main>
     </div>
+  </div>
   );
 };
 

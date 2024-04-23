@@ -55,9 +55,4 @@ AppointmentSchema.virtual('history', {
     justOne:false
 });
 
-// AppointmentSchema.pre('deleteOne', {document:true, query: false}, async function(next){
-//     await this.model('TimeAppointment').deleteMany({appointment: this._id});
-// })
-
-
 module.exports=mongoose.model('Appointment' ,AppointmentSchema);

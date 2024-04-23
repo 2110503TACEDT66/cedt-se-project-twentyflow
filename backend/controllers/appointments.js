@@ -8,7 +8,7 @@ exports.getAppointments=async (req,res,next)=>{
     let query;
     //General users can see only their appointments!
     if(req.user.role !== 'admin'){
-        query=Appointment.find({user:req.user.id}).populate({
+        query=Appointment.find({user:req.user.id,status:"unfinished"}).populate({
             path:'coWorking',
             select: 'name province tel price_hourly'
         }
@@ -19,7 +19,7 @@ exports.getAppointments=async (req,res,next)=>{
     }else{
         //If you are an admin, you can see all!
         if(req.params.coWorkingId) {
-            query=Appointment.find({coWorking:req.params.coWorkingId}).populate({
+            query=Appointment.find({coWorking:req.params.coWorkingId,status:"unfinished"}).populate({
                 path: 'coWorking' ,
                 select: 'name province tel price_hourly',
 
@@ -28,7 +28,7 @@ exports.getAppointments=async (req,res,next)=>{
                 select: 'name'
                 } ) ;
         }else {
-            query=Appointment.find().populate({
+            query=Appointment.find({status:"unfinished"}).populate({
                 path:'coWorking' ,
                 select: 'name province tel price_hourly'
             }).populate({
@@ -58,10 +58,10 @@ exports.getAppointment=async (req,res,next) =>{
     try {
         const appointment = await Appointment.findById(req.params.id).populate({
             path:'coWorking' ,
-            select: 'name province tel price_hourly'
+            select: 'name province tel price_hourly '
         });
 
-        if (!appointment){
+        if (!appointment || appointment.status === 'finished'){
             return res.status(404).json({success:false,message:`No appointment with the id of ${req.params.id}`});
         }
 
@@ -91,7 +91,7 @@ exports.addAppointment=async (req,res,next)=>{
         req.body.user=req.user.id;
 
         //Check for existed appointment
-        const existedAppointment = await Appointment.find({user:req.user.id});
+        const existedAppointment = await Appointment.find({user:req.user.id, status:"unfinished"});
 
         //If the user is not an admin, they can only create 3 appointment.
         if (existedAppointment.length >= 3 && req.user.role !== 'admin'){
@@ -122,7 +122,7 @@ exports.updateAppointment=async (req,res,next)=>{
         let appointment = await Appointment.findById(req.params.id);
         
 
-        if(!appointment){
+        if(!appointment || appointment.status === 'finished'){
             return res.status(404).json({success:false,message:`No appointment with the id of ${req.params.id}`});
 
         }
@@ -161,7 +161,7 @@ exports.deleteAppointment=async (req,res,next)=>{
         let appointment = await Appointment.findById(req.params.id);
         
 
-        if(!appointment){
+        if(!appointment || appointment.status === 'finished'){
             return res.status(404).json({success:false,message:`No appointment with the id of ${req.params.id}`});
 
         }

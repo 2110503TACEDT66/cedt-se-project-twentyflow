@@ -12,8 +12,10 @@ exports.getHistories = async (req, res, next) => {
         ).populate({
             path: 'user',
             select: 'name'
-        })
-        .sort({createdAt: -1});
+        }).populate({
+            path: 'appointment',
+            select: 'startTime endTime date room  additional'
+        }).sort({createdAt: -1});
     }else{
         //If you are an admin, you can see all!
         if(req.params.coWorkingId) {
@@ -24,6 +26,9 @@ exports.getHistories = async (req, res, next) => {
             }).populate({
                 path:'user',
                 select: 'name'
+            }).populate({
+                path: 'appointment',
+                select: 'startTime endTime date room  additional'
             })
             .sort({createdAt: -1});
 
@@ -34,6 +39,9 @@ exports.getHistories = async (req, res, next) => {
             }).populate({
                 path:'user',
                 select: 'name'
+            }).populate({
+                path: 'appointment',
+                select: 'startTime endTime date room  additional'
             })
             .sort({createdAt: -1});
 
@@ -60,6 +68,9 @@ exports.getHistory = async (req, res, next) => {
         }).populate({
             path: 'user',
             select: 'name'
+        }).populate({
+            path: 'appointment',
+            select: 'startTime endTime date room  additional'
         })
         .sort({createdAt: -1});
 
@@ -117,6 +128,9 @@ exports.updateHistory = async (req, res, next) => {
         }).populate({
             path: 'user',
             select: 'name'
+        }).populate({
+            path: 'appointment',
+            select: 'startTime endTime date room  additional'
         });
 
 

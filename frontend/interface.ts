@@ -55,4 +55,11 @@ interface StatCardProps {
     changeDirection: "up" | "down";
     value: string;
     label: string;
-  }
+}
+
+interface RankItemProps {
+    rank: number;
+    name: string;
+    price: string;
+}
+  

@@ -57,9 +57,15 @@ interface StatCardProps {
     label: string;
 }
 
-interface RankItemProps {
+interface RankItemPriceProps {
     rank: number;
     name: string;
     price: string;
+}
+
+interface RankItemHourProps {
+    rank: number;
+    name: string;
+    hour: string;
 }
   

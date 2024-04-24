@@ -40,44 +40,91 @@ export default function ReservationCard({
       .then((res) => res.json())
       .then((data) => {
         setData(data.data);
+        
       });
   }, []);
 
   const onsubmit = async () => {
     if ( date && time1 && time2 ){
+      const startHour = parseInt(time1?.format('HH:mm').split(':')[0]);
+      const endHour = parseInt(time2?.format('HH:mm').split(':')[0]);
+      const startMinute = parseInt(time1?.format('HH:mm').split(':')[1]);
+      const endMinute = parseInt(time2?.format('HH:mm').split(':')[1]);
+      const cowokingStartHour = parseInt(coworking.opentime.split(':')[0]);
+      const cowokingEndHour = parseInt(coworking.closetime.split(':')[0]);
+      const cowokingStartMinute = parseInt(coworking.opentime.split(':')[1]);
+      const cowokingEndMinute = parseInt(coworking.closetime.split(':')[1]);
       if (session?.user.role === "user"){
         if (data && data.length <= 2){
-          // check condition time overlap    
-          const priceId = await GetpriceId(
-            coworking.name,
-            coworking.price_hourly,
-            time1?.format('HH:mm'),
-            time2?.format('HH:mm'),
-            session.user.token
-          );
-          
-          addAppt(
-            time1.format('HH:mm'),
-            time2.format('HH:mm'),
-            session.user._id,
-            coworking.id,
-            session.user.token,
-            priceId,
-            room,
-            dayjs(date?.format('YYYY-MM-DD')).toDate().toISOString(),
-            add
-          )
+
+          // check condition time overlap 
+          if (startHour > endHour || (startHour == endHour && startMinute >= endMinute)){
+            Swal.fire({
+              title: "Reservation Failed",
+              text: "Start time must be before end time",
+              icon: "error",
+            });
+            return;
+          }else if (startHour < cowokingStartHour || (startHour == cowokingStartHour && startMinute < cowokingStartMinute)){
+            Swal.fire({
+              title: "Reservation Failed",
+              text: "Start time must be after coworking open time",
+              icon: "error",
+            });
+            return;
+          }
+          else if (endHour > cowokingEndHour || (endHour == cowokingEndHour && endMinute > cowokingEndMinute)){
+            Swal.fire({
+              title: "Reservation Failed",
+              text: "End time must be before coworking close time",
+              icon: "error",
+            });
+            return;
+          }
+          else{
+            const priceId = await GetpriceId(
+              coworking.name,
+              coworking.price_hourly,
+              time1?.format('HH:mm'),
+              time2?.format('HH:mm'),
+              session.user.token
+            );
+            addAppt(
+              time1.format('HH:mm'),
+              time2.format('HH:mm'),
+              session.user._id,
+              coworking.id,
+              session.user.token,
+              priceId,
+              room,
+              dayjs(date?.format('YYYY-MM-DD')).toDate().toISOString(),
+              add
+            )
+            Swal.fire({
+              title: "Reservation Successful",
+              icon: "success",
+            }).then((result)=>{
+              if(result.isConfirmed){
+                router.push("/booking");
+              }
+            });
+          }
+        }
+        else{
           Swal.fire({
-            title: "Reservation Successful",
-            icon: "success",
-          }).then((result)=>{
-            if(result.isConfirmed){
-              router.push("/booking");
-            }
+            title: "Reservation Failed",
+            text: "You can only reserve 3 times",
+            icon: "error",
           });
         }
       }
-
+    }
+    else{
+      Swal.fire({
+        title: "Reservation Failed",
+        text: "Please fill in all the required fields",
+        icon: "error",
+      });
     }
 
   };

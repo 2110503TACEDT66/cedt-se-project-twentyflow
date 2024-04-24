@@ -2,12 +2,14 @@
 
 import DateReserve from "@/components/DateReseve";
 import { Dayjs } from "dayjs";
+import dayjs from 'dayjs';
 import addAppt from "@/libs/addAppt";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import GetpriceId from "@/libs/getPriceId";
 import Swal from "sweetalert2";
+import TimeReserve from "./TimeReserve";
 
 export default function ReservationCard({
   coworking,
@@ -16,10 +18,9 @@ export default function ReservationCard({
 }) {
   const router = useRouter();
 
-  const [datetime1, setDate1] = useState<Dayjs | null>(null);
-  const [time1, setTime1] = useState<string>("");
-  const [datetime2, setDate2] = useState<Dayjs | null>(null);
-  const [time2, setTime2] = useState<string>("");
+  const [date, setDate] = useState<Dayjs | null>(null);
+  const [time1, setTime1] = useState<Dayjs | null>(null);
+  const [time2, setTime2] = useState<Dayjs | null>(null);
 
   const { data: session, status } = useSession();
   const [data, setData] = useState<Reservation[]>();
@@ -39,157 +40,56 @@ export default function ReservationCard({
   }, []);
 
   const onsubmit = async () => {
-    if (datetime1 && session && time1 && datetime2 && time2) {
-      if (session.user.role === "user") {
-        if (!data || data.length <= 2) {
-          const year = new Date(datetime1.toISOString()).getFullYear();
-          const month = new Date(datetime1.toISOString()).getMonth();
-          const day = new Date(datetime1.toISOString()).getDate();
-          const year2 = new Date(datetime2.toISOString()).getFullYear();
-          const month2 = new Date(datetime2.toISOString()).getMonth();
-          const day2 = new Date(datetime2.toISOString()).getDate();
-          if (
-            time1.match(/^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$/) &&
-            time1.length === 5 &&
-            time2.match(/^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$/) &&
-            time2.length === 5
-          ) {
-            const hour = parseInt(time1.split(":")[0]);
-            const minute = parseInt(time1.split(":")[1]);
-            const hour2 = parseInt(time2.split(":")[0]);
-            const minute2 = parseInt(time2.split(":")[1]);
-            const newDate = new Date(year, month, day, hour, minute);
-            const newDate2 = new Date(year2, month2, day2, hour2, minute2);
-            if (newDate.getTime() < newDate2.getTime()) {
-              const priceId = await GetpriceId(
-                coworking.name,
-                coworking.price_hourly,
-                newDate.toISOString(),
-                newDate2.toISOString(),
-                session.user.token
-              );
-              addAppt(
-                newDate.toISOString(),
-                newDate2.toISOString(),
-                session.user._id,
-                coworking.id,
-                session.user.token,
-                priceId
-              );
-              Swal.fire({
-                title: "Reservation Successful",
-                icon: "success",
-              }).then((result)=>{
-                if(result.isConfirmed){
-                  router.push("/booking");
-                }
-              });
-            } else {
-              Swal.fire({
-                title: "Start time must be less than end time",
-                icon: "error",
-              });
-            }
-          } else {
-            Swal.fire({
-              title: "Invalid time format",
-              icon: "error",
-            })
-            ;
-          }
-        } else {
-          Swal.fire({
-            title: "You have reached the maximum number of reservations",
-            icon: "error",
-          }).then((result)=>{
-            if(result.isConfirmed){
-              router.push("/");
-            }
-          });
-        }
-      } else {
-        const year = new Date(datetime1.toISOString()).getFullYear();
-        const month = new Date(datetime1.toISOString()).getMonth();
-        const day = new Date(datetime1.toISOString()).getDate();
-        const year2 = new Date(datetime2.toISOString()).getFullYear();
-        const month2 = new Date(datetime2.toISOString()).getMonth();
-        const day2 = new Date(datetime2.toISOString()).getDate();
-        if (
-          time1.match(/^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$/) &&
-          time1.length === 5 &&
-          time2.match(/^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$/) &&
-          time2.length === 5
-        ) {
-          const hour = parseInt(time1.split(":")[0]);
-          const minute = parseInt(time1.split(":")[1]);
-          const hour2 = parseInt(time2.split(":")[0]);
-          const minute2 = parseInt(time2.split(":")[1]);
-          const newDate = new Date(year, month, day, hour, minute);
-          const newDate2 = new Date(year2, month2, day2, hour2, minute2);
-          if (newDate.getTime() < newDate2.getTime()) {
-            const priceId = await GetpriceId(
-              coworking.name,
-              coworking.price_hourly,
-              newDate.toISOString(),
-              newDate2.toISOString(),
-              session.user.token
-            );
-            addAppt(
-              newDate.toISOString(),
-              newDate2.toISOString(),
-              session.user._id,
-              coworking.id,
-              session.user.token,
-              priceId
-            );
-            router.push("/booking");
-          } else {
-            alert("Start time must be less than end time");
-          }
-        } else {
-          alert("Invalid time format");
+    if ( date && time1 && time2 ){
+      if (session?.user.role === "user"){
+        if (data && data.length <= 2){
+          // check condition time overlap
+
+          
         }
       }
+
     }
+    // ห้ามจองเกิน 3
+
   };
+
   return (
     <div className=" w-10/12 space-y-10 h-full p-10 bg-white rounded-md flex flex-col">
-      <div className=" flex flex-col space-y-3">
-        <h1 className=" font-bold text-xl">Name</h1>
-        <h1 className=" font-semibold text-xl border-2 p-3 rounded-md border-gray-300">
-          {coworking.name}
-        </h1>
-      </div>
-      <div className=" flex flex-col w-full space-y-3">
-        <h1 className=" font-bold text-xl">StartTime</h1>
-        <div className=" flex flex-row w-full space-x-7">
-          <div className=" flex flex-row space-y-3 w-1/2">
-            <DateReserve onChangeDate={(value: Dayjs) => setDate1(value)} />
-          </div>
-          <div className=" flex flex-col space-y-3 w-1/2">
-            <input
-              onChange={(e) => setTime1(e.target.value)}
-              placeholder="04:30"
-              className=" text-xl text-blck font-semibold placeholder:text-xl border-2 focus:outline-none px-5 border-gray-300 h-full rounded-md"
-              type="text"
-            />
-          </div>
+      <div className=" flex flex-row w-full space-x-5">
+        <div className="flex flex-col space-y-3 w-5/6" >
+          <h1 className=" font-bold text-xl">Name</h1>
+          <h1 className=" font-semibold text-xl border-2 p-3 rounded-md border-gray-300">
+            {coworking.name}
+          </h1>
+        </div>
+        <div className="flex flex-col space-y-3 w-1/6 " >
+          <h1 className=" font-bold text-xl">Room</h1>
+          <h1 className=" font-semibold text-xl border-2 p-3 rounded-md border-gray-300">
+            2
+          </h1>
         </div>
       </div>
       <div className=" flex flex-col w-full space-y-3">
-        <h1 className=" font-bold text-xl">EndTime</h1>
-        <div className=" flex flex-row w-full space-x-7">
-          <div className=" flex flex-row space-y-3 w-1/2">
-            <DateReserve onChangeDate={(value: Dayjs) => setDate2(value)} />
-          </div>
-          <div className=" flex flex-col space-y-3 w-1/2">
-            <input
-              onChange={(e) => setTime2(e.target.value)}
-              placeholder="04:30"
-              className=" text-xl text-blck font-semibold placeholder:text-xl border-2 focus:outline-none px-5 border-gray-300 h-full rounded-md"
-              type="text"
-            />
-          </div>
+        <h1 className=" font-bold text-xl">Date</h1>
+        <div className=" flex flex-row space-y-3 w-full">
+          <DateReserve onChangeDate={(value: Dayjs) => setDate(value)} />
+        </div>
+      </div>
+      <div className=" flex flex-row w-full space-x-5">
+        <div className="flex flex-col space-y-3 w-1/2 " >
+          <h1 className=" font-bold text-xl">Start</h1>
+          <TimeReserve onChangeTime={(value : Dayjs) => setTime1(value)}/>
+        </div>
+        <div className="flex flex-col space-y-3 w-1/2 " >
+          <h1 className=" font-bold text-xl">End</h1>
+          <TimeReserve onChangeTime={(value : Dayjs) => setTime2(value)}/>
+        </div>
+      </div>
+      <div className=" flex flex-col w-full space-y-3">
+        <h1 className=" font-bold text-xl">Additional requirement</h1>
+        <div className=" flex flex-row space-y-3 w-full">
+          <textarea className=" w-full h-40 border-2 p-3 rounded-md border-gray-300" />
         </div>
       </div>
       <button

@@ -17,6 +17,8 @@ interface CoworkingJson {
     data: Coworking[]
 }
 
+
+
 interface User {
     name: string,
     _id: string,
@@ -26,11 +28,13 @@ interface User {
 interface Reservation {
     startTime : string,
     endTime : string,
+    Date : string,
     user : User,
     coWorking : Coworking,
     createAt : string,
     priceId : string,
     status : string,
+    additional : string,
     _id : string
 }
 
@@ -46,6 +50,8 @@ interface History {
     coWorking: Coworking;
     price: number;
     user : User;
+    appointment : Reservation;
+    hour : number;
     
 }
 

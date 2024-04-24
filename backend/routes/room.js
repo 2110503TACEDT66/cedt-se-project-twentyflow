@@ -7,6 +7,6 @@ const { addRoom, getRooms } = require('../controllers/room');
 const router = express.Router();
 
 
-router.route('/:coWorkingId').post(protect,authorize('admin','user'),addRoom).get(protect,authorize('admin','user'),getRooms)
+router.route('/:coWorkingId').post(addRoom).get(protect,authorize('admin','user'),getRooms)
 
 module.exports = router

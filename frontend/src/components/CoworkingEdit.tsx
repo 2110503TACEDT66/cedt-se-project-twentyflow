@@ -71,7 +71,10 @@ export default function ReservationCard({
           return;
         }
         else{
-      
+
+        /*
+        ! Update the onsubmit function to call the addAppt function with the correct parameters.
+        */
           
           Swal.fire({
             title: "Reservation Successful",

@@ -40,44 +40,91 @@ export default function ReservationCard({
       .then((res) => res.json())
       .then((data) => {
         setData(data.data);
+        
       });
   }, []);
 
   const onsubmit = async () => {
     if ( date && time1 && time2 ){
+      const startHour = parseInt(time1?.format('HH:mm').split(':')[0]);
+      const endHour = parseInt(time2?.format('HH:mm').split(':')[0]);
+      const startMinute = parseInt(time1?.format('HH:mm').split(':')[1]);
+      const endMinute = parseInt(time2?.format('HH:mm').split(':')[1]);
+      const cowokingStartHour = parseInt(coworking.opentime.split(':')[0]);
+      const cowokingEndHour = parseInt(coworking.closetime.split(':')[0]);
+      const cowokingStartMinute = parseInt(coworking.opentime.split(':')[1]);
+      const cowokingEndMinute = parseInt(coworking.closetime.split(':')[1]);
       if (session?.user.role === "user"){
         if (data && data.length <= 2){
-          // check condition time overlap    
-          const priceId = await GetpriceId(
-            coworking.name,
-            coworking.price_hourly,
-            time1?.format('HH:mm'),
-            time2?.format('HH:mm'),
-            session.user.token
-          );
-          
-          addAppt(
-            time1.format('HH:mm'),
-            time2.format('HH:mm'),
-            session.user._id,
-            coworking.id,
-            session.user.token,
-            priceId,
-            room,
-            dayjs(date?.format('YYYY-MM-DD')).toDate().toISOString(),
-            add
-          )
+
+          // check condition time overlap 
+          if (startHour > endHour || (startHour == endHour && startMinute >= endMinute)){
+            Swal.fire({
+              title: "Reservation Failed",
+              text: "Start time must be before end time",
+              icon: "error",
+            });
+            return;
+          }else if (startHour < cowokingStartHour || (startHour == cowokingStartHour && startMinute < cowokingStartMinute)){
+            Swal.fire({
+              title: "Reservation Failed",
+              text: "Start time must be after coworking open time",
+              icon: "error",
+            });
+            return;
+          }
+          else if (endHour > cowokingEndHour || (endHour == cowokingEndHour && endMinute > cowokingEndMinute)){
+            Swal.fire({
+              title: "Reservation Failed",
+              text: "End time must be before coworking close time",
+              icon: "error",
+            });
+            return;
+          }
+          else{
+            const priceId = await GetpriceId(
+              coworking.name,
+              coworking.price_hourly,
+              time1?.format('HH:mm'),
+              time2?.format('HH:mm'),
+              session.user.token
+            );
+            addAppt(
+              time1.format('HH:mm'),
+              time2.format('HH:mm'),
+              session.user._id,
+              coworking.id,
+              session.user.token,
+              priceId,
+              room,
+              dayjs(date?.format('YYYY-MM-DD')).toDate().toISOString(),
+              add
+            )
+            Swal.fire({
+              title: "Reservation Successful",
+              icon: "success",
+            }).then((result)=>{
+              if(result.isConfirmed){
+                router.push("/booking");
+              }
+            });
+          }
+        }
+        else{
           Swal.fire({
-            title: "Reservation Successful",
-            icon: "success",
-          }).then((result)=>{
-            if(result.isConfirmed){
-              router.push("/booking");
-            }
+            title: "Reservation Failed",
+            text: "You can only reserve 3 times",
+            icon: "error",
           });
         }
       }
-
+    }
+    else{
+      Swal.fire({
+        title: "Reservation Failed",
+        text: "Please fill in all the required fields",
+        icon: "error",
+      });
     }
 
   };
@@ -101,17 +148,17 @@ export default function ReservationCard({
       <div className=" flex flex-col w-full space-y-3">
         <h1 className=" font-bold text-xl">Date</h1>
         <div className=" flex flex-row space-y-3 w-full">
-          <DateReserve onChangeDate={(value: Dayjs) => setDate(value)} />
+          <DateReserve value={null} onChangeDate={(value: Dayjs) => setDate(value)} />
         </div>
       </div>
       <div className=" flex flex-row w-full space-x-5">
         <div className="flex flex-col space-y-3 w-1/2 " >
           <h1 className=" font-bold text-xl">Start</h1>
-          <TimeReserve onChangeTime={(value : Dayjs) => setTime1(value)}/>
+          <TimeReserve value={null} onChangeTime={(value : Dayjs) => setTime1(value)}/>
         </div>
         <div className="flex flex-col space-y-3 w-1/2 " >
           <h1 className=" font-bold text-xl">End</h1>
-          <TimeReserve onChangeTime={(value : Dayjs) => setTime2(value)}/>
+          <TimeReserve value={null} onChangeTime={(value : Dayjs) => setTime2(value)}/>
         </div>
       </div>
       <div className=" flex flex-col w-full space-y-3">

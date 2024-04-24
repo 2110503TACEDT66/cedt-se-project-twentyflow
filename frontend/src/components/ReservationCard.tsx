@@ -44,9 +44,6 @@ export default function ReservationCard({
   }, []);
 
   const onsubmit = async () => {
-    console.log(date?.format('YYYY-MM-DD'));
-    console.log(dayjs(date?.format('YYYY-MM-DD')).toDate().toISOString());
-    console.log(new Date().toISOString())
     if ( date && time1 && time2 ){
       if (session?.user.role === "user"){
         if (data && data.length <= 2){
@@ -54,8 +51,8 @@ export default function ReservationCard({
           const priceId = await GetpriceId(
             coworking.name,
             coworking.price_hourly,
-            dayjs(time1?.format('YYYY-MM-DD')).toDate().toISOString(),
-            dayjs(time2?.format('YYYY-MM-DD')).toDate().toISOString(),
+            time1?.format('HH:mm'),
+            time2?.format('HH:mm'),
             session.user.token
           );
           

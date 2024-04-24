@@ -43,7 +43,7 @@ const AppointmentSchema=new mongoose.Schema({
     },
     additional : {
         type: String,
-        required: [true, 'Please add a additional']
+        required: false
     },
 });
 

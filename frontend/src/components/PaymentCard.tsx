@@ -60,14 +60,22 @@ export default function PaymentCard({
       );
     }
   }, []);
+  
+ 
 
-  const hour: number = currentReservation
-    ? Math.ceil(
-        (new Date(currentReservation.endTime).getTime() -
-          new Date(currentReservation?.startTime).getTime()) /
-          (1000 * 60 * 60)
-      )
-    : 0;
+ 
+  let hourC = 0
+  const startHour = parseInt(currentReservation?.startTime?.split(":")[0] ?? "")
+  const endHour = parseInt(currentReservation?.endTime?.split(":")[0] ?? "")
+  const startMin = parseInt(currentReservation?.startTime?.split(":")[1] ?? "")
+  const endMin = parseInt(currentReservation?.endTime?.split(":")[1] ?? "")
+ 
+
+    if(startMin < endMin){
+        hourC += 1
+    }
+    hourC += endHour - startHour
+  const hour: number = hourC;
   const coWorkingName = currentReservation?.coWorking.name;
   const userName = currentUser?.name;
 
@@ -144,7 +152,7 @@ export default function PaymentCard({
             <h1 className=" font-bold text-xl">User</h1>
             <div className=" flex flex-row w-full space-x-7">
               <h1 className=" font-semibold text-xl border-2 py-4 px-5 rounded-md border-gray-300">
-                {userName}
+                {userName?.split(" ")[0]}
               </h1>
             </div>
           </div>

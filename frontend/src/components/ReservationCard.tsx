@@ -148,17 +148,17 @@ export default function ReservationCard({
       <div className=" flex flex-col w-full space-y-3">
         <h1 className=" font-bold text-xl">Date</h1>
         <div className=" flex flex-row space-y-3 w-full">
-          <DateReserve onChangeDate={(value: Dayjs) => setDate(value)} />
+          <DateReserve value={null} onChangeDate={(value: Dayjs) => setDate(value)} />
         </div>
       </div>
       <div className=" flex flex-row w-full space-x-5">
         <div className="flex flex-col space-y-3 w-1/2 " >
           <h1 className=" font-bold text-xl">Start</h1>
-          <TimeReserve onChangeTime={(value : Dayjs) => setTime1(value)}/>
+          <TimeReserve value={null} onChangeTime={(value : Dayjs) => setTime1(value)}/>
         </div>
         <div className="flex flex-col space-y-3 w-1/2 " >
           <h1 className=" font-bold text-xl">End</h1>
-          <TimeReserve onChangeTime={(value : Dayjs) => setTime2(value)}/>
+          <TimeReserve value={null} onChangeTime={(value : Dayjs) => setTime2(value)}/>
         </div>
       </div>
       <div className=" flex flex-col w-full space-y-3">

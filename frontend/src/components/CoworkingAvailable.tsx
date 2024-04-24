@@ -1,9 +1,10 @@
 'use client'
 
-import DateReserve from "./DateReseve"
-import TimeReserve from "./TimeReserve"
 import { useState } from "react";
 import { Dayjs } from "dayjs";
+import dayjs from "dayjs";
+import TimeReserve from "./TimeReserve"
+import DateReserve from "./DateReseve"
 import RoomCard from "./RoomCard";
 
 export default function CoworkingAvailable(){
@@ -14,10 +15,10 @@ export default function CoworkingAvailable(){
             <div className="w-full flex flex-row justify-between">
             <div className="bg-custom-grey flex flex-row justify-round space-x-10 w-[85%] px-7 pr-7 pt-5 pb-5 rounded-lg">
                 <div className="w-[50%] bg-white">
-                <DateReserve onChangeDate={()=>setDate(date)}/>
+                    <DateReserve onChangeDate={(value: Dayjs) => setDate(value)} value={date}/>
                 </div>
                 <div className="w-[45%] bg-white">
-                <TimeReserve onChangeTime={()=>setTime(time)}/>
+                    <TimeReserve onChangeTime={(value: Dayjs) => setTime(value)} value={time}/>
                 </div>
             </div>
             

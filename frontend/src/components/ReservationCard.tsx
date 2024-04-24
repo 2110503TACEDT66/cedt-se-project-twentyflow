@@ -18,9 +18,13 @@ export default function ReservationCard({
 }) {
   const router = useRouter();
 
+  //mockdata 
+  const room = "6627b361400b52808840e86c"
+
   const [date, setDate] = useState<Dayjs | null>(null);
   const [time1, setTime1] = useState<Dayjs | null>(null);
   const [time2, setTime2] = useState<Dayjs | null>(null);
+  const [add, setAdd] = useState<string>("");
 
   const { data: session, status } = useSession();
   const [data, setData] = useState<Reservation[]>();
@@ -40,17 +44,44 @@ export default function ReservationCard({
   }, []);
 
   const onsubmit = async () => {
+    console.log(date?.format('YYYY-MM-DD'));
+    console.log(dayjs(date?.format('YYYY-MM-DD')).toDate().toISOString());
+    console.log(new Date().toISOString())
     if ( date && time1 && time2 ){
       if (session?.user.role === "user"){
         if (data && data.length <= 2){
-          // check condition time overlap
-
+          // check condition time overlap    
+          const priceId = await GetpriceId(
+            coworking.name,
+            coworking.price_hourly,
+            dayjs(time1?.format('YYYY-MM-DD')).toDate().toISOString(),
+            dayjs(time2?.format('YYYY-MM-DD')).toDate().toISOString(),
+            session.user.token
+          );
           
+          addAppt(
+            time1.format('HH:mm'),
+            time2.format('HH:mm'),
+            session.user._id,
+            coworking.id,
+            session.user.token,
+            priceId,
+            room,
+            dayjs(date?.format('YYYY-MM-DD')).toDate().toISOString(),
+            add
+          )
+          Swal.fire({
+            title: "Reservation Successful",
+            icon: "success",
+          }).then((result)=>{
+            if(result.isConfirmed){
+              router.push("/booking");
+            }
+          });
         }
       }
 
     }
-    // ห้ามจองเกิน 3
 
   };
 
@@ -89,7 +120,7 @@ export default function ReservationCard({
       <div className=" flex flex-col w-full space-y-3">
         <h1 className=" font-bold text-xl">Additional requirement</h1>
         <div className=" flex flex-row space-y-3 w-full">
-          <textarea className=" w-full h-40 border-2 p-3 rounded-md border-gray-300" />
+          <textarea onChange={(e : any ) => setAdd(e.target.value)} className=" w-full h-40 border-2 p-3 rounded-md border-gray-300" />
         </div>
       </div>
       <button

@@ -30,6 +30,7 @@ const config: Config = {
       colors: {
         ...colors,
         'custom-purple': '#7D5CB5',
+        'custom-grey' : '#EFEFEF',
       },
       fontFamily: {
         'kanit': ['Kanit', 'sans-serif'],

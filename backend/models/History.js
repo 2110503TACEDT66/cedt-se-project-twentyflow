@@ -17,7 +17,17 @@ const HistorySchema=new mongoose.Schema({
         type:Date,
         default: Date.now,
         required:true
-    }
+    },
+    appointment : {
+        type:mongoose.Schema.ObjectId,
+        ref: 'Appointment' ,
+        required:true
+    },
+    hour : {
+        type: Number,
+        required: [true, 'Please add a hour']
+    },
+
 });
 
 module.exports=mongoose.model('History' ,HistorySchema);

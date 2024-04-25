@@ -212,28 +212,43 @@ exports.updateAll = async (req, res, next) => {
     try{
         const appointment = await Appointment.findById(req.body.appointmentID).populate({
             path: 'coWorking',
-            select: 'name'
+            select: 'name price_hourly'
         });
+
+        const startHour = parseInt(appointment.startTime.split(":")[0])
+        const endHour = parseInt(appointment.endTime.split(":")[0])
+        const startMin = parseInt(appointment.startTime.split(":")[1])
+        const endMin = parseInt(appointment.endTime.split(":")[1])
+        let hourC = 0
+
+        if(startMin < endMin){
+            hourC += 1
+        }
+        hourC += endHour - startHour
+
+
         const createHistory =  await History.create(
             {
                 user: req.user.id,
                 coWorking: appointment.coWorking,
-                price: req.body.amount ,
+                price: hourC * appointment.coWorking.price_hourly,
+                appointment: req.body.appointmentID,
+                hour: hourC
             }
         )
         const createReward = await Reward.create(
             {
                 user: req.user.id,
                 rewardName: appointment.coWorking.name,
-                rewardPoint: req.body.amount ,
+                rewardPoint: hourC * appointment.coWorking.price_hourly ,
             }
         )
+        const updatePoint = await User.findByIdAndUpdate(req.user.id, { $inc: { points: hourC * appointment.coWorking.price_hourly } });
+        const upDate = await Appointment.findByIdAndUpdate(req.body.appointmentID, { status: "finished" });
 
-        const updatePoint = await User.findByIdAndUpdate(req.user.id, { $inc: { points: req.body.amount } });
-        const deleteAppointment = await Appointment.findByIdAndDelete(req.body.appointmentID);
-    
     }
     catch(err){
+        console.log(err)
         res.status(400).json({
             success:false,
             error: err.message

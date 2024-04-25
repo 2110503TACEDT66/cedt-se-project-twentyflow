@@ -9,13 +9,24 @@ interface Coworking {
     price_hourly : number,
     opentime : string,
     closetime : string,
+    rooms : Room[],
 }
 interface CoworkingJson {
     success: boolean,
     count: number,
+    
     pagination: Object,
     data: Coworking[]
 }
+
+interface Room {
+    roomNumber: number,
+    capacity: number,
+    _id: string,
+
+}
+
+
 
 interface User {
     name: string,
@@ -26,11 +37,14 @@ interface User {
 interface Reservation {
     startTime : string,
     endTime : string,
+    date : string,
     user : User,
     coWorking : Coworking,
     createAt : string,
     priceId : string,
     status : string,
+    room : Room,
+    additional : string,
     _id : string
 }
 
@@ -46,6 +60,8 @@ interface History {
     coWorking: Coworking;
     price: number;
     user : User;
+    appointment : Reservation;
+    hour : number;
     
 }
 

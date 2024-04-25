@@ -164,7 +164,7 @@ exports.createPaymentSession = async (req, res) => {
                 quantity: 1,
             }],    
             allow_promotion_codes: true,
-            success_url: `http://localhost:3000/payment/${appId}&${appointment.coWorking.price_hourly * (Math.ceil((new Date(appointment.endTime).getTime() - new Date(appointment.startTime).getTime())/( 1000*60*60) ))   }/success`,
+            success_url: `http://localhost:3000/payment/${appId}/success`,
             cancel_url: `http://localhost:3000/payment/${appId}/cancel`,
             customer: stripeCustomerId,
         });

@@ -19,7 +19,7 @@ exports.getCoWorkings = async (req,res,next) => {
     
     let queryStr=JSON.stringify(reqQuery);
     queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in|regex)\b/g,match=>`$${match}`)
-    query = CoWorking.find(JSON.parse(queryStr)).populate('appointments');
+    query = CoWorking.find(JSON.parse(queryStr));
 
     //Select Fields
     if(req.query.select){
@@ -39,6 +39,8 @@ exports.getCoWorkings = async (req,res,next) => {
     const limit = parseInt(req.query.limit,10) || 25
     const startIndex = (page-1)*limit;
     const endIndex = page*limit;
+    // Populate rooms array
+    // query = query.populate('rooms');
     try{
         const total = await CoWorking.countDocuments();
         query = query.skip(startIndex).limit(limit)
@@ -72,7 +74,10 @@ exports.getCoWorkings = async (req,res,next) => {
 //@access      Public
 exports.getCoWorking = async (req,res,next) => {
     try{
-        const coWorking = await CoWorking.findById(req.params.id);
+        const coWorking = await CoWorking.findById(req.params.id).populate({
+            path: 'rooms',
+            select: 'roomNumber capacity'
+        });
 
         if(!coWorking){
             return res.status(400).json({success:false});

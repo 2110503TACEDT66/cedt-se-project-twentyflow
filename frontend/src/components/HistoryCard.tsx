@@ -41,6 +41,18 @@ export default function HistoryCard( {reservation} : {reservation : Reservation}
     }
 
     const tranClass = isOpen ? "absolute" : "hidden";
+    const startHour = parseInt(reservation.startTime.split(":")[0])
+    const endHour = parseInt(reservation.endTime.split(":")[0])
+    const startMin = parseInt(reservation.startTime.split(":")[1])
+    const endMin = parseInt(reservation.endTime.split(":")[1])
+    let hourC = 0
+
+    if(startMin < endMin){
+        hourC += 1
+    }
+    hourC += endHour - startHour
+
+    const hour = endHour - startHour
 
     return(
         <div className=" flex flex-row justify-between h-full bg-gray-200 rounded-md px-3 py-3">
@@ -63,22 +75,30 @@ export default function HistoryCard( {reservation} : {reservation : Reservation}
                 </div>
                 <div className=" flex flex-row  items-center space-x-6">
                     <h1 className=" font-bold text-xl">
+                        Date : 
+                    </h1>
+                    <h1 className=" bg-white p-3 rounded-lg font-bold text-xl">
+                        { new Date(reservation.date).toLocaleDateString("th-TH")}
+                    </h1>
+                </div>
+                <div className=" flex flex-row  items-center space-x-6">
+                    <h1 className=" font-bold text-xl">
                         Start : 
                     </h1>
                     <h1 className=" bg-white p-3 rounded-lg font-bold text-xl">
-                        {new Date(reservation.startTime).toLocaleTimeString("th-TH")} {new Date(reservation.startTime).toLocaleDateString("th-TH")} 
+                        { reservation.startTime} 
                     </h1>
                     <h1 className=" font-bold text-xl">
                         End : 
                     </h1>
                     <h1 className=" bg-white p-3 rounded-lg font-bold text-xl">
-                        {new Date(reservation.endTime).toLocaleTimeString("th-TH")} {new Date(reservation.endTime).toLocaleDateString("th-TH")} 
+                        { reservation.endTime} 
                     </h1>
                     <h1 className=" font-bold text-xl">
                         Hour : 
                     </h1>
                     <h1 className=" bg-white p-3 rounded-lg font-bold text-xl">
-                        {Math.ceil((new Date(reservation.endTime).getTime() - new Date(reservation.startTime).getTime())/( 1000*60*60) ) }   
+                        {hourC }
                     </h1>
                 </div>
 

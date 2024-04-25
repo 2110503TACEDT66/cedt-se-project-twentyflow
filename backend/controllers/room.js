@@ -23,6 +23,18 @@ exports.getRooms = async (req, res, next) => {
     }
 }
 
+exports.getRoom = async (req, res, next) => {
+    try {
+        const room = await Room.findById(req.params.id);
+        res.status(200).json({
+            success: true,
+            data: room
+        });
+    } catch (error) {
+        return res.status(500).json({ success: false, message: "Cannot find Room" });
+    }
+}
+
 exports.addRoom = async (req, res, next) => {
     try {
         const room = await Room.create(req.body);

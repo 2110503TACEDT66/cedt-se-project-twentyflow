@@ -90,3 +90,9 @@ interface UserSortByPrice {
     name: string;
     points: string;
 }
+
+interface UserSortByHour {
+    totalHours: number;
+    user: string;
+    userId: string;
+}

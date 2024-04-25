@@ -6,10 +6,11 @@ import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import RankItem from "./RankItem";
 import getUserSortByPrice from "@/libs/getUserSortByPrice";
+import getUserSortByHour from "@/libs/getUserSortByHour";
 
 function LeaderBoard() {
   const [ sortByPrice, setSortByPrice ] = useState<UserSortByPrice[]>([]);
-
+  const [ sortByHour, setSortByHour ] = useState<UserSortByHour[]>([]);
   useEffect(() => {
     getUserSortByPrice()
       .then((response) => {
@@ -26,15 +27,30 @@ function LeaderBoard() {
       });
       // console.log(sortByPrice)
   })
+
+  useEffect(() => {
+    getUserSortByHour()
+      .then((response) => {
+        const convertedData = response.data.map((item: any) => ({
+          ...item,
+          totalHours: item.totalHours.toString(), // Convert hour to string
+      }));
+      // Update the sortByHour state with the converted data
+      setSortByHour(convertedData);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  })
   
 
-  const rankDataHour: RankItemHourProps[] = [
-    {rank: 1, name: "Item 1", hour: "10"},
-    {rank: 2, name: "Item 2", hour: "20"},
-    {rank: 3, name: "Item 3", hour: "30"},
-    {rank: 4, name: "Item 4", hour: "40"},
-    {rank: 5, name: "Item 5", hour: "50"},
-  ];
+  // const rankDataHour: RankItemHourProps[] = [
+  //   {rank: 1, name: "Item 1", hour: "10"},
+  //   {rank: 2, name: "Item 2", hour: "20"},
+  //   {rank: 3, name: "Item 3", hour: "30"},
+  //   {rank: 4, name: "Item 4", hour: "40"},
+  //   {rank: 5, name: "Item 5", hour: "50"},
+  // ];
 
   const [menuChanger, setMenuChanger] = useState<number>(1)
   const tranclass1 = (menuChanger === 1) ? "border-b-4" : ""
@@ -43,6 +59,7 @@ function LeaderBoard() {
   const tranDiv1 = (menuChanger === 1) ? "flex" : "hidden"
   const tranDiv2 = (menuChanger === 2) ? "flex" : "hidden"
   let index = 1;
+  let index2 = 1;
 
   return (
     <div className="flex flex-col  items-center bg-main-100 min-h-[90vh]">
@@ -86,7 +103,7 @@ function LeaderBoard() {
           return element;
         })}
       </main>
-
+      
       <main className={`${tranDiv2} flex flex-col items-center pt-6 mt-3.5 text-2xl font-bold text-center whitespace-nowrap rounded-3xl bg-zinc-300 text-stone-500 max-md:max-w-full`}>
         <div className="flex gap-5 justify-between max-w-full w-full max-md:flex-wrap">
           <div className="flex gap-5 justify-between">
@@ -96,13 +113,19 @@ function LeaderBoard() {
           <div className="mr-16">Hour</div>
         </div>
         <hr className="self-stretch w-full border border-solid border-zinc-300 stroke-[1px] stroke-zinc-300 max-md:max-w-full" />
-        {rankDataHour.map((item, index) => (
-          <RankItem key={index} rank={item.rank} name={item.name} hour={item.hour} />
-        ))}
+        {sortByHour.map((item) => {
+          const element = (<RankItem 
+            key={item.userId}
+            rank={index2++} 
+            name={item.user} 
+            hour={item.totalHours.toString()} />) // Convert totalHours to string
+
+          return element;
+        })}
       </main>
     </div>
-  </div>
+    </div>
   );
-};
+}
 
 export default LeaderBoard;

@@ -60,13 +60,15 @@ exports.sumUserBookingHours = async (req, res, next) => {
             },
             {
                 $addFields: {
-                    user: { $arrayElemAt: ["$userDetails.name", 0] }
+                    user: { $arrayElemAt: ["$userDetails.name", 0] },
+                    userId: { $arrayElemAt: ["$userDetails._id", 0] }
                 }
             },
             {
                 $project: {
                     _id: 0,
                     user: 1,
+                    userId: 1,
                     totalHours: 1
                 }
             },
@@ -89,6 +91,7 @@ exports.sumUserBookingHours = async (req, res, next) => {
         });
     }
 };
+
 
 
 

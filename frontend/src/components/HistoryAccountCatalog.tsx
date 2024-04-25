@@ -46,7 +46,6 @@ export default function CodeCatalog(){
                           </h1>
                       </div>
                    )
-
                 )
               }
        </div>

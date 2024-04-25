@@ -1,7 +1,7 @@
 //update user name,email
 // update user name, email
 const User = require('../models/User');
-const updateUserProfile = async (req, res , next) => {
+exports.updateUserProfile = async (req, res , next) => {
     try {
         let user = await User.findById(req.params.id);
 
@@ -37,6 +37,25 @@ const updateUserProfile = async (req, res , next) => {
     }
 };
 
-module.exports = {
-    updateUserProfile,
+exports.getUserSortByPrice = async (req, res, next) => {
+    try {
+        // Fetch users from the database and sort them by the 'price' field in ascending order
+        // and limit the result to the first 5 users
+        const users = await User.find()
+                                .sort({ points: -1 })
+                                .limit(10)
+                                .select('id name points');
+                                
+        // Send the successful response with the data
+        res.status(200).json({
+            success: true,
+            data: users
+        });
+    } catch (error) {
+        // Handle any errors and send a response with a 500 status code
+        res.status(500).json({
+            success: false,
+            message: "Cannot get Users"
+        });
+    }
 };

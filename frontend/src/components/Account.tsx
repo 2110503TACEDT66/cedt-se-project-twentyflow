@@ -3,7 +3,6 @@ import updateUserProfile from "@/libs/updateUserProfile";
 import { faClockRotateLeft, faPenToSquare, faTag, faUser, faCreditCard } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useSession } from "next-auth/react";
-import { Telemetry } from "next/dist/telemetry/storage";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import CodeCatalog from "./CodeCatalog";

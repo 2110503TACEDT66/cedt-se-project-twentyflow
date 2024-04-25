@@ -24,6 +24,7 @@ const dashboard = require('./routes/dashboard');
 const coupon = require('./routes/coupon');
 const reward = require('./routes/reward');
 const payment = require('./routes/stripe');
+const users = require('./routes/user');
 const app = express();
 
 //Body parser
@@ -64,6 +65,7 @@ app.use('/api/v1/dashboard', dashboard)
 app.use('/api/v1/coupon',coupon);
 app.use('/api/v1/reward',reward);
 app.use('/api/v1/payment',payment);
+app.use('/api/v1/user-sort-by-price',users);
 
 
 const PORT = process.env.PORT || 5000;

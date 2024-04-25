@@ -68,4 +68,9 @@ interface RankItemHourProps {
     name: string;
     hour: string;
 }
-  
+
+interface UserSortByPrice {
+    _id: string;
+    name: string;
+    points: string;
+}

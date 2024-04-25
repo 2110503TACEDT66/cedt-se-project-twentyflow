@@ -45,8 +45,9 @@ export default async function Header() {
             </div>
           ) : (
             <div className="flex space-x-7 justify-center items-center">
-              <Link href="/booking" className=" text-xl font-bold hover:text-main-100">
-                BOOKING
+              
+              <Link href="/leaderboard" className=" text-xl font-bold hover:text-main-100">
+                LEADERBOARD
               </Link>
               {session.user.role === "admin" ? (
                 <Link href={"/dashboard"} className=" text-xl font-bold hover:text-main-100">
@@ -56,7 +57,11 @@ export default async function Header() {
                 <Link href={"/coupon"} className=" text-xl font-bold hover:text-main-100">
                   COUPON
                 </Link>
-              )}
+              )
+              }
+              <Link href="/booking" className=" text-xl font-bold hover:text-main-100">
+                BOOKING
+              </Link>
               <Link
                 className="text-xl flex flex-row font-bold space-x-2 text-white p-2 bg-main-100 rounded-md"
                 href="/account"

@@ -25,6 +25,7 @@ const coupon = require('./routes/coupon');
 const reward = require('./routes/reward');
 const payment = require('./routes/stripe');
 const users = require('./routes/user');
+const room = require('./routes/room');
 const app = express();
 
 //Body parser
@@ -66,6 +67,7 @@ app.use('/api/v1/coupon',coupon);
 app.use('/api/v1/reward',reward);
 app.use('/api/v1/payment',payment);
 app.use('/api/v1/user',users);
+app.use('/api/v1/room',room);
 
 app.use('/api/v1/ranking',rankingRouter);
 

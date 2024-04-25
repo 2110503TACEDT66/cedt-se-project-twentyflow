@@ -8,7 +8,7 @@ import HistoryAccount from './HistoryAccount';
 import CircularProgress from '@mui/material/CircularProgress';
 
 
-export default function CodeCatalog(){
+export default function HistoryAccountCatalog(){
     const [user, setUser] = useState();
     const {data: session} = useSession();
     const[history,setHistory] = useState<History[]>([]);

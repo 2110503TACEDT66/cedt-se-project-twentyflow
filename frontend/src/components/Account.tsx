@@ -118,7 +118,7 @@ export default function Account() {
                     <CodeCatalog/>
                 </div>  
                 <div className={`${tranDiv5} flex-col space-y-4 `}>
-                    <HistoryAccountCatalog  />
+                    <HistoryAccountCatalog   />
                 </div>  
         </div>
 

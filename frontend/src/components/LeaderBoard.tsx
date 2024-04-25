@@ -64,7 +64,7 @@ function LeaderBoard() {
   return (
     <div className="flex flex-col  items-center bg-main-100 min-h-[90vh]">
       <h1 className=" text-5xl py-10 font-semibold text-white">LEADER BOARD</h1>
-    <div className="flex flex-col px-12 pb-4 max-w-full bg-white rounded-3xl w-[80%] max-md:px-5 max-md:mt-10">
+    <div className="flex flex-col mb-7 px-12 pb-4 max-w-full bg-white rounded-3xl w-[80%] max-md:px-5 max-md:mt-10">
       <header className="flex gap-5 justify-between self-center max-w-full w-[400px]">
         <div className={`${tranclass1} border-main-100 border-solid w-1/2 flex justify-center p-3`} onClick={() => {setMenuChanger(1)}}>
           <img

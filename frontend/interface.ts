@@ -26,8 +26,6 @@ interface Room {
 
 }
 
-
-
 interface User {
     name: string,
     _id: string,
@@ -71,6 +69,15 @@ interface StatCardProps {
     changeDirection: "up" | "down";
     value: string;
     label: string;
+  }
+
+interface HistoryDetails {
+    _id: string;
+    user: Object;
+    coWorking: Object;
+    appointment: string;
+    hour: number;
+    price: number;
 }
 
 interface RankItemPriceProps {

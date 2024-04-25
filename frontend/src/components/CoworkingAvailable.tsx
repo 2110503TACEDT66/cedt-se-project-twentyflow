@@ -7,9 +7,10 @@ import TimeReserve from "./TimeReserve"
 import DateReserve from "./DateReseve"
 import RoomCard from "./RoomCard";
 
-export default function CoworkingAvailable(){
-    const [date, setDate] = useState<Dayjs | null>(null);
-    const [time,setTime] = useState<Dayjs | null>(null);
+
+export default function CoworkingAvailable( { coworkingDetail} : {coworkingDetail: Coworking}){
+    const [date, setDate] = useState<Dayjs | null>(dayjs(new Date()));
+    const [time,setTime] = useState<Dayjs | null>(dayjs(new Date()));
     return(
         <div className="flex flex-col justify-round bg-white rounded-2xl px-8 pt-8 pb-7 w-full space-y-4 h-[75vh]">
             <div className="w-full flex flex-row justify-between">
@@ -25,9 +26,19 @@ export default function CoworkingAvailable(){
             <button className="bg-custom-purple text-white font-semibold text-2xl px-5 py-2 rounded-lg w-[13%]">Search</button>
             
             </div>
-            <div>
-                <RoomCard />
+            <div className=" grid grid-cols-4 gap-20 pt-20">
+
+            {
+                (coworkingDetail.rooms.sort((a,b) => a.roomNumber - b.roomNumber)).map((room) => {
+                    return(
+                        <div className="flex justify-center items-center" key={room._id}>
+                            <RoomCard coworking={coworkingDetail} room={room}/>
+                        </div>
+                    )
+                })
+            }
             </div>
+
         </div>
     )
 }

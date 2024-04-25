@@ -13,13 +13,15 @@ import TimeReserve from "./TimeReserve";
 
 export default function ReservationCard({
   coworking,
+  room
 }: {
-  coworking: Coworking;
+  coworking: Coworking,
+  room : Room
+
 }) {
   const router = useRouter();
 
   //mockdata 
-  const room = "6627b361400b52808840e86c"
 
   const [date, setDate] = useState<Dayjs | null>(null);
   const [time1, setTime1] = useState<Dayjs | null>(null);
@@ -96,7 +98,7 @@ export default function ReservationCard({
               coworking.id,
               session.user.token,
               priceId,
-              room,
+              room._id,
               dayjs(date?.format('YYYY-MM-DD')).toDate().toISOString(),
               add
             )
@@ -141,7 +143,7 @@ export default function ReservationCard({
         <div className="flex flex-col space-y-3 w-1/6 " >
           <h1 className=" font-bold text-xl">Room</h1>
           <h1 className=" font-semibold text-xl border-2 p-3 rounded-md border-gray-300">
-            2
+            {room.roomNumber}
           </h1>
         </div>
       </div>

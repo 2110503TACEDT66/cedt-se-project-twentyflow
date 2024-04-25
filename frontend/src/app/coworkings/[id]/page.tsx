@@ -8,7 +8,7 @@ export default async function Page({ params }: { params: { id: string } }) {
   return (
     <main className=" p-10 min-h-[90vh] bg-main-100 flex flex-col space-y-10">
       <CoworkingDetail params={params}/>
-      <CoworkingAvailable />
+      <CoworkingAvailable coworkingDetail={coworkingDetail.data} />
     </main>
   );
 }

@@ -9,6 +9,7 @@ interface Coworking {
     price_hourly : number,
     opentime : string,
     closetime : string,
+    rooms : Room[],
 }
 interface CoworkingJson {
     success: boolean,
@@ -16,6 +17,13 @@ interface CoworkingJson {
     
     pagination: Object,
     data: Coworking[]
+}
+
+interface Room {
+    roomNumber: number,
+    capacity: number,
+    _id: string,
+
 }
 
 

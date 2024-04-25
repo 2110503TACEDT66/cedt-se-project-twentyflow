@@ -41,6 +41,11 @@ const CoWorkingSchema = new mongoose.Schema({
         type : String,
         required : [true , 'Please add a close time'],
     },
+    rooms : [{
+        type : mongoose.Schema.ObjectId,
+        ref : 'Room',
+        require : false
+    }],
 }, {
     toJSON: {virtuals:true},
     toObject: {virtuals:true}

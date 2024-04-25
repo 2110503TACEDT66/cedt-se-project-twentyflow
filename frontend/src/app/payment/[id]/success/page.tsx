@@ -25,8 +25,7 @@ export default function Success() {
       if (!initialized.current) {
         initialized.current = true
         if (url) {
-        let appId = (url.split("/")[4]).split("&")[0];
-        let amount = (url.split("/")[4]).split("&")[1];
+        let appId = (url.split("/")[4])
         fetch (`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/updateall`, {
           method: 'POST',
           headers: {
@@ -35,7 +34,6 @@ export default function Success() {
           },
           body: JSON.stringify({
             appointmentID : appId,
-            amount : amount
           })
         })
         .then((res) => {

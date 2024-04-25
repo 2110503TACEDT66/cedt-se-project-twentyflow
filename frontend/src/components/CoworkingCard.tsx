@@ -4,23 +4,7 @@ import Swal from "sweetalert2";
 
 
 export default function CoworkingCard( {coworking} : {coworking : Coworking}){
-    const handleSelectClick = (e: { preventDefault: () => void; }) => {
-        e.preventDefault(); // Prevents the default link navigation
-        // Trigger the Swal alert
-        Swal.fire({
-            title: 'Select Coworking Space?',
-            text: `You are about to select ${coworking.name}.`,
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonText: 'Yes, select it!',
-            cancelButtonText: 'No, cancel',
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // User confirmed selection, navigate to the coworking space
-                window.location.href = `/coworkings/${coworking.id}`;
-            }
-        });
-    };
+
     return(
         <div className=" flex flex-row justify-between bg-gray-200 rounded-md px-3 py-3">
             <div className=" flex flex-col space-y-3">
@@ -68,8 +52,7 @@ export default function CoworkingCard( {coworking} : {coworking : Coworking}){
                     
                 </div>
             </div>
-            <Link href={`/coworkings/${coworking.id}`} className=" bg-main-100 my-5 w-2/12 text-white flex justify-center items-center font-bold rounded-md"
-            onClick={handleSelectClick}>
+            <Link href={`/coworkings/${coworking.id}`} className=" bg-main-100 my-5 w-2/12 text-white flex justify-center items-center font-bold rounded-md">
                 SELECT
             </Link>
         </div>

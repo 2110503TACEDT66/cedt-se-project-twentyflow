@@ -60,14 +60,22 @@ export default function PaymentCard({
       );
     }
   }, []);
+  
+ 
 
-  const hour: number = currentReservation
-    ? Math.ceil(
-        (new Date(currentReservation.endTime).getTime() -
-          new Date(currentReservation?.startTime).getTime()) /
-          (1000 * 60 * 60)
-      )
-    : 0;
+ 
+  let hourC = 0
+  const startHour = parseInt(currentReservation?.startTime?.split(":")[0] ?? "")
+  const endHour = parseInt(currentReservation?.endTime?.split(":")[0] ?? "")
+  const startMin = parseInt(currentReservation?.startTime?.split(":")[1] ?? "")
+  const endMin = parseInt(currentReservation?.endTime?.split(":")[1] ?? "")
+ 
+
+    if(startMin < endMin){
+        hourC += 1
+    }
+    hourC += endHour - startHour
+  const hour: number = hourC;
   const coWorkingName = currentReservation?.coWorking.name;
   const userName = currentUser?.name;
 
@@ -101,16 +109,69 @@ export default function PaymentCard({
       console.error("Error creating session:", error);
     }
   };
+  const appt = currentReservation?.date ? new Date(currentReservation.date) : null;
   return (
-    <div className="flex w-screen flex-col  items-center bg-main-100 min-h-[90vh] p-7">
+    <div className="flex min-w-screen flex-col  items-center bg-main-100 min-h-[90vh] p-7">
       <h1 className=" text-5xl py-10 font-semibold text-white">PAYMENT</h1>
 
       <div className=" w-10/12 space-y-10 h-full p-10 bg-white rounded-md flex flex-col">
-        <div className=" flex flex-col space-y-3">
-          <h1 className=" font-bold text-xl">Name</h1>
-          <h1 className=" font-semibold text-xl border-2 p-3 rounded-md border-gray-300">
-            {coWorkingName}
-          </h1>
+        <div className=" flex flex-row  w-full space-x-5">
+          <div className="flex flex-col space-y-3 w-5/6" >
+            <h1 className=" font-bold text-xl">Name</h1>
+            <h1 className=" font-semibold text-xl border-2 p-3 rounded-md border-gray-300">
+              {currentReservation?.coWorking.name}
+            </h1>
+          </div>
+          <div className="flex flex-col space-y-3 w-1/6 " >
+            <h1 className=" font-bold text-xl">Room</h1>
+            <h1 className=" font-semibold text-xl border-2 p-3 rounded-md border-gray-300">
+              {currentReservation?.room.roomNumber}
+            </h1>
+          </div>
+        </div>
+
+        <div className=" flex flex-col w-full space-y-3">
+          <h1 className=" font-bold text-xl">Date</h1>
+          <div className=" flex flex-row space-y-3 w-full">
+            <h1 className=" font-semibold text-xl w-full border-2 p-3 rounded-md border-gray-300">
+              {appt?.toLocaleDateString('th-TH')}
+            </h1>
+          </div>
+        </div>
+
+        <div className=" flex flex-row w-full space-x-5">
+          <div className=" flex flex-col w-1/2 space-y-3">
+            <h1 className=" font-bold text-xl">
+              Start Time
+            </h1>
+            <div className=" flex flex-row space-y-3 w-full">
+              <h1 className=" font-semibold text-xl w-full border-2 p-3 rounded-md border-gray-300">
+                {currentReservation?.startTime}
+              </h1>
+            </div>
+          </div>
+          <div className=" flex flex-col w-1/2 space-y-3">
+            <h1 className=" font-bold text-xl">
+                End Time
+            </h1>
+            <div className=" flex flex-row space-y-3 w-full">
+              <h1 className=" font-semibold text-xl w-full border-2 p-3 rounded-md border-gray-300">
+                {currentReservation?.endTime}
+              </h1>
+            </div>
+          </div>
+
+        </div>
+        
+        
+
+        <div className=" flex flex-col w-full space-y-3">
+          <h1 className=" font-bold text-xl">Additional requirement</h1>
+          <div className=" flex flex-row space-y-3 w-full">
+            <h1 className=" font-semibold min-h-40 w-full text-xl border-2 p-3 rounded-md border-gray-300">
+              {currentReservation?.additional}
+            </h1>
+          </div>
         </div>
 
         <div className="flex flex-row w-full space-x-7">
@@ -132,19 +193,20 @@ export default function PaymentCard({
               <h1 className=" font-semibold text-xl border-2 py-4 px-5 rounded-md border-gray-300">
                 {currentReservation !== undefined
                   ? currentReservation.coWorking.price_hourly * hour
-                  : "NaN"}
+                  : ""}
               </h1>
               <h1 className=" font-semibold text-xl flex flex-col justify-center">
                 Baht
               </h1>
             </div>
           </div>
+          
 
           <div className=" flex flex-col w-1/5 space-y-3">
             <h1 className=" font-bold text-xl">User</h1>
             <div className=" flex flex-row w-full space-x-7">
               <h1 className=" font-semibold text-xl border-2 py-4 px-5 rounded-md border-gray-300">
-                {userName}
+                {userName?.split(" ")[0]}
               </h1>
             </div>
           </div>

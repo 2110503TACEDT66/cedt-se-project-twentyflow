@@ -56,3 +56,12 @@ interface StatCardProps {
     value: string;
     label: string;
   }
+
+interface HistoryDetails {
+    _id: string;
+    user: Object;
+    coWorking: Object;
+    appointment: string;
+    hour: number;
+    price: number;
+}

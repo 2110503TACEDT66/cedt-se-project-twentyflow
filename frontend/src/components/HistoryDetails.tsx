@@ -3,22 +3,25 @@
 import dayjs, { Dayjs } from "dayjs";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function HistoryDetails({historyId} : {historyId : string}) {
 
     const router = useRouter();
     const session = useSession();
     const currentUser = session.data?.user;
-    const userName = currentUser?.name;
+    const [userName, setUserName] = useState<string>(); 
+    const [appId, setAppId] = useState<string>();
     const [coWorkName, setCoWorkName] = useState<string>();
+    const [coId, setCoId] = useState<string>();
+    const [coRoom, setCoRoom] = useState<string>();
     const [roomNum, setRoomNum] = useState<number>();
-    const [dateBooking, setDateBooking] = useState<Dayjs>();
+    const [dateBooking, setDateBooking] = useState<string>();
     const [startTime, setStartTime] = useState<string>();
     const [endTime, setEndTime] = useState<string>();
     const [additionnal, setAdditional] = useState<string>();
-    const [hours, setHours] = useState<number>();
-    const [price, setPrice] = useState<number>();
+    const [hours, setHours] = useState<number>(0);
+    const [price, setPrice] = useState<number>(0);
 
     useEffect(() => {
         if(currentUser) {
@@ -32,12 +35,58 @@ export default function HistoryDetails({historyId} : {historyId : string}) {
             })
             .then((res) => res.json())
             .then((data) =>{
-                console.log(data);
-                setHours(data.hour);
-                setPrice(data.price);
+                console.log(data.HistoryDetails);
+                const details = data.HistoryDetails;
+                setCoWorkName(details.coWorking.name);
+                setPrice(details.price);
+                setUserName(details.user.name);
+                setAppId(details.appointment);
+                setHours(details.hour);
+                setCoId(details.coWorking._id);
             })
         }
     }, []);
+
+    useEffect(() => {
+        if(currentUser) {
+            fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/appointments/${appId}`, {
+                cache: "no-store",
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    authorization: `Bearer ${currentUser.token}`,
+                },
+            })
+            .then((res) => res.json())
+            .then((data) => {
+                console.log(data);
+                const details = data.data;
+                // const day = new Date(details.date);
+                // setDateBooking(day.toDateString());
+                setAdditional(details.additional);
+                setStartTime(details.startTime);
+                setEndTime(details.endTime);
+                setCoRoom(details.room);
+            })
+        }
+    }, [appId]);
+
+    useEffect(() => {
+        if(currentUser) {
+            fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/coWorking/${coId}`, {
+                cache: "no-store",
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    authorization: `Bearer ${currentUser.token}`,
+                },
+            })
+            .then((res) => res.json())
+            .then((data) => {
+                console.log(data);
+            })
+        }
+    }, [coId]); 
 
     return(
         <div className="flex w-full  scrollbar-none flex-col  items-center bg-main-100 min-h-[90vh] p-7">
@@ -48,7 +97,7 @@ export default function HistoryDetails({historyId} : {historyId : string}) {
                             Name 
                         </h1>
                         <h1 className=" font-bold text-xl border-2 py-4 px-5 rounded-md border-gray-300">
-                            {userName}
+                            {coWorkName}
                         </h1>
                     </div>
                     <div className="flex flex-col w-1/5 py-2 px-5">
@@ -56,7 +105,7 @@ export default function HistoryDetails({historyId} : {historyId : string}) {
                             Room
                         </h1>
                         <h1 className=" font-bold text-xl border-2 py-4 px-5 rounded-md border-gray-300">
-                            {1}
+                            {roomNum}
                         </h1>
                     </div>
                 </div>
@@ -65,7 +114,7 @@ export default function HistoryDetails({historyId} : {historyId : string}) {
                         Date
                     </h1>
                     <h1 className="w-full font-bold text-xl border-2 py-4 px-5 rounded-md border-gray-300">
-                        Date
+                        {dateBooking}
                     </h1>
                 </div>
                 <div className="flex flex-row px-5">
@@ -74,7 +123,7 @@ export default function HistoryDetails({historyId} : {historyId : string}) {
                             Start
                         </h1>
                         <h1 className="w-full font-bold text-xl border-2 py-4 px-5 rounded-md border-gray-300">
-                            Start
+                            {startTime}
                         </h1>
                     </div>
                     <div className="flex flex-col w-1/2 py-2 px-5">
@@ -82,7 +131,7 @@ export default function HistoryDetails({historyId} : {historyId : string}) {
                             End
                         </h1>
                         <h1 className="w-full font-bold text-xl border-2 py-4 px-5 rounded-md border-gray-300">
-                            End
+                            {endTime}
                         </h1>
                     </div>
                 </div>
@@ -91,27 +140,27 @@ export default function HistoryDetails({historyId} : {historyId : string}) {
                         Additional
                     </h1>
                     <h1 className="w-full h-[15vh] font-bold text-xl border-2 py-4 px-5 rounded-md border-gray-300">
-                        End
+                        {additionnal}
                     </h1>
                 </div>
                 <div className="flex flex-row space-x-3 pb-5">
-                    <div className="px-9 w-1/3">
+                    <div className="px-9 w-1/5">
                         <h1 className=" font-semibold text-xl py-4 px-5 rounded-md border-gray-300"> 
                             Hours
                         </h1>
                         <h1 className="w-full font-bold text-xl border-2 py-4 px-5 rounded-md border-gray-300">
-                            hours
+                            {hours}
                         </h1>
                     </div>
-                    <div className="px-9 w-1/3">
+                    <div className="px-9 w-1/5">
                         <h1 className=" font-semibold text-xl py-4 px-5 rounded-md border-gray-300"> 
                             Price
                         </h1>
                         <h1 className="w-full font-bold text-xl border-2 py-4 px-5 rounded-md border-gray-300">
-                            price
+                            {price}
                         </h1>
                     </div>
-                    <div className="px-9 w-1/3">
+                    <div className="px-9 w-3/5">
                         <h1 className=" font-semibold text-xl py-4 px-5 rounded-md border-gray-300"> 
                             Username
                         </h1>

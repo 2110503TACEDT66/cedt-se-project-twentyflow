@@ -4,9 +4,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClockRotateLeft } from "@fortawesome/free-solid-svg-icons";
 import Image from "next/image"
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 
 
-export default function HistoryAccount( {historyName, historyPrice}: {historyName:string, historyPrice:number}) {
+export default function HistoryAccount( {historyId, historyName, historyPrice}: {historyId:string, historyName:string, historyPrice:number}) {
 
 
     return(
@@ -21,9 +22,10 @@ export default function HistoryAccount( {historyName, historyPrice}: {historyNam
                 <h1 className=" text-3xl text-white font-bold ">
                     {historyPrice} THB
                 </h1>
+
             </div>
             <div className="w-1/4 flex justify-center place-items-end my-4">
-                <Link href={`/account/${'6628f6c350a76747b2c554fb'}`} className="bg-white text-main-100 text-[20px] py-2 rounded-md font-bold w-3/4 text-center hover:text-black hover:shadow-lg">
+                <Link href={`/account/${historyId}`} className="bg-white text-main-100 text-[20px] py-2 rounded-md font-bold w-3/4 text-center hover:text-black hover:shadow-lg">
                         Details
                 </Link>
             </div>

@@ -37,7 +37,7 @@ export default function CodeCatalog(){
                 (       
                     history.length > 0 ? (
                         history.map((history) => (
-                          <HistoryAccount key={history._id} historyName={history.coWorking.name} historyPrice={history.price}/>
+                          <HistoryAccount key={history._id} historyId={history._id} historyName={history.coWorking.name} historyPrice={history.price}/>
                         ))
                    ) : (
                       <div className=' flex justify-center items-center'>

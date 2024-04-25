@@ -1,4 +1,5 @@
 const History = require('../models/History');
+const Appointment = require('../models/Appointment');
 
 exports.getHistories = async (req, res, next) => {
     let query;
@@ -54,6 +55,7 @@ exports.getHistories = async (req, res, next) => {
 
 exports.getHistory = async (req, res, next) => {
     try {
+
         const history = await History.findById(req.params.id).populate({
             path: 'coWorking',
             select: 'name address tel'
@@ -71,10 +73,10 @@ exports.getHistory = async (req, res, next) => {
         }
         res.status(200).json({
             success: true,
-            data: history
+            HistoryDetails: history,
         });
     } catch (error) {
-        return res.status(500).json({success:false,message:"Cannot find History"});
+        return res.status(500).json({success:false,message:error.message});
     }
 };
 exports.addHistory = async (req, res, next) => {

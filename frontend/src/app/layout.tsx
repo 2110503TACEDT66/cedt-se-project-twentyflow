@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { Raleway } from "next/font/google";
+import {   Prompt } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import { getServerSession } from "next-auth";
 import NextAuthProvider from "@/providers/NextAuthProvider";
 import { authOptions } from "./api/auth/[...nextauth]/route";
 
-const raleway = Raleway({ subsets: ["latin"] });
+const raleway = Prompt({ subsets: ["latin"], display: "swap", weight: ['400', '500', '600' , '700'] });
 
 export const metadata: Metadata = {
   title: "CEDT CoWorking Space",

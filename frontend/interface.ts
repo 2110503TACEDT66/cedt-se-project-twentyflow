@@ -26,8 +26,6 @@ interface Room {
 
 }
 
-
-
 interface User {
     name: string,
     _id: string,
@@ -72,3 +70,36 @@ interface StatCardProps {
     value: string;
     label: string;
   }
+
+interface HistoryDetails {
+    _id: string;
+    user: Object;
+    coWorking: Object;
+    appointment: string;
+    hour: number;
+    price: number;
+}
+
+interface RankItemPriceProps {
+    rank: number;
+    name: string;
+    price: string;
+}
+
+interface RankItemHourProps {
+    rank: number;
+    name: string;
+    hour: string;
+}
+
+interface UserSortByPrice {
+    _id: string;
+    name: string;
+    points: string;
+}
+
+interface UserSortByHour {
+    totalHours: number;
+    user: string;
+    userId: string;
+}

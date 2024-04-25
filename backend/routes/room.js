@@ -8,9 +8,11 @@ const appointmentRouter = require('./appointments');
 const router = express.Router();
 
 
-router.use('/:roomId/appointments/',appointmentRouter);
+
 
 
 router.route('/').post(addRoom).get(protect,authorize('admin','user'),getRooms)
 router.route('/:id').get(protect,authorize('admin','user'),getRoom)
+
+router.route('/:roomId/appointments/',appointmentRouter);
 module.exports = router

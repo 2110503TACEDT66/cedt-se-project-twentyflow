@@ -130,10 +130,10 @@ export default function CoworkingAvailable( { coworkingDetail } : {coworkingDeta
             <div className="w-full flex flex-row justify-between">
             <div className="bg-custom-grey flex flex-row justify-round space-x-10 w-[85%] px-7 pr-7 pt-5 pb-5 rounded-lg">
                 <div className="w-[50%] bg-white">
-                    <DateReserve onChangeDate={(value: Dayjs) => setDate(value)} value={date}/>
+                    <DateReserve disable={false} onChangeDate={(value: Dayjs) => setDate(value)} value={date}/>
                 </div>
                 <div className="w-[45%] bg-white">
-                    <TimeReserve onChangeTime={(value: Dayjs) => setTime(value)} value={time}/>
+                    <TimeReserve disable={false} onChangeTime={(value: Dayjs) => setTime(value)} value={time}/>
                 </div>
             </div>
             

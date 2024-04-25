@@ -194,14 +194,10 @@ exports.deleteAppointment=async (req,res,next)=>{
 
 exports.getRoom=async (req,res,next)=>{
     try {
-
         const room = await Room.findById(req.params.roomId).populate({
             path:'appointments',
             select: 'startTime endTime date'
         });
-        
-
-        console.log(room);
 
         if (!room){
             return res.status(404).json({success:false,message:`Yes No coWorking with the id of ${req.params.coWorkingId}`});

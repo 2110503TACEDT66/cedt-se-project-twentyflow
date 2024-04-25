@@ -59,6 +59,13 @@ exports.getAppointment=async (req,res,next) =>{
         const appointment = await Appointment.findById(req.params.id).populate({
             path:'coWorking' ,
             select: 'name province tel price_hourly '
+        }).populate({
+            path:'user',
+            select: 'name'
+        }).populate({
+            path:'room',
+            select: 'roomNumber capacity'
+        
         });
 
         if (!appointment || appointment.status === 'finished'){

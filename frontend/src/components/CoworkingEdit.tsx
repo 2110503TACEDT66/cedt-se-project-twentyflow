@@ -10,6 +10,8 @@ import { useEffect, useState } from "react";
 import GetpriceId from "@/libs/getPriceId";
 import Swal from "sweetalert2";
 import TimeReserve from "./TimeReserve";
+import UpdateReservation from "@/libs/UpdateReservation";
+import CircularProgress from "@mui/material/CircularProgress";
 
 export default function ReservationCard({
   coworking,
@@ -19,9 +21,7 @@ export default function ReservationCard({
   appointment: Reservation
 }) {
   const router = useRouter();
-
-  //mockdata 
-  const room = "6627b361400b52808840e86c"
+  const { data: session, status } = useSession();
 
   function timeToDate(date : string) {
     let tempTime = date.split(":");
@@ -36,6 +36,14 @@ export default function ReservationCard({
   const [time1, setTime1] = useState<Dayjs | null>(dayjs(timeToDate(appointment.startTime)));
   const [time2, setTime2] = useState<Dayjs | null>(dayjs(timeToDate(appointment.endTime)));
   const [add, setAdd] = useState<string>(appointment.additional);
+  if (!session) {
+    return (
+      <div className="w-full h-full flex justify-center items-center">
+        <CircularProgress />
+      </div>
+    
+    );
+  }
   const onsubmit = async () => {
     if ( date && time1 && time2 ){
       const startHour = parseInt(time1?.format('HH:mm').split(':')[0]);
@@ -49,14 +57,14 @@ export default function ReservationCard({
           // check condition time overlap 
         if (startHour > endHour || (startHour == endHour && startMinute >= endMinute)){
           Swal.fire({
-            title: "Reservation Failed",
+            title: "Edit Failed",
             text: "Start time must be before end time",
             icon: "error",
           });
           return;
         }else if (startHour < cowokingStartHour || (startHour == cowokingStartHour && startMinute < cowokingStartMinute)){
           Swal.fire({
-            title: "Reservation Failed",
+            title: "Edit Failed",
             text: "Start time must be after coworking open time",
             icon: "error",
           });
@@ -64,20 +72,24 @@ export default function ReservationCard({
         }
         else if (endHour > cowokingEndHour || (endHour == cowokingEndHour && endMinute > cowokingEndMinute)){
           Swal.fire({
-            title: "Reservation Failed",
+            title: "Edit Failed",
             text: "End time must be before coworking close time",
             icon: "error",
           });
           return;
         }
         else{
-
-        /*
-        ! Update the onsubmit function to call the addAppt function with the correct parameters.
-        */
+          UpdateReservation(
+            time1.format("HH:mm"),
+            time2.format("HH:mm"),
+            session.user.token,
+            appointment._id,
+            new Date(date?.toDate()).toISOString(),
+            add
+          );
           
           Swal.fire({
-            title: "Reservation Successful",
+            title: "Edit Successful",
             icon: "success",
           }).then((result)=>{
             if(result.isConfirmed){
@@ -89,7 +101,7 @@ export default function ReservationCard({
     }
     else{
       Swal.fire({
-        title: "Reservation Failed",
+        title: "Edit Failed",
         text: "Please fill in all the required fields",
         icon: "error",
       });

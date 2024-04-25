@@ -4,7 +4,9 @@ export default async function UpdateReservation(
   startTime: string,
   endTime: string,
   token: string,
-  appId: string
+  appId: string,
+  date : string,
+  additional : string
 ) {
   const url = `${process.env.NEXT_PUBLIC_BACKEND_URL}/appointments/${appId}`;
   const response = await fetch(url, {
@@ -16,6 +18,8 @@ export default async function UpdateReservation(
     body: JSON.stringify({
       startTime,
       endTime,
+      date,
+      additional
     }),
   });
   const body = await response.json();

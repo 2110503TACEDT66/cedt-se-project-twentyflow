@@ -43,6 +43,7 @@ interface Reservation {
     createAt : string,
     priceId : string,
     status : string,
+    room : Room,
     additional : string,
     _id : string
 }

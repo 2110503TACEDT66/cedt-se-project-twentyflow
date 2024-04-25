@@ -65,6 +65,7 @@ app.use('/api/v1/coupon',coupon);
 app.use('/api/v1/reward',reward);
 app.use('/api/v1/payment',payment);
 app.use('/api/v1/ranking',rankingRouter);
+app.use('/api/v1/room',require('./routes/room'));
 
 
 const PORT = process.env.PORT || 5000;

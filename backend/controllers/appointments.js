@@ -1,5 +1,6 @@
 const Appointment = require('../models/Appointment');
 const CoWorking = require('../models/CoWorking');
+const Room = require('../models/Room');
 
 //@desc      Get unfinished appointments
 //@route     GET /api/v1/appointments
@@ -191,3 +192,26 @@ exports.deleteAppointment=async (req,res,next)=>{
     }
 }
 
+exports.getRoom=async (req,res,next)=>{
+    try {
+
+        const room = await Room.findById(req.params.roomId).populate({
+            path:'appointments',
+            select: 'startTime endTime date'
+        });
+        
+
+        console.log(room);
+
+        if (!room){
+            return res.status(404).json({success:false,message:`Yes No coWorking with the id of ${req.params.coWorkingId}`});
+        }
+
+        res.status(200).json({
+            success:true,
+            data: room
+        });
+    } catch (error){
+        return res.status(500).json({success:false,message:"Cannot find Appointment"});
+    }
+}

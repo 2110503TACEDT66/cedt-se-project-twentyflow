@@ -6,11 +6,15 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { Dayjs } from 'dayjs';
 
-export default function TimeReserve({onChangeTime, value} : {onChangeTime: Function , value: Dayjs | null}) {
+export default function TimeReserve({onChangeTime, value, disable} : {onChangeTime: Function , value: Dayjs | null , disable: boolean}) {
     return(
         <div className=" w-full ">
             <LocalizationProvider  dateAdapter={AdapterDayjs} >
-                <TimePicker defaultValue={value} onChange={(value)=>onChangeTime(value)} ampm={false}  slotProps={{ textField: { fullWidth: true } }}  />
+                {
+                    disable 
+                    ? <TimePicker defaultValue={value} onChange={(value)=>onChangeTime(value)} disabled ampm={false} slotProps={{ textField: { fullWidth: true } }}  /> :
+                    <TimePicker defaultValue={value} onChange={(value)=>onChangeTime(value)} ampm={false}  slotProps={{ textField: { fullWidth: true } }}  />
+                }
             </LocalizationProvider>
         </div>
     )

@@ -3,8 +3,12 @@ const express = require('express');
 const {protect, authorize} = require('../middleware/auth');
 const { addRoom, getRooms, getRoom} = require('../controllers/room');
 
+const appointmentRouter = require('./appointments');
 
 const router = express.Router();
+
+
+router.use('/:roomId/appointments/',appointmentRouter);
 
 
 router.route('/').post(addRoom).get(protect,authorize('admin','user'),getRooms)

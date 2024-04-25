@@ -1,7 +1,9 @@
 //update user name,email
 // update user name, email
 const User = require('../models/User');
-const updateUserProfile = async (req, res , next) => {
+const Appointment = require('../models/Appointment');
+const History = require('../models/History');
+exports.updateUserProfile = async (req, res , next) => {
     try {
         let user = await User.findById(req.params.id);
 
@@ -37,6 +39,89 @@ const updateUserProfile = async (req, res , next) => {
     }
 };
 
-module.exports = {
-    updateUserProfile,
+
+// i want to sum users booking hours
+exports.sumUserBookingHours = async (req, res, next) => {
+    try {
+        const userTotalHours = await History.aggregate([
+            {
+                $group: {
+                    _id: "$user",
+                    totalHours: { $sum: "$hour" }
+                }
+            },
+            {
+                $lookup: {
+                    from: "users", // Assuming your users collection is named "users"
+                    localField: "_id",
+                    foreignField: "_id",
+                    as: "userDetails"
+                }
+            },
+            {
+                $addFields: {
+                    user: { $arrayElemAt: ["$userDetails.name", 0] },
+                    userId: { $arrayElemAt: ["$userDetails._id", 0] }
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    user: 1,
+                    userId: 1,
+                    totalHours: 1
+                }
+            },
+            {
+                $sort: { totalHours: -1 } // Sort by totalHours in descending order
+            },
+            {
+                $limit: 10 // Limit the result to 10 documents
+            }
+        ]);
+
+        res.status(200).json({
+            success: true,
+            data: userTotalHours
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Cannot get User's total booking hours"
+        });
+    }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+exports.getUserSortByPrice = async (req, res, next) => {
+    try {
+        // Fetch users from the database and sort them by the 'price' field in ascending order
+        // and limit the result to the first 5 users
+        const users = await User.find()
+                                .sort({ points: -1 })
+                                .limit(10)
+                                .select('id name points');
+                                
+        // Send the successful response with the data
+        res.status(200).json({
+            success: true,
+            data: users
+        });
+    } catch (error) {
+        // Handle any errors and send a response with a 500 status code
+        res.status(500).json({
+            success: false,
+            message: "Cannot get Users"
+        });
+    }
 };

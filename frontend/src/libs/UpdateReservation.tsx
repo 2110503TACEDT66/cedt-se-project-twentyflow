@@ -1,11 +1,8 @@
 import { start } from "repl";
 
 export default async function UpdateReservation(
-  startTime: string,
-  endTime: string,
   token: string,
   appId: string,
-  date : string,
   additional : string
 ) {
   const url = `${process.env.NEXT_PUBLIC_BACKEND_URL}/appointments/${appId}`;
@@ -16,9 +13,6 @@ export default async function UpdateReservation(
       authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({
-      startTime,
-      endTime,
-      date,
       additional
     }),
   });

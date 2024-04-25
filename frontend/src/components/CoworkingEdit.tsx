@@ -80,11 +80,8 @@ export default function ReservationCard({
         }
         else{
           UpdateReservation(
-            time1.format("HH:mm"),
-            time2.format("HH:mm"),
             session.user.token,
             appointment._id,
-            new Date(date?.toDate()).toISOString(),
             add
           );
           
@@ -128,17 +125,17 @@ export default function ReservationCard({
       <div className=" flex flex-col w-full space-y-3">
         <h1 className=" font-bold text-xl">Date</h1>
         <div className=" flex flex-row space-y-3 w-full">
-          <DateReserve value={dayjs(new Date(appointment.date))} onChangeDate={(value: Dayjs) => setDate(value)} />
+          <DateReserve disable={true} value={dayjs(new Date(appointment.date))} onChangeDate={(value: Dayjs) => setDate(value)} />
         </div>
       </div>
       <div className=" flex flex-row w-full space-x-5">
         <div className="flex flex-col space-y-3 w-1/2 " >
           <h1 className=" font-bold text-xl">Start</h1>
-          <TimeReserve value={dayjs(timeToDate(appointment.startTime))} onChangeTime={(value : Dayjs) => setTime1(value)}/>
+          <TimeReserve disable={true} value={dayjs(timeToDate(appointment.startTime))} onChangeTime={(value : Dayjs) => setTime1(value)}/>
         </div>
         <div className="flex flex-col space-y-3 w-1/2 " >
           <h1 className=" font-bold text-xl">End</h1>
-          <TimeReserve value={dayjs(timeToDate(appointment.endTime))} onChangeTime={(value : Dayjs) => setTime2(value)}/>
+          <TimeReserve disable={true} value={dayjs(timeToDate(appointment.endTime))} onChangeTime={(value : Dayjs) => setTime2(value)}/>
         </div>
       </div>
       <div className=" flex flex-col w-full space-y-3">

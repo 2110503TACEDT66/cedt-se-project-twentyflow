@@ -1,7 +1,7 @@
 const Appointment = require('../models/Appointment');
 const CoWorking = require('../models/CoWorking');
 
-//@desc      Get all appointments
+//@desc      Get unfinished appointments
 //@route     GET /api/v1/appointments
 //@access    Public
 exports.getAppointments=async (req,res,next)=>{
@@ -190,3 +190,4 @@ exports.deleteAppointment=async (req,res,next)=>{
         });
     }
 }
+

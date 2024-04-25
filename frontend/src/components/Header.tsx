@@ -34,14 +34,13 @@ export default async function Header() {
               <Link href="/api/auth/register" className=" text-xl font-bold">
                 REGISTER
               </Link>
-              {/* <Link
+              <Link
                 href="/api/auth/signin"
                 className=" text-xl font-bold text-white p-2 bg-main-100 rounded-md"
-                onClick={handleLogin}
               >
                 LOGIN
-              </Link> */}
-              <LogInButton />
+              </Link>
+              {/* <LogInButton /> */}
             </div>
           ) : (
             <div className="flex space-x-7 justify-center items-center">

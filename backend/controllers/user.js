@@ -2,6 +2,7 @@
 // update user name, email
 const User = require('../models/User');
 const Appointment = require('../models/Appointment');
+const History = require('../models/History');
 exports.updateUserProfile = async (req, res , next) => {
     try {
         let user = await User.findById(req.params.id);
@@ -39,71 +40,59 @@ exports.updateUserProfile = async (req, res , next) => {
 };
 
 
-exports.sumUserBookingHours = async (req, res) => {
+// i want to sum users booking hours
+exports.sumUserBookingHours = async (req, res, next) => {
     try {
-        const user = await User.findById(req.params.id);
-
-        if (!user) {
-            return res.status(404).json({
-                success: false,
-                message: 'User not found',
-            });
-        }
-
-        if (user._id.toString() !== req.user.id && req.user.role !== 'admin') {
-            return res.status(401).json({
-                success: false,
-                message: `User ${req.user.id} is not authorized to update this user`,
-            });
-        }
-
-        const userBookingHours = await Appointment.aggregate([
-            {
-                $match: {
-                    user: user._id,
-                    status: 'finished',
-                },
-            },
-            {
-                $project: {
-                    startMinutes: {
-                        $add: [
-                            { $multiply: [{ $toInt: { $substr: ['$startTime', 0, 2] } }, 60] },
-                            { $toInt: { $substr: ['$startTime', 3, 2] } },
-                        ],
-                    },
-                    endMinutes: {
-                        $add: [
-                            { $multiply: [{ $toInt: { $substr: ['$endTime', 0, 2] } }, 60] },
-                            { $toInt: { $substr: ['$endTime', 3, 2] } },
-                        ],
-                    },
-                },
-            },
+        const userTotalHours = await History.aggregate([
             {
                 $group: {
-                    _id: '$user',
-                    totalMinutes: { $sum: { $subtract: ['$endMinutes', '$startMinutes'] } },
-                },
+                    _id: "$user",
+                    totalHours: { $sum: "$hour" }
+                }
+            },
+            {
+                $lookup: {
+                    from: "users", // Assuming your users collection is named "users"
+                    localField: "_id",
+                    foreignField: "_id",
+                    as: "userDetails"
+                }
+            },
+            {
+                $addFields: {
+                    user: { $arrayElemAt: ["$userDetails.name", 0] }
+                }
             },
             {
                 $project: {
-                    totalHours: { $divide: ['$totalMinutes', 60] },
-                },
+                    _id: 0,
+                    user: 1,
+                    totalHours: 1
+                }
             },
+            {
+                $sort: { totalHours: -1 } // Sort by totalHours in descending order
+            },
+            {
+                $limit: 10 // Limit the result to 10 documents
+            }
         ]);
 
         res.status(200).json({
             success: true,
-            data: userBookingHours,
+            data: userTotalHours
         });
     } catch (error) {
-        return res.status(500).json({
+        res.status(500).json({
             success: false,
-            message: `Cannot get user booking hours ${error}`,
+            message: "Cannot get User's total booking hours"
         });
     }
 };
+
+
+
+
 
 
 

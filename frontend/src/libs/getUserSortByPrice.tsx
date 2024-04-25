@@ -1,5 +1,5 @@
 export default async function getUserSortByPrice(){
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/user-sort-by-price`,{
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/user/price`,{
         method: "GET"
     })
     if(!response.ok) {

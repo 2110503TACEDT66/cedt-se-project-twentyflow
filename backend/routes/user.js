@@ -1,10 +1,11 @@
 const express = require('express');
-const {getUserSortByPrice} = require('../controllers/user');
+const {getUserSortByPrice , sumUserBookingHours} = require('../controllers/user');
 
 const router = express.Router({mergeParams:true});
 
-const {protect} = require('../middleware/auth');
+// const {protect} = require('../middleware/auth');
 
-router.route('/').get(getUserSortByPrice);
+router.route('/price').get(getUserSortByPrice);
+router.route('/hour').get(sumUserBookingHours);
 
 module.exports=router;

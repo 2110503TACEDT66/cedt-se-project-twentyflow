@@ -9,7 +9,7 @@ const rateLimit = require("express-rate-limit")
 const hpp = require('hpp')
 const cors = require('cors')
 const auth = require('./routes/auth');
-
+const rankingRouter = require('./routes/ranking');
 //Load env vars
 dotenv.config({path:'./config/config.env'});
 
@@ -66,6 +66,8 @@ app.use('/api/v1/coupon',coupon);
 app.use('/api/v1/reward',reward);
 app.use('/api/v1/payment',payment);
 app.use('/api/v1/user-sort-by-price',users);
+app.use('/api/v1/ranking',rankingRouter);
+app.use('/api/v1/room',require('./routes/room'));
 
 
 const PORT = process.env.PORT || 5000;

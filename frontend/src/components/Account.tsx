@@ -35,15 +35,16 @@ export default function Account() {
     const [changeTel, setChangeTel] = useState<string | undefined>(tel);
 
     const handleSave = async () => {
-        const telRegex = /^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/;
-
+        const telRegex = /^\d{10}$|^\d{3}-\d{3}-\d{4}$/;
+        
         if(!changeTel || !telRegex.test(changeTel)) {
             alert('Invalid telephone number');
             return;
         }
-
+        
+        const formattedTel = changeTel?.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3');
         if(changeUsername && changeTel && currentUser?.token && currentUser?._id){
-            await updateUserProfile(changeUsername, currentUser?.token, currentUser?._id, changeTel);
+            await updateUserProfile(changeUsername, currentUser?.token, currentUser?._id, formattedTel);
             session.update();
             setMenuChanger(1);
             window.location.reload();
@@ -103,7 +104,7 @@ export default function Account() {
                     <h1 className=" font-bold text-xl">
                         Telephone Number
                     </h1>
-                    <input type="number" className="font-semibold text-xl border-2 p-3 rounded-md border-gray-300" value={changeTel} onChange={(event) => {setChangeTel(event.target.value)}}></input>
+                    <input type="tel" className="font-semibold text-xl border-2 p-3 rounded-md border-gray-300" value={changeTel} onChange={(event) => {setChangeTel(event.target.value)}}></input>
 
                     <button className= "bg-main-100 text-white text-[20px] py-3 rounded-md font-semibold w-full"
                     onClick={handleSave}>

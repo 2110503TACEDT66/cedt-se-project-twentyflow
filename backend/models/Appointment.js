@@ -2,11 +2,20 @@ const mongoose=require('mongoose');
 
 const AppointmentSchema=new mongoose.Schema({
     startTime: {
-        type: Date,
+        type: String,
         required:true
     },
     endTime: {
+        type: String,
+        required:true
+    },
+    date : {
         type: Date,
+        required:true
+    },
+    room : {
+        type:mongoose.Schema.ObjectId,
+        ref: 'Room' ,
         required:true
     },
     user:{
@@ -32,7 +41,18 @@ const AppointmentSchema=new mongoose.Schema({
         enum: ['finished','unfinished'],
         default: 'unfinished'
     },
+    additional : {
+        type: String,
+        required: [true, 'Please add a additional']
+    },
 });
 
+
+AppointmentSchema.virtual('history', {
+    ref: 'History',
+    localField: '_id',
+    foreignField: 'appointment',
+    justOne:false
+});
 
 module.exports=mongoose.model('Appointment' ,AppointmentSchema);

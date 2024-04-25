@@ -219,6 +219,8 @@ exports.updateAll = async (req, res, next) => {
                 user: req.user.id,
                 coWorking: appointment.coWorking,
                 price: req.body.amount ,
+                appointment: req.body.appointmentID,
+                hour: Math.ceil((new Date(appointment.endTime) - new Date(appointment.startTime))/3600000)
             }
         )
         const createReward = await Reward.create(
@@ -228,10 +230,9 @@ exports.updateAll = async (req, res, next) => {
                 rewardPoint: req.body.amount ,
             }
         )
-
         const updatePoint = await User.findByIdAndUpdate(req.user.id, { $inc: { points: req.body.amount } });
-        const deleteAppointment = await Appointment.findByIdAndDelete(req.body.appointmentID);
-    
+        appointment.status = 'finished';
+
     }
     catch(err){
         res.status(400).json({

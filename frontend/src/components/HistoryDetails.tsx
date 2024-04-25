@@ -11,7 +11,6 @@ export default function HistoryDetails({historyId} : {historyId : string}) {
     const session = useSession();
     const currentUser = session.data?.user;
     const [userName, setUserName] = useState<string>(); 
-    const [appId, setAppId] = useState<string>();
     const [coWorkName, setCoWorkName] = useState<string>();
     const [coId, setCoId] = useState<string>();
     const [coRoom, setCoRoom] = useState<string>();
@@ -25,31 +24,45 @@ export default function HistoryDetails({historyId} : {historyId : string}) {
 
     useEffect(() => {
         if(currentUser) {
-            fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/history/${historyId}`, {
-                cache: "no-store",
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    authorization: `Bearer ${currentUser.token}`,
-                },
-            })
-            .then((res) => res.json())
-            .then((data) =>{
-                console.log(data.HistoryDetails);
-                const details = data.HistoryDetails;
-                setCoWorkName(details.coWorking.name);
-                setPrice(details.price);
-                setUserName(details.user.name);
-                setAppId(details.appointment);
-                setHours(details.hour);
-                setCoId(details.coWorking._id);
-            })
+            try {
+                fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/history/${historyId}`, {
+                    cache: "no-store",
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        authorization: `Bearer ${currentUser.token}`,
+                    },
+                })
+                .then((res) => res.json())
+                .then((data) =>{
+                    // console.log(data.HistoryDetails);
+                    const details = data.HistoryDetails;
+                    if (details && details.coWorking && details.coWorking.name) {
+                        setCoWorkName(details.coWorking.name);
+                        setPrice(details.price);
+                        setUserName(details.user.name);
+                        setHours(details.hour);
+                        
+
+                        const day = new Date(details.appointment.date);
+                        setDateBooking(day.toDateString());
+                        setAdditional(details.appointment.additional);
+                        setStartTime(details.appointment.startTime);
+                        setEndTime(details.appointment.endTime);
+
+                        setCoId(details.coWorking.id);
+                        setCoRoom(details.appointment.room);
+                    }
+                })
+            } catch(error) {
+                console.error("Error fetching data:", error);
+            }
         }
-    }, []);
+    }, [historyId, session]);
 
     useEffect(() => {
-        if(currentUser) {
-            fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/appointments/${appId}`, {
+        if(currentUser && coId && coRoom) {
+            fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/coWorkings/${coId}`, {
                 cache: "no-store",
                 method: "GET",
                 headers: {
@@ -59,34 +72,20 @@ export default function HistoryDetails({historyId} : {historyId : string}) {
             })
             .then((res) => res.json())
             .then((data) => {
-                console.log(data);
-                const details = data.data;
-                // const day = new Date(details.date);
-                // setDateBooking(day.toDateString());
-                setAdditional(details.additional);
-                setStartTime(details.startTime);
-                setEndTime(details.endTime);
-                setCoRoom(details.room);
-            })
-        }
-    }, [appId]);
+                if (data && data.data && data.data.rooms) {
+                    const rooms = data.data.rooms;
 
-    useEffect(() => {
-        if(currentUser) {
-            fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/coWorking/${coId}`, {
-                cache: "no-store",
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    authorization: `Bearer ${currentUser.token}`,
-                },
-            })
-            .then((res) => res.json())
-            .then((data) => {
-                console.log(data);
+                    for(let i in rooms) {
+                        console.log(rooms[i]);
+                        if(rooms[i]._id === coRoom) {
+                            setRoomNum(rooms[i].roomNumber);
+                            break;
+                        }
+                    }
+                }
             })
         }
-    }, [coId]); 
+    }, [coId, coRoom]); 
 
     return(
         <div className="flex w-full  scrollbar-none flex-col  items-center bg-main-100 min-h-[90vh] p-7">

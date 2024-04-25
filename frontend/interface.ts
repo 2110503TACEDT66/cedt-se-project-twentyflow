@@ -71,4 +71,28 @@ interface StatCardProps {
     changeDirection: "up" | "down";
     value: string;
     label: string;
-  }
+}
+
+interface RankItemPriceProps {
+    rank: number;
+    name: string;
+    price: string;
+}
+
+interface RankItemHourProps {
+    rank: number;
+    name: string;
+    hour: string;
+}
+
+interface UserSortByPrice {
+    _id: string;
+    name: string;
+    points: string;
+}
+
+interface UserSortByHour {
+    totalHours: number;
+    user: string;
+    userId: string;
+}

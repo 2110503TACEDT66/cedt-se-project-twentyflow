@@ -11,6 +11,7 @@ import 'dayjs/plugin/isBetween';
 import Swal from "sweetalert2";
 import CircularProgress from "@mui/material/CircularProgress";
 import { start } from "repl";
+import Coworking from "./Coworking";
 
 
 export default function CoworkingAvailable( { coworkingDetail } : {coworkingDetail: Coworking}){
@@ -27,6 +28,7 @@ export default function CoworkingAvailable( { coworkingDetail } : {coworkingDeta
     for (let i = 0; i < coworkingDetail.rooms.length; i++) {
         available.push(true);
     }
+    //for roomCard
     const [isRoomAvailable, setIsRoomAvailable] = useState(available);
     const [startPeriods, setStartPeriods] = useState(startPeriod);
     const [endPeriods, setEndPeriods] = useState(endPeriod);
@@ -78,7 +80,6 @@ export default function CoworkingAvailable( { coworkingDetail } : {coworkingDeta
                 )
                     .then((res) => res.json())
                     .then((data) => {
-                       
                         const datata:any = data.data.appointments.filter((appointment:any) => {
                             return dayjs(new Date(appointment.date)).isSame(reservationTime, 'day');
                         }).sort((a:any, b:any) => {
@@ -100,7 +101,7 @@ export default function CoworkingAvailable( { coworkingDetail } : {coworkingDeta
                             const endTime = dayjs(endToDate.format("YYYY-MM-DD") + " " + endToDate.format("HH:mm"))
                             // console.log(reservationTime)
                             // console.log(startTime, endTime);
-                                if (reservationTime.isAfter(startTime) && reservationTime.isBefore(endTime) || reservationTime.isSame(startTime)) {
+                                if (reservationTime.isAfter(startTime) && reservationTime.isBefore(endTime) || (reservationTime.isSame(startTime) || reservationTime.isSame(endTime))) {
                                     available[data.data.roomNumber - 1] = false;
                                     startPeriod[data.data.roomNumber - 1] = startToDate.format("HH:mm");
                                     endPeriod[data.data.roomNumber - 1] = endToDate.format("HH:mm");
@@ -124,7 +125,7 @@ export default function CoworkingAvailable( { coworkingDetail } : {coworkingDeta
             }
         }
 
-    }, [ lag]);
+    }, [lag]);
 
 
     //console.log(token )
@@ -138,10 +139,10 @@ export default function CoworkingAvailable( { coworkingDetail } : {coworkingDeta
               });
             return;
         }
-        else if (compareTime(time, dayjs(timeToDate(coworkingDetail.opentime))) || compareTime(dayjs(timeToDate(coworkingDetail.closetime)), time)){
+        else if (compareTime(time, dayjs(timeToDate(coworkingDetail.opentime))) || compareTime(dayjs(timeToDate(coworkingDetail.closetime)), time) || dayjs(timeToDate(coworkingDetail.closetime)).isSame(timeToDate(time.format("HH:mm"))) ) {
             Swal.fire({
                 title: "Search Failed",
-                text: "Time must be between coworking open and close time",
+                text: "Time must be between open time and close time",
                 icon: "error",
               });
             return;

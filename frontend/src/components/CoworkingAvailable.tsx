@@ -118,6 +118,14 @@ export default function CoworkingAvailable( { coworkingDetail } : {coworkingDeta
               });
             return;
         }
+        if (dayjs().isAfter(date, 'days')) {
+            Swal.fire({
+                title: "Search Failed",
+                text: "Date must be today or later",
+                icon: "error",
+              });
+            return;
+        }
         else if (compareTime(time, dayjs(timeToDate(coworkingDetail.opentime))) || compareTime(dayjs(timeToDate(coworkingDetail.closetime)), time)){
             Swal.fire({
                 title: "Search Failed",

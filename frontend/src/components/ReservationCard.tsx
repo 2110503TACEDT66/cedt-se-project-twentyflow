@@ -46,8 +46,8 @@ export default function ReservationCard({
         
       });
 
-      const reservationTime = dayjs(date?.format("YYYY-MM-DD") );
-      console.log(reservationTime, 'time')
+    const reservationTime = dayjs(date?.format("YYYY-MM-DD") );
+    console.log(reservationTime, 'reservation time')
     fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/appointments/${room._id}/appointments`, {
         method: "GET",
         headers: {
@@ -62,7 +62,7 @@ export default function ReservationCard({
         const startTimeB = dayjs(timeToDate(b.startTime));
         return startTimeA.isBefore(startTimeB) ? -1 : 1;
       });
-      console.log(datata, 'yes')
+      console.log(datata, 'datata')
       
       setReservationData(datata) ;
     })
@@ -135,7 +135,7 @@ export default function ReservationCard({
               for ( let i = 0 ; i < reservationData.length ; i++){
                 const start = dayjs(timeToDate(reservationData[i].startTime));
                 const end = dayjs(timeToDate(reservationData[i].endTime))
-                if ( (dayjs(timeToDate(time1.format("HH:mm"))).isAfter(start) || dayjs(timeToDate(time1.format("HH:mm"))).isBefore(end)) || (dayjs(timeToDate(time2.format("HH:mm"))).isAfter(start) || dayjs(timeToDate(time2.format("HH:mm"))).isBefore(end)) 
+                if ( (dayjs(timeToDate(time1.format("HH:mm"))).isAfter(start) && dayjs(timeToDate(time1.format("HH:mm"))).isBefore(end)) || (dayjs(timeToDate(time2.format("HH:mm"))).isAfter(start) && dayjs(timeToDate(time2.format("HH:mm"))).isBefore(end)) 
                   || dayjs(timeToDate(time1.format("HH:mm"))).isSame(start) || dayjs(timeToDate(time2.format("HH:mm"))).isSame(end) ){
                     Swal.fire({
                       title: "Reservation Failed",

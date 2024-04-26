@@ -61,19 +61,29 @@ export default function ReservationCard({
         setData(data.data);
       });
 
-    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/appointments/${coworking.rooms[appointment.room.roomNumber-1]._id}/appointments`, {
-        method: "GET",
-        headers: {
-            authorization: `Bearer ${session?.user.token}`,
-        }
-    }).then((res) => res.json())
-    .then((data) => {
-      setReservationData(data.data.appointments) ;
-      // console.log(data.data, 'data')
-    })
+      const reservationTime = dayjs(date?.format("YYYY-MM-DD") );
+      const roomId = appointment.room._id;
+      console.log(reservationTime, 'reservation time')
+      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/appointments/${roomId}/appointments`, {
+          method: "GET",
+          headers: {
+              authorization: `Bearer ${session?.user.token}`,
+          }
+      }).then((res) => res.json())
+      .then((data) => {
+        const datata:any = data.data.appointments.filter((appointment:any) => {
+          return dayjs(new Date(appointment.date)).isSame(reservationTime, 'day');
+        }).sort((a:any, b:any) => {
+          const startTimeA = dayjs(timeToDate(a.startTime));
+          const startTimeB = dayjs(timeToDate(b.startTime));
+          return startTimeA.isBefore(startTimeB) ? -1 : 1;
+        });
+        console.log(datata, 'datata')
+        
+        setReservationData(datata) ;
+      })
 
-
-  }, []);
+  }, [date,time1,time2,add]);
 
   console.log(reservationData, 'reservationData')
   // console.log(data, 'here')
@@ -147,13 +157,14 @@ export default function ReservationCard({
               const end = dayjs(timeToDate1(reservationData[i].endTime))
 
               if( dayjs(timeToDate1(appointment.startTime)).isSame(start) || dayjs(timeToDate1(appointment.endTime)).isSame(end)){
-                console.log('this')
+                console.log('found same time start and start appointment')
                 continue;
               }
               
-                if ( (dayjs(timeToDate1(time1.format("HH:mm"))).isAfter(start) || dayjs(timeToDate1(time1.format("HH:mm"))).isBefore(end)) || (dayjs(timeToDate1(time2.format("HH:mm"))).isAfter(start) || dayjs(timeToDate1(time2.format("HH:mm"))).isBefore(end)) 
+              if ( (dayjs(timeToDate1(time1.format("HH:mm"))).isAfter(start) && dayjs(timeToDate1(time1.format("HH:mm"))).isBefore(end)) || (dayjs(timeToDate1(time2.format("HH:mm"))).isAfter(start) && dayjs(timeToDate1(time2.format("HH:mm"))).isBefore(end)) 
                   || dayjs(timeToDate1(time1.format("HH:mm"))).isSame(start) || dayjs(timeToDate1(time2.format("HH:mm"))).isSame(end) ){
-                    console.log('here')
+                    console.log('inside if condition')
+                    console.log(start, 'this start time')
                     Swal.fire({
                     title: "Reservation Failed",
                     text: "Time slot is already reserved",

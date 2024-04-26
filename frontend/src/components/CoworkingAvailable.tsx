@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Dayjs } from "dayjs";
 import dayjs from "dayjs";
 import TimeReserve from "./TimeReserve"
@@ -21,9 +21,12 @@ export default function CoworkingAvailable( { coworkingDetail } : {coworkingDeta
     const [isLoading, setIsLoading] = useState(false);
     const [firstLoad, setFirstLoad] = useState(true);
     let available : boolean[]= [];
+    const history : Object[] = [];
     for (let i = 0; i < coworkingDetail.rooms.length; i++) {
         available.push(true);
+        history.push([]);
     }
+    const historyData = useRef<Object[]>(history);
     const [isRoomAvailable, setIsRoomAvailable] = useState(available);
     function timeToDate(tdate : string) {
         let tempTime = tdate.split(":");
@@ -50,7 +53,7 @@ export default function CoworkingAvailable( { coworkingDetail } : {coworkingDeta
             } else {
                 if (time1Minute < time2Minute) {
                     return true;
-                } else if (time1Minute > time2Minute) {
+                } else if (time1Minute >= time2Minute) {
                     return false;
                 } else {
                     return false;
@@ -77,19 +80,13 @@ export default function CoworkingAvailable( { coworkingDetail } : {coworkingDeta
                         const datata:any = data.data.appointments.filter((appointment:any) => {
                             return dayjs(new Date(appointment.date)).isSame(reservationTime, 'day');
                         });
-                        console.log("###########")
-                        console.log(i)
-                        console.log(datata);
-                        console.log("###########")
-                        // console.log(data.data.roomNumber);
-                        // console.log(data.data.appointments.length);
+                        history[data.data.roomNumber - 1] = datata;
+                        historyData.current = history;
                         for (let j = 0; j < datata.length; j++) {
                             const startToDate = dayjs(timeToDate(datata[j].startTime));
                             const endToDate = dayjs(timeToDate(datata[j].endTime));
                             const startTime = dayjs(startToDate.format("YYYY-MM-DD") + " " + startToDate.format("HH:mm"))
                             const endTime = dayjs(endToDate.format("YYYY-MM-DD") + " " + endToDate.format("HH:mm"))
-                            // console.log(reservationTime)
-                            // console.log(startTime, endTime);
                             if (reservationTime.isSame(dayjs(new Date(datata[j].date)).format("YYYY-MM-DD"), 'day')  ) {
                                 if (reservationTime.isAfter(startTime) && reservationTime.isBefore(endTime)) {
                                     available[data.data.roomNumber - 1] = false;
@@ -101,8 +98,13 @@ export default function CoworkingAvailable( { coworkingDetail } : {coworkingDeta
 
                     }
                 });
+            
+                
             }
         }
+        
+            
+        
 
     }, [ lag]);
 
@@ -134,6 +136,7 @@ export default function CoworkingAvailable( { coworkingDetail } : {coworkingDeta
               });
             return;
         }else{
+            
             setIsLoading(true);
                 setTimeout(() => {
                     setIsLoading(false);
@@ -142,7 +145,7 @@ export default function CoworkingAvailable( { coworkingDetail } : {coworkingDeta
             setFirstLoad(false);
             for (let i = 0; i < coworkingDetail.rooms.length; i++) {
                 available[i] = true;
-            }
+            } 
             setIsRoomAvailable(available);
         }
     }
@@ -179,7 +182,7 @@ export default function CoworkingAvailable( { coworkingDetail } : {coworkingDeta
                                 (coworkingDetail.rooms.sort((a, b) => a.roomNumber - b.roomNumber)).map((room, index) => {
                                     return (
                                         <div className="flex justify-center items-center" key={room._id}>
-                                            <RoomCard coworking={coworkingDetail} room={room} available={isRoomAvailable[index]} />
+                                            <RoomCard date={date} time={time} data={historyData.current[index]} coworking={coworkingDetail} room={room} available={isRoomAvailable[index]} />
                                         </div>
                                     );
                                 }

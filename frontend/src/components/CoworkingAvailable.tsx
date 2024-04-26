@@ -78,6 +78,7 @@ export default function CoworkingAvailable( { coworkingDetail } : {coworkingDeta
                         });
                         // console.log(data.data.roomNumber);
                         // console.log(data.data.appointments.length);
+                        console.log(datata);
                         for (let j = 0; j < datata.length; j++) {
                             const startToDate = dayjs(timeToDate(datata[j].startTime));
                             const endToDate = dayjs(timeToDate(datata[j].endTime));

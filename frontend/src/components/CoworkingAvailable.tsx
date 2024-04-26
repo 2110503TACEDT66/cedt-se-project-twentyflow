@@ -101,7 +101,7 @@ export default function CoworkingAvailable( { coworkingDetail } : {coworkingDeta
                             const endTime = dayjs(endToDate.format("YYYY-MM-DD") + " " + endToDate.format("HH:mm"))
                             // console.log(reservationTime)
                             // console.log(startTime, endTime);
-                                if (reservationTime.isAfter(startTime) && reservationTime.isBefore(endTime) || (reservationTime.isSame(startTime) || reservationTime.isSame(endTime))) {
+                                if (reservationTime.isAfter(startTime) && reservationTime.isBefore(endTime) || (reservationTime.isSame(startTime))) {
                                     available[data.data.roomNumber - 1] = false;
                                     startPeriod[data.data.roomNumber - 1] = startToDate.format("HH:mm");
                                     endPeriod[data.data.roomNumber - 1] = endToDate.format("HH:mm");

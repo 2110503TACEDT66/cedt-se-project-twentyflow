@@ -46,6 +46,8 @@ export default function ReservationCard({
         
       });
 
+      const reservationTime = dayjs(date?.format("YYYY-MM-DD") );
+      console.log(reservationTime, 'time')
     fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/appointments/${room._id}/appointments`, {
         method: "GET",
         headers: {
@@ -53,13 +55,22 @@ export default function ReservationCard({
         }
     }).then((res) => res.json())
     .then((data) => {
-      setReservationData(data.data.appointments) ;
+      const datata:any = data.data.appointments.filter((appointment:any) => {
+        return dayjs(new Date(appointment.date)).isSame(reservationTime, 'day');
+      }).sort((a:any, b:any) => {
+        const startTimeA = dayjs(timeToDate(a.startTime));
+        const startTimeB = dayjs(timeToDate(b.startTime));
+        return startTimeA.isBefore(startTimeB) ? -1 : 1;
+      });
+      console.log(datata, 'yes')
+      
+      setReservationData(datata) ;
     })
 
+    
 
-  }, []);
 
-  
+  }, [date,time1,time2,add]);
   // console.log(data, 'here')
   // if(reservationData)
   // console.log(reservationData[0], 'here1')

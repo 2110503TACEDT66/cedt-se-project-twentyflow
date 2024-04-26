@@ -59,7 +59,6 @@ export default function ReservationCard({
       .then((res) => res.json())
       .then((data) => {
         setData(data.data);
-        
       });
 
     fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/appointments/${coworking.rooms[appointment.room.roomNumber-1]._id}/appointments`, {
@@ -70,12 +69,13 @@ export default function ReservationCard({
     }).then((res) => res.json())
     .then((data) => {
       setReservationData(data.data.appointments) ;
+      // console.log(data.data, 'data')
     })
 
 
   }, []);
 
-  
+  console.log(reservationData, 'reservationData')
   // console.log(data, 'here')
   // if(reservationData)
   // console.log(reservationData[0], 'here1')
@@ -134,21 +134,21 @@ export default function ReservationCard({
           } 
 
           else if(reservationData) {
+            console.log(reservationData, 'reservationData')
             console.log(dayjs(timeToDate1(time1.format("HH:mm"))), 'time1')
             console.log(dayjs(timeToDate1(time2.format("HH:mm"))), 'time2')
             
             console.log(dayjs(timeToDate1(reservationData[0].startTime)), 'start')
             console.log(dayjs(timeToDate1(reservationData[0].endTime)), 'end')
+
+            console.log(dayjs(timeToDate1(appointment.startTime)), 'start appointment')
             for ( let i = 0 ; i < reservationData.length ; i++){
               const start = dayjs(timeToDate1(reservationData[i].startTime));
               const end = dayjs(timeToDate1(reservationData[i].endTime))
 
-              if( dayjs(timeToDate1(appointment.startTime)).isSame(start) && dayjs(timeToDate1(appointment.endTime)).isSame(end)){
+              if( dayjs(timeToDate1(appointment.startTime)).isSame(start) || dayjs(timeToDate1(appointment.endTime)).isSame(end)){
+                console.log('this')
                 continue;
-              }
-
-              if(dayjs(timeToDate1(time2.format("HH:mm"))).isAfter(start) || dayjs(timeToDate1(time2.format("HH:mm"))).isBefore(end)){
-                console.log('here')
               }
               
                 if ( (dayjs(timeToDate1(time1.format("HH:mm"))).isAfter(start) || dayjs(timeToDate1(time1.format("HH:mm"))).isBefore(end)) || (dayjs(timeToDate1(time2.format("HH:mm"))).isAfter(start) || dayjs(timeToDate1(time2.format("HH:mm"))).isBefore(end)) 

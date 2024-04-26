@@ -90,7 +90,7 @@ export default function CoworkingAvailable( { coworkingDetail } : {coworkingDeta
                         
                         console.log("###########")
                         console.log(i)
-                        console.log(datata);
+                        console.log(datata , `${coworkingDetail.rooms[i].roomNumber}`);
                         console.log("###########")
                         // console.log(data.data.roomNumber);
                         // console.log(data.data.appointments.length);

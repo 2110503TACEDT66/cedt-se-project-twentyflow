@@ -138,12 +138,7 @@ export default function ReservationCard({
           return;
         }
         else{
-          if ((dayjs(timeToDate1(time1.format("HH:mm"))).isAfter((timeToDate1(appointment.startTime)))|| dayjs(timeToDate1(time1.format("HH:mm"))).isSame((timeToDate1(appointment.startTime)))) && 
-              ( dayjs(timeToDate1(time2.format("HH:mm"))).isBefore(timeToDate1(appointment.endTime)) || dayjs(timeToDate1(time2.format("HH:mm"))).isSame(timeToDate1(appointment.endTime)))){ 
-             console.log("here1")
-          } 
-
-          else if(reservationData) {
+          if(reservationData) {
             console.log(reservationData, 'reservationData')
             console.log(dayjs(timeToDate1(time1.format("HH:mm"))), 'time1')
             console.log(dayjs(timeToDate1(time2.format("HH:mm"))), 'time2')

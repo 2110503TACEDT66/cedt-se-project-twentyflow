@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import GetpriceId from "@/libs/getPriceId";
 import Swal from "sweetalert2";
 import TimeReserve from "./TimeReserve";
+import { time } from "console";
 
 export default function ReservationCard({
   coworking,
@@ -30,6 +31,7 @@ export default function ReservationCard({
 
   const { data: session, status } = useSession();
   const [data, setData] = useState<Reservation[]>();
+  const [reservationData, setReservationData] = useState<any>();
 
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/appointments`, {
@@ -44,7 +46,37 @@ export default function ReservationCard({
         setData(data.data);
         
       });
+
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/appointments/${room._id}/appointments`, {
+        method: "GET",
+        headers: {
+            authorization: `Bearer ${session?.user.token}`,
+        }
+    }).then((res) => res.json())
+    .then((data) => {
+      setReservationData(data.data.appointments) ;
+    })
+
+
   }, []);
+
+  
+  // console.log(data, 'here')
+  // if(reservationData)
+  // console.log(reservationData[0], 'here1')
+
+  function timeToDate(tdate : string) {
+    let tempTime = tdate.split(":");
+    let dt = new Date();
+    dt.setDate(date?.date() || 0);
+    dt.setMonth(date?.month() || 0);
+    dt.setFullYear(date?.year() || 0);
+    dt.setHours(parseInt(tempTime[0]));
+    dt.setMinutes(parseInt(tempTime[1]));
+    dt.setSeconds(0);
+    return dt;
+  }
+
 
   const onsubmit = async () => {
     if ( date && time1 && time2 ){
@@ -82,8 +114,32 @@ export default function ReservationCard({
               icon: "error",
             });
             return;
-          }
-          else{
+          } 
+          else {
+            if(reservationData) {
+              // console.log(dayjs(timeToDate(time1.format("HH:mm"))), 'time1')
+              // console.log(dayjs(timeToDate(time2.format("HH:mm"))), 'time2')
+              
+              // console.log(dayjs(timeToDate(reservationData[0].startTime)), 'start')
+              // console.log(dayjs(timeToDate(reservationData[0].endTime)), 'end')
+              for ( let i = 0 ; i < reservationData.length ; i++){
+                const start = dayjs(timeToDate(reservationData[i].startTime));
+                const end = dayjs(timeToDate(reservationData[i].endTime))
+                
+                  if ( dayjs(timeToDate(time1.format("HH:mm"))).isBetween(start,end) || dayjs(timeToDate(time2.format("HH:mm"))).isBetween(start,end) 
+                    || dayjs(timeToDate(time1.format("HH:mm"))).isSame(start) || dayjs(timeToDate(time2.format("HH:mm"))).isSame(end) ){
+                    Swal.fire({
+                      title: "Reservation Failed",
+                      text: "Time slot is already reserved",
+                      icon: "error",
+                    });
+                    return;
+                  
+                }
+              }
+  
+            } 
+  
             const priceId = await GetpriceId(
               coworking.name,
               coworking.price_hourly,

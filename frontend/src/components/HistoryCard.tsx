@@ -5,16 +5,19 @@ import { useSearchParams } from "next/navigation";
 import DeleteReservation from "@/libs/DeleteReservation";
 import { faGear, faPenToSquare, faTrash, faX, faXmark } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState } from "react";
+import { use, useState } from "react";
 import Swal from "sweetalert2";
+import { useEffect } from "react";
+import getRoom from "@/libs/getRoom";
 
-
-export default function HistoryCard( {reservation} : {reservation : Reservation}){
+export default function HistoryCard( {reservation} : {reservation : ReservationJson}){
     const session = useSession()
     const currentUser = session.data?.user
     const rid = reservation._id
 
     const [isOpen, setIsOpen] = useState<boolean>(false);
+    const [roomNo, setRoom] = useState<string | null>(null)
+    // console.log(reservation.startTime)
     // console.log(reservation.endTime)
     
     
@@ -52,6 +55,15 @@ export default function HistoryCard( {reservation} : {reservation : Reservation}
 
     const hour = endHour - startHour
 
+    const room:string = reservation.room
+
+    useEffect(() => {
+        getRoom({token : session.data?.user.token as string , id : room}).then((data) => {
+            setRoom(data.data.roomNumber as string)
+        })
+    },[])
+
+
     return(
         <div className=" flex flex-row justify-between h-full bg-gray-200 rounded-md px-3 py-3">
             <div className=" flex flex-col space-y-3 h-full">
@@ -61,6 +73,12 @@ export default function HistoryCard( {reservation} : {reservation : Reservation}
                     </h1>
                     <h1 className=" bg-white p-3 rounded-lg font-bold text-xl">
                         {reservation.coWorking.name}
+                    </h1>
+                    <h1 className=" font-bold text-xl">
+                        Room : 
+                    </h1>
+                    <h1 className=" bg-white p-3 rounded-lg font-bold text-xl">
+                        {roomNo}
                     </h1>
                 </div>
                 <div className=" flex flex-row  items-center space-x-6">

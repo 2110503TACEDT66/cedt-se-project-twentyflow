@@ -46,6 +46,21 @@ interface Reservation {
     _id : string
 }
 
+interface ReservationJson {
+    startTime : string,
+    endTime : string,
+    date : string,
+    user : User,
+    coWorking : Coworking,
+    createAt : string,
+    priceId : string,
+    status : string,
+    room : string,
+    additional : string,
+    _id : string
+}
+
+
 interface Reward {
     rewardName : string,
     rewardPoint : number,

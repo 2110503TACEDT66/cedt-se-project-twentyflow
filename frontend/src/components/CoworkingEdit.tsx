@@ -44,6 +44,7 @@ export default function ReservationCard({
     
     );
   }
+
   const onsubmit = async () => {
     if ( date && time1 && time2 ){
       const startHour = parseInt(time1?.format('HH:mm').split(':')[0]);
@@ -118,7 +119,7 @@ export default function ReservationCard({
         <div className="flex flex-col space-y-3 w-1/6 " >
           <h1 className=" font-bold text-xl">Room</h1>
           <h1 className=" font-semibold text-xl border-2 p-3 rounded-md border-gray-300">
-            2
+            {appointment.room.roomNumber}
           </h1>
         </div>
       </div>

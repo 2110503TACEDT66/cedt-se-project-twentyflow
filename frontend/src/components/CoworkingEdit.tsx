@@ -45,6 +45,54 @@ export default function ReservationCard({
     );
   }
 
+  const [data, setData] = useState<Reservation[]>();
+  const [reservationData, setReservationData] = useState<any>();
+
+  useEffect(() => {
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/appointments`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${session?.user.token}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setData(data.data);
+        
+      });
+
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/appointments/${coworking.rooms[appointment.room.roomNumber-1]._id}/appointments`, {
+        method: "GET",
+        headers: {
+            authorization: `Bearer ${session?.user.token}`,
+        }
+    }).then((res) => res.json())
+    .then((data) => {
+      setReservationData(data.data.appointments) ;
+    })
+
+
+  }, []);
+
+  
+  // console.log(data, 'here')
+  // if(reservationData)
+  // console.log(reservationData[0], 'here1')
+
+  function timeToDate1(tdate : string) {
+    let tempTime = tdate.split(":");
+    let dt = new Date();
+    dt.setDate(date?.date() || 0);
+    dt.setMonth(date?.month() || 0);
+    dt.setFullYear(date?.year() || 0);
+    dt.setHours(parseInt(tempTime[0]));
+    dt.setMinutes(parseInt(tempTime[1]));
+    dt.setSeconds(0);
+    return dt;
+  }
+
+
   const onsubmit = async () => {
     if ( date && time1 && time2 ){
       const startHour = parseInt(time1?.format('HH:mm').split(':')[0]);
@@ -80,10 +128,50 @@ export default function ReservationCard({
           return;
         }
         else{
+          if ((dayjs(timeToDate1(time1.format("HH:mm"))).isAfter((timeToDate1(appointment.startTime)))|| dayjs(timeToDate1(time1.format("HH:mm"))).isSame((timeToDate1(appointment.startTime)))) && 
+              ( dayjs(timeToDate1(time2.format("HH:mm"))).isBefore(timeToDate1(appointment.endTime)) || dayjs(timeToDate1(time2.format("HH:mm"))).isSame(timeToDate1(appointment.endTime)))){ 
+             console.log("here1")
+          } 
+
+          else if(reservationData) {
+            console.log(dayjs(timeToDate1(time1.format("HH:mm"))), 'time1')
+            console.log(dayjs(timeToDate1(time2.format("HH:mm"))), 'time2')
+            
+            console.log(dayjs(timeToDate1(reservationData[0].startTime)), 'start')
+            console.log(dayjs(timeToDate1(reservationData[0].endTime)), 'end')
+            for ( let i = 0 ; i < reservationData.length ; i++){
+              const start = dayjs(timeToDate1(reservationData[i].startTime));
+              const end = dayjs(timeToDate1(reservationData[i].endTime))
+
+              // if( dayjs(timeToDate1(appointment.startTime)) == start && dayjs(timeToDate1(appointment.endTime)) == end){
+              //   continue;
+              // }
+
+              if(dayjs(timeToDate1(time2.format("HH:mm"))).isAfter(start) || dayjs(timeToDate1(time2.format("HH:mm"))).isBefore(end)){
+                console.log('here')
+              }
+              
+                if ( (dayjs(timeToDate1(time1.format("HH:mm"))).isAfter(start) || dayjs(timeToDate1(time1.format("HH:mm"))).isBefore(end)) || (dayjs(timeToDate1(time2.format("HH:mm"))).isAfter(start) || dayjs(timeToDate1(time2.format("HH:mm"))).isBefore(end)) 
+                  || dayjs(timeToDate1(time1.format("HH:mm"))).isSame(start) || dayjs(timeToDate1(time2.format("HH:mm"))).isSame(end) ){
+                    console.log('here')
+                    Swal.fire({
+                    title: "Reservation Failed",
+                    text: "Time slot is already reserved",
+                    icon: "error",
+                  });
+                  return;
+                
+              }
+            }
+
+          }
           UpdateReservation(
             session.user.token,
             appointment._id,
-            add
+            add,
+            time1.format("HH:mm"),
+            time2.format("HH:mm"),
+            
           );
           
           Swal.fire({
@@ -126,17 +214,17 @@ export default function ReservationCard({
       <div className=" flex flex-col w-full space-y-3">
         <h1 className=" font-bold text-xl">Date</h1>
         <div className=" flex flex-row space-y-3 w-full">
-          <DateReserve disable={true} value={dayjs(new Date(appointment.date))} onChangeDate={(value: Dayjs) => setDate(value)} />
+          <DateReserve disable={false} value={dayjs(new Date(appointment.date))} onChangeDate={(value: Dayjs) => setDate(value)} />
         </div>
       </div>
       <div className=" flex flex-row w-full space-x-5">
         <div className="flex flex-col space-y-3 w-1/2 " >
           <h1 className=" font-bold text-xl">Start</h1>
-          <TimeReserve disable={true} value={dayjs(timeToDate(appointment.startTime))} onChangeTime={(value : Dayjs) => setTime1(value)}/>
+          <TimeReserve disable={false} value={dayjs(timeToDate(appointment.startTime))} onChangeTime={(value : Dayjs) => setTime1(value)}/>
         </div>
         <div className="flex flex-col space-y-3 w-1/2 " >
           <h1 className=" font-bold text-xl">End</h1>
-          <TimeReserve disable={true} value={dayjs(timeToDate(appointment.endTime))} onChangeTime={(value : Dayjs) => setTime2(value)}/>
+          <TimeReserve disable={false} value={dayjs(timeToDate(appointment.endTime))} onChangeTime={(value : Dayjs) => setTime2(value)}/>
         </div>
       </div>
       <div className=" flex flex-col w-full space-y-3">

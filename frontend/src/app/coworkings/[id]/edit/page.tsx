@@ -40,7 +40,7 @@ export default function EditPage({ params }: { params: { id: string } }) {
   console.log()
   console
   return (
-    <main className=" min-h-[90vh]  flex justify-center items-center bg-main-100">
+    <main className=" min-h-[120vh]  flex justify-center items-center bg-main-100">
       <CoWorkingEdit appointment={appointment} coworking={coworking} />
     </main>
   );

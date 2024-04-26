@@ -13,8 +13,8 @@ import CircularProgress from "@mui/material/CircularProgress";
 
 
 export default function CoworkingAvailable( { coworkingDetail } : {coworkingDetail: Coworking}){
-    const [date, setDate] = useState<Dayjs | null>(dayjs(new Date()));
-    const [time,setTime] = useState<Dayjs | null>(dayjs(new Date()));
+    const [date, setDate] = useState<Dayjs | null>(null);
+    const [time,setTime] = useState<Dayjs | null>(null);
     const session = useSession();
     const token = session.data?.user.token || "";
     const [ lag, setLag ] = useState(true);
@@ -61,7 +61,6 @@ export default function CoworkingAvailable( { coworkingDetail } : {coworkingDeta
     }
 
     useEffect(() => {
-        setFirstLoad(false);
         const reservationTime = dayjs(date?.format("YYYY-MM-DD") + " " + time?.format("HH:mm"));
         if (coworkingDetail && coworkingDetail.rooms) {
             for (let i = 0; i < coworkingDetail.rooms.length; i++) {
@@ -111,7 +110,15 @@ export default function CoworkingAvailable( { coworkingDetail } : {coworkingDeta
     //console.log(token )
     const  handleSearch  = () => {
         //console.log(date?.format("YYYY-MM-DD"), time?.format("HH:mm"));
-        if (compareTime(time, dayjs(timeToDate(coworkingDetail.opentime))) || compareTime(dayjs(timeToDate(coworkingDetail.closetime)), time)){
+        if (!date || !time) {
+            Swal.fire({
+                title: "Search Failed",
+                text: "Please select date and time",
+                icon: "error",
+              });
+            return;
+        }
+        else if (compareTime(time, dayjs(timeToDate(coworkingDetail.opentime))) || compareTime(dayjs(timeToDate(coworkingDetail.closetime)), time)){
             Swal.fire({
                 title: "Search Failed",
                 text: "Time must be between coworking open and close time",
@@ -149,8 +156,11 @@ export default function CoworkingAvailable( { coworkingDetail } : {coworkingDeta
             
             {
                 firstLoad ? (
-                    <div className="flex justify-center items-center h-full w-full">
-                        <CircularProgress color="secondary" />
+                    
+                    <div className=" flex justify-center items-center h-full py-40">
+                        <h1 className=" text-3xl font-bold">
+                            Please select date and time
+                        </h1>
                     </div>
                 ) :
                 (

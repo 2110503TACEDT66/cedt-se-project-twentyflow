@@ -18,8 +18,8 @@ export default function CoworkingAvailable( { coworkingDetail } : {coworkingDeta
     const session = useSession();
     const token = session.data?.user.token || "";
     const [ lag, setLag ] = useState(true);
-    const [ firstClick , setFirstClick ] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [firstLoad, setFirstLoad] = useState(true);
     let available : boolean[]= [];
     for (let i = 0; i < coworkingDetail.rooms.length; i++) {
         available.push(true);
@@ -61,6 +61,7 @@ export default function CoworkingAvailable( { coworkingDetail } : {coworkingDeta
     }
 
     useEffect(() => {
+        setFirstLoad(false);
         const reservationTime = dayjs(date?.format("YYYY-MM-DD") + " " + time?.format("HH:mm"));
         if (coworkingDetail && coworkingDetail.rooms) {
             for (let i = 0; i < coworkingDetail.rooms.length; i++) {
@@ -68,17 +69,21 @@ export default function CoworkingAvailable( { coworkingDetail } : {coworkingDeta
                     method: "GET",
                     headers: {
                         authorization: `Bearer ${token}`,
-                    },cache: 'force-cache'
+                    }
                 }
                 )
                     .then((res) => res.json())
                     .then((data) => {
+                       
                         const datata:any = data.data.appointments.filter((appointment:any) => {
                             return dayjs(new Date(appointment.date)).isSame(reservationTime, 'day');
                         });
+                        console.log("###########")
+                        console.log(i)
+                        console.log(datata);
+                        console.log("###########")
                         // console.log(data.data.roomNumber);
                         // console.log(data.data.appointments.length);
-                        console.log(datata);
                         for (let j = 0; j < datata.length; j++) {
                             const startToDate = dayjs(timeToDate(datata[j].startTime));
                             const endToDate = dayjs(timeToDate(datata[j].endTime));
@@ -88,7 +93,8 @@ export default function CoworkingAvailable( { coworkingDetail } : {coworkingDeta
                             // console.log(startTime, endTime);
                             if (reservationTime.isSame(dayjs(new Date(datata[j].date)).format("YYYY-MM-DD"), 'day')  ) {
                                 if (reservationTime.isAfter(startTime) && reservationTime.isBefore(endTime)) {
-                                    available[i] = false;
+                                    available[data.data.roomNumber - 1] = false;
+
                                     setIsRoomAvailable(available);
                                     break;
                                 }
@@ -99,7 +105,7 @@ export default function CoworkingAvailable( { coworkingDetail } : {coworkingDeta
             }
         }
 
-    }, [token, coworkingDetail.id, lag]);
+    }, [ lag]);
 
 
     //console.log(token )
@@ -113,12 +119,12 @@ export default function CoworkingAvailable( { coworkingDetail } : {coworkingDeta
               });
             return;
         }else{
-            setFirstClick(true);
             setIsLoading(true);
                 setTimeout(() => {
                     setIsLoading(false);
                 }, 1000);
             setLag(!lag);
+            setFirstLoad(false);
             for (let i = 0; i < coworkingDetail.rooms.length; i++) {
                 available[i] = true;
             }
@@ -128,32 +134,43 @@ export default function CoworkingAvailable( { coworkingDetail } : {coworkingDeta
 
     return(
         <div className="flex flex-col justify-round bg-white rounded-2xl px-8 pt-8 pb-7 w-full space-y-4 h-[90vh]">
-            <div className="w-full flex flex-row justify-between">
-            <div className="bg-custom-grey flex flex-row justify-round space-x-10 w-[85%] px-7 pr-7 pt-5 pb-5 rounded-lg">
-                <div className="w-[50%] bg-white">
-                    <DateReserve disable={false} onChangeDate={(value: Dayjs) => setDate(value)} value={date}/>
+             <div className="w-full flex flex-row justify-between">
+                <div className="bg-custom-grey flex flex-row justify-round space-x-10 w-[85%] px-7 pr-7 pt-5 pb-5 rounded-lg">
+                    <div className="w-[50%] bg-white">
+                        <DateReserve disable={false} onChangeDate={(value: Dayjs) => setDate(value)} value={date} />
+                    </div>
+                    <div className="w-[45%] bg-white">
+                        <TimeReserve disable={false} onChangeTime={(value: Dayjs) => setTime(value)} value={time} />
+                    </div>
                 </div>
-                <div className="w-[45%] bg-white">
-                    <TimeReserve disable={false} onChangeTime={(value: Dayjs) => setTime(value)} value={time}/>
-                </div>
+                <button className="bg-custom-purple text-white font-semibold text-2xl items-center rounded-lg w-[13%]" onClick={handleSearch}>Search</button>
             </div>
             
-            <button className="bg-custom-purple text-white font-semibold text-2xl items-center rounded-lg w-[13%]" onClick={handleSearch}>Search</button>
             
-            </div>
-            <div className= {isLoading? "flex justify-center items-center h-full w-full" : "grid grid-cols-4 gap-20 pt-20"}>
             {
-                firstClick ? (
-                    isLoading ? (<CircularProgress color="secondary" />) :
-                (coworkingDetail.rooms.sort((a,b) => a.roomNumber - b.roomNumber)).map((room, index) => {
-                    return(
-                        <div className="flex justify-center items-center" key={room._id}>
-                            <RoomCard coworking={coworkingDetail} room={room} available={isRoomAvailable[index]}/>
+                firstLoad ? (
+                    <div className="flex justify-center items-center h-full w-full">
+                        <CircularProgress color="secondary" />
+                    </div>
+                ) :
+                (
+                    <>
+                   
+                        <div className={isLoading ? "flex justify-center items-center h-full w-full" : "grid grid-cols-4 gap-20 pt-20"}>
+                            {isLoading ? (<CircularProgress color="secondary" />) :
+                                (coworkingDetail.rooms.sort((a, b) => a.roomNumber - b.roomNumber)).map((room, index) => {
+                                    return (
+                                        <div className="flex justify-center items-center" key={room._id}>
+                                            <RoomCard coworking={coworkingDetail} room={room} available={isRoomAvailable[index]} />
+                                        </div>
+                                    );
+                                }
+                                )}
                         </div>
-                    )
-                })) : <div></div>
+                            
+                    </>
+                )
             }
-            </div>
 
         </div>
     )

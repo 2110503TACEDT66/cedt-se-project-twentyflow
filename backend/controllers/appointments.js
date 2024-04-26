@@ -197,7 +197,7 @@ exports.getRoom=async (req,res,next)=>{
         const room = await Room.findById(req.params.roomId).populate({
             path:'appointments',
             select: 'startTime endTime date'
-        });
+        }).sort({roomNumber:1});
 
         if (!room){
             return res.status(404).json({success:false,message:`Yes No coWorking with the id of ${req.params.coWorkingId}`});

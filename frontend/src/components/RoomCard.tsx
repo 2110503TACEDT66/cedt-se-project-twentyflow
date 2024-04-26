@@ -4,38 +4,45 @@ import { useRouter } from "next/navigation"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faCircleCheck } from "@fortawesome/free-solid-svg-icons"
 import { faCircleXmark } from "@fortawesome/free-solid-svg-icons"
-import { Dayjs } from "dayjs"
+import Link from "next/link"
 
-export default function RoomCard({room, coworking , available , data , time , date  }: {room: Room , coworking: Coworking, available: boolean , data : any , time : Dayjs | null, date : Dayjs | null}) {
+export default function RoomCard({room, coworking , available , startPeriod , endPeriod }: {room: Room , coworking: Coworking, available: boolean, startPeriod: string, endPeriod: string}) {
     const router = useRouter()
+    
 
-    console.log(room.roomNumber)
-    for (let i = 0; i < data.length; i++) {
-        console.log(data[i].startTime)
-    }
     
     
     return (
         <div>
             {
                 available ?
-                <div onClick={()=>{ router.push(`/coworkings/${coworking.id}/booking/${room._id}`)}} 
-                    className=" cursor-pointer w-20 h-28 flex justify-center items-center bg-custom-purple p-5 m-2 rounded-lg">
-                    <FontAwesomeIcon icon={faCircleCheck}  className="text-white w-12 h-12"/> :
+                <div className="w-20 h-28 flex justify-center items-center bg-main-100 p-5 m-2 rounded-lg group relative">
+                <FontAwesomeIcon icon={faCircleCheck} className="text-white w-12 h-12" />
+                <div className="absolute bottom-10 left-full translate-x-4 bg-white shadow-xl p-5 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 w-44">
+                    <p>Room Number : {room.roomNumber}</p>
+                    <p>status : available</p>
+                    <p>next period : </p>
+                    <p>{startPeriod} - {endPeriod}</p>
+                    <Link href={
+                        {
+                            pathname: `/coworkings/${coworking.id}/booking/${room._id}`,
+                            query: {
+                                startPeriod: startPeriod,
+                                endPeriod: endPeriod
+                            }
+                        }
+                    
+
+                    } className="bg-main-100 rounded-lg px-5 py-2 text-white"> Reserve</Link>
+                </div>
                 </div> :
                 <div className="w-20 h-28 flex justify-center items-center bg-[#D5C4F1] p-5 m-2 rounded-lg group relative">
                     <FontAwesomeIcon icon={faCircleXmark} className="text-white w-12 h-12" />
-                    <div className="absolute bottom-full -right-36  bg-gray-700 text-white px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                       <h1>
-                            Number : {room.roomNumber}
-                        </h1> 
-                        <h1>
-                            Status : Busy
-                        </h1>
-                        <h1>
-                            Period : {data[0].startTime} - {data[0].endTime}
-                        </h1>
-                        
+                    <div className="absolute bottom-10 left-full translate-x-1 bg-white shadow-xl p-5 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 w-44">
+                        <p>Room Number : {room.roomNumber}</p>
+                        <p>status : busy</p>
+                        <p>period : </p>
+                        <p>{startPeriod} - {endPeriod}</p>
                     </div>
                 </div>
             }

@@ -156,13 +156,15 @@ export default function ReservationCard({
               const start = dayjs(timeToDate1(reservationData[i].startTime));
               const end = dayjs(timeToDate1(reservationData[i].endTime))
 
-              if( dayjs(timeToDate1(appointment.startTime)).isSame(start) || dayjs(timeToDate1(appointment.endTime)).isSame(end)){
+              if( dayjs(timeToDate1(appointment.startTime)).isSame(start) && dayjs(timeToDate1(appointment.endTime)).isSame(end)){
                 console.log('found same time start and start appointment')
                 continue;
               }
               
-              if ( (dayjs(timeToDate1(time1.format("HH:mm"))).isAfter(start) && dayjs(timeToDate1(time1.format("HH:mm"))).isBefore(end)) || (dayjs(timeToDate1(time2.format("HH:mm"))).isAfter(start) && dayjs(timeToDate1(time2.format("HH:mm"))).isBefore(end)) 
-                  || dayjs(timeToDate1(time1.format("HH:mm"))).isSame(start) || dayjs(timeToDate1(time2.format("HH:mm"))).isSame(end) ){
+              if ( (dayjs(timeToDate1(time1.format("HH:mm"))).isBetween(start,end)) 
+                || (dayjs(timeToDate1(time2.format("HH:mm"))).isBetween(start,end)) 
+                || dayjs(timeToDate1(time1.format("HH:mm"))).isSame(start) 
+                || dayjs(timeToDate1(time2.format("HH:mm"))).isSame(end) ){
                     console.log('inside if condition')
                     console.log(start, 'this start time')
                     Swal.fire({

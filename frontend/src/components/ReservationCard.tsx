@@ -135,8 +135,10 @@ export default function ReservationCard({
               for ( let i = 0 ; i < reservationData.length ; i++){
                 const start = dayjs(timeToDate(reservationData[i].startTime));
                 const end = dayjs(timeToDate(reservationData[i].endTime))
-                if ( (dayjs(timeToDate(time1.format("HH:mm"))).isAfter(start) && dayjs(timeToDate(time1.format("HH:mm"))).isBefore(end)) || (dayjs(timeToDate(time2.format("HH:mm"))).isAfter(start) && dayjs(timeToDate(time2.format("HH:mm"))).isBefore(end)) 
-                  || dayjs(timeToDate(time1.format("HH:mm"))).isSame(start) || dayjs(timeToDate(time2.format("HH:mm"))).isSame(end) ){
+                if ( (dayjs(timeToDate(time1.format("HH:mm"))).isBetween(start,end) ) 
+                  || (dayjs(timeToDate(time2.format("HH:mm"))).isBetween(start,end)) 
+                  || dayjs(timeToDate(time1.format("HH:mm"))).isSame(start) 
+                  || dayjs(timeToDate(time2.format("HH:mm"))).isSame(end) ){
                     Swal.fire({
                       title: "Reservation Failed",
                       text: "Time slot is already reserved",

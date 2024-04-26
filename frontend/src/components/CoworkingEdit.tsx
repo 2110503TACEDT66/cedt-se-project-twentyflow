@@ -107,7 +107,7 @@ export default function ReservationCard({
   };
 
   return (
-    <div className=" w-10/12 space-y-10 h-full p-10 bg-white rounded-md flex flex-col">
+    <div className=" w-10/12 space-y-10 h-full p-10 my-8 bg-white rounded-md flex flex-col">
       <div className=" flex flex-row w-full space-x-5">
         <div className="flex flex-col space-y-3 w-5/6" >
           <h1 className=" font-bold text-xl">Name</h1>

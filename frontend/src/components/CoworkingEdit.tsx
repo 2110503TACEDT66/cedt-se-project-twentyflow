@@ -143,9 +143,9 @@ export default function ReservationCard({
               const start = dayjs(timeToDate1(reservationData[i].startTime));
               const end = dayjs(timeToDate1(reservationData[i].endTime))
 
-              // if( dayjs(timeToDate1(appointment.startTime)) == start && dayjs(timeToDate1(appointment.endTime)) == end){
-              //   continue;
-              // }
+              if( dayjs(timeToDate1(appointment.startTime)).isSame(start) && dayjs(timeToDate1(appointment.endTime)).isSame(end)){
+                continue;
+              }
 
               if(dayjs(timeToDate1(time2.format("HH:mm"))).isAfter(start) || dayjs(timeToDate1(time2.format("HH:mm"))).isBefore(end)){
                 console.log('here')

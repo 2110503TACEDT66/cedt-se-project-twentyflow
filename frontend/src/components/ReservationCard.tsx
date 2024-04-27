@@ -178,14 +178,98 @@ export default function ReservationCard({
           });
         }
       }
+      else{
+        if (startHour > endHour || (startHour == endHour && startMinute >= endMinute)){
+          Swal.fire({
+            title: "Reservation Failed",
+            text: "Start time must be before end time",
+            icon: "error",
+          });
+          return;
+        }else if (startHour < cowokingStartHour || (startHour == cowokingStartHour && startMinute < cowokingStartMinute)){
+          Swal.fire({
+            title: "Reservation Failed",
+            text: "Start time must be after coworking open time",
+            icon: "error",
+          });
+          return;
+        }
+        else if (endHour > cowokingEndHour || (endHour == cowokingEndHour && endMinute > cowokingEndMinute)){
+          Swal.fire({
+            title: "Reservation Failed",
+            text: "End time must be before coworking close time",
+            icon: "error",
+          });
+          return;
+        } 
+        else {
+          if(reservationData) {
+            for ( let i = 0 ; i < reservationData.length ; i++){
+              const start = dayjs(timeToDate(reservationData[i].startTime));
+              const end = dayjs(timeToDate(reservationData[i].endTime))
+              if ( (dayjs(timeToDate(time1.format("HH:mm"))).isBetween(start,end) ) 
+                || (dayjs(timeToDate(time2.format("HH:mm"))).isBetween(start,end)) 
+                || dayjs(timeToDate(time1.format("HH:mm"))).isSame(start) 
+                || dayjs(timeToDate(time2.format("HH:mm"))).isSame(end) ){
+                  Swal.fire({
+                    title: "Reservation Failed",
+                    text: "Time slot is already reserved",
+                    icon: "error",
+                  });
+                  return;
+                
+              }
+            }
+
+          } 
+          if(!session){
+            Swal.fire({
+              title: "Reservation Failed",
+              text: "Please login to reserve",
+              icon: "error",
+            });
+            return;
+          }
+
+          const priceId = await GetpriceId(
+            coworking.name,
+            coworking.price_hourly,
+            time1?.format('HH:mm'),
+            time2?.format('HH:mm'),
+            session.user.token
+          );
+          addAppt(
+            time1.format('HH:mm'),
+            time2.format('HH:mm'),
+            session.user._id,
+            coworking.id,
+            session.user.token,
+            priceId,
+            room._id,
+            dayjs(date?.format('YYYY-MM-DD')).toDate().toISOString(),
+            add
+          ).then((res) => {
+            console.log(res, 'res')
+          }
+          )
+          Swal.fire({
+            title: "Reservation Successful",
+            icon: "success",
+          }).then((result)=>{
+            if(result.isConfirmed){
+              router.push("/booking");
+            }
+          });
+      }
+      }
     }
-    else{
-      Swal.fire({
-        title: "Reservation Failed",
-        text: "Please fill in all the required fields",
-        icon: "error",
-      });
-    }
+      else{
+        Swal.fire({
+          title: "Reservation Failed",
+          text: "Please fill in all the required fields",
+          icon: "error",
+        });
+      }
 
   };
 

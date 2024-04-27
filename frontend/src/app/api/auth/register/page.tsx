@@ -39,7 +39,7 @@ const Page = async () => {
       <h1 className=" text-5xl py-10 font-semibold text-white">
         REGISTER
       </h1>
-      <form action={onSubmit}  className="px-7 py-4 shadow space-y-7 bg-white rounded-md flex flex-col w-2/5">
+      <form action={onSubmit}  className="px-7 py-4 shadow space-y-7 bg-white rounded-md flex flex-col w-3/5">
 
         <div className=" flex flex-row w-full ">
             <div className=" flex flex-col space-y-3 w-full">

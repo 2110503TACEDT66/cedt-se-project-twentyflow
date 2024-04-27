@@ -35,7 +35,6 @@ export default function HistoryDetails({historyId} : {historyId : string}) {
                 })
                 .then((res) => res.json())
                 .then((data) =>{
-                    // console.log(data.HistoryDetails);
                     const details = data.HistoryDetails;
                     if (details && details.coWorking && details.coWorking.name) {
                         setCoWorkName(details.coWorking.name);
@@ -76,7 +75,6 @@ export default function HistoryDetails({historyId} : {historyId : string}) {
                     const rooms = data.data.rooms;
 
                     for(let i in rooms) {
-                        console.log(rooms[i]);
                         if(rooms[i]._id === coRoom) {
                             setRoomNum(rooms[i].roomNumber);
                             break;

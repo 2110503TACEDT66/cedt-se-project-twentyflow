@@ -24,8 +24,7 @@ function LeaderBoard() {
       })
       .catch((error) => {
         console.error(error);
-      });
-      // console.log(sortByPrice)
+      }); 
   })
 
   useEffect(() => {

@@ -29,7 +29,6 @@ const MyComponent: React.FC<MyComponentProps> = () => {
         })
         .then((data) => {
           setItem(data.data.weeklyRevenue);
-          console.log(data.data.weeklyRevenue);
         })
         .catch((error) => {
           console.error("Error fetching customer this month:", error);

@@ -39,7 +39,6 @@ exports.addRoom = async (req, res, next) => {
     try {
         const room = await Room.create(req.body);
         const coWorking = await coworking.findById(req.params.coWorkingId);
-        console.log(coWorking);
         coWorking.rooms.push(room);
         await coWorking.save();
         res.status(200).json({

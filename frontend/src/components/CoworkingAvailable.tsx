@@ -87,20 +87,12 @@ export default function CoworkingAvailable( { coworkingDetail } : {coworkingDeta
                             const startTimeB = dayjs(timeToDate(b.startTime));
                             return startTimeA.isBefore(startTimeB) ? -1 : 1;
                         });
-                        
-                        console.log("###########")
-                        console.log(i)
-                        console.log(datata , `${coworkingDetail.rooms[i].roomNumber}`);
-                        console.log("###########")
-                        // console.log(data.data.roomNumber);
-                        // console.log(data.data.appointments.length);
+                    
                         for (let j = 0; j < datata.length; j++) {
                             const startToDate = dayjs(timeToDate(datata[j].startTime));
                             const endToDate = dayjs(timeToDate(datata[j].endTime));
                             const startTime = dayjs(startToDate.format("YYYY-MM-DD") + " " + startToDate.format("HH:mm"))
                             const endTime = dayjs(endToDate.format("YYYY-MM-DD") + " " + endToDate.format("HH:mm"))
-                            // console.log(reservationTime)
-                            // console.log(startTime, endTime);
                                 if (reservationTime.isAfter(startTime) && reservationTime.isBefore(endTime) || (reservationTime.isSame(startTime))) {
                                     available[data.data.roomNumber - 1] = false;
                                     startPeriod[data.data.roomNumber - 1] = startToDate.format("HH:mm");
@@ -127,10 +119,7 @@ export default function CoworkingAvailable( { coworkingDetail } : {coworkingDeta
 
     }, [lag]);
 
-
-    //console.log(token )
     const  handleSearch  = () => {
-        //console.log(date?.format("YYYY-MM-DD"), time?.format("HH:mm"));
         if (!date || !time) {
             Swal.fire({
                 title: "Search Failed",

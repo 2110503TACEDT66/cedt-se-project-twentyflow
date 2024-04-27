@@ -47,7 +47,6 @@ export default function ReservationCard({
       });
 
     const reservationTime = dayjs(date?.format("YYYY-MM-DD") );
-    console.log(reservationTime, 'reservation time')
     fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/appointments/${room._id}/appointments`, {
         method: "GET",
         headers: {
@@ -62,8 +61,6 @@ export default function ReservationCard({
         const startTimeB = dayjs(timeToDate(b.startTime));
         return startTimeA.isBefore(startTimeB) ? -1 : 1;
       });
-      console.log(datata, 'datata')
-      
       setReservationData(datata) ;
     })
 
@@ -71,10 +68,6 @@ export default function ReservationCard({
 
 
   }, [date,time1,time2,add]);
-  // console.log(data, 'here')
-  // if(reservationData)
-  // console.log(reservationData[0], 'here1')
-
   function timeToDate(tdate : string) {
     let tempTime = tdate.split(":");
     let dt = new Date();
@@ -127,11 +120,6 @@ export default function ReservationCard({
           } 
           else {
             if(reservationData) {
-              // console.log(dayjs(timeToDate(time1.format("HH:mm"))), 'time1')
-              // console.log(dayjs(timeToDate(time2.format("HH:mm"))), 'time2')
-              
-              // console.log(dayjs(timeToDate(reservationData[0].startTime)), 'start')
-              // console.log(dayjs(timeToDate(reservationData[0].endTime)), 'end')
               for ( let i = 0 ; i < reservationData.length ; i++){
                 const start = dayjs(timeToDate(reservationData[i].startTime));
                 const end = dayjs(timeToDate(reservationData[i].endTime))
@@ -168,6 +156,9 @@ export default function ReservationCard({
               room._id,
               dayjs(date?.format('YYYY-MM-DD')).toDate().toISOString(),
               add
+            ).then((res) => {
+              console.log(res, 'res')
+            }
             )
             Swal.fire({
               title: "Reservation Successful",

@@ -191,7 +191,6 @@ exports.getWeeklyRevenue = async (req,res,next) => {
 exports.getActiveUser = async (req,res,next) => {
     try {
         const histories = await History.find();
-        console.log(histories);
         let activeUser = histories.filter(appt => {
             const dateBook = new Date(appt.createdAt);
             const currentDate = new Date();
@@ -217,8 +216,6 @@ exports.getActiveUser = async (req,res,next) => {
         } else {
             trend = Math.round((activeUser.length - yesterdayActiveUser.length) / yesterdayActiveUser.length * 100);
         }
-
-        console.log(trend);
 
         res.status(200).json({success:true, data:{
             ActiveUser: activeUser,
@@ -315,11 +312,6 @@ exports.getRevenueTrend = async (req,res,next) => {
         } else {
             trend = (todayRevenue/totalFromPastToYesterday) * 100;
         }
-        
-        // console.log(trend);
-        // console.log(todayRevenue);
-        // console.log(totalPrice);
-        // console.log(totalFromPastToYesterday);
 
         res.status(200).json({success:true, trends: trend});
 

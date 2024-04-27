@@ -63,7 +63,6 @@ export default function ReservationCard({
 
       const reservationTime = dayjs(date?.format("YYYY-MM-DD") );
       const roomId = appointment.room._id;
-      console.log(reservationTime, 'reservation time')
       fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/appointments/${roomId}/appointments`, {
           method: "GET",
           headers: {
@@ -78,18 +77,11 @@ export default function ReservationCard({
           const startTimeB = dayjs(timeToDate(b.startTime));
           return startTimeA.isBefore(startTimeB) ? -1 : 1;
         });
-        console.log(datata, 'datata')
         
         setReservationData(datata) ;
       })
 
   }, [date,time1,time2,add]);
-
-  console.log(reservationData, 'reservationData')
-  // console.log(data, 'here')
-  // if(reservationData)
-  // console.log(reservationData[0], 'here1')
-
   function timeToDate1(tdate : string) {
     let tempTime = tdate.split(":");
     let dt = new Date();
@@ -139,20 +131,11 @@ export default function ReservationCard({
         }
         else{
           if(reservationData) {
-            console.log(reservationData, 'reservationData')
-            console.log(dayjs(timeToDate1(time1.format("HH:mm"))), 'time1')
-            console.log(dayjs(timeToDate1(time2.format("HH:mm"))), 'time2')
-            
-            console.log(dayjs(timeToDate1(reservationData[0].startTime)), 'start')
-            console.log(dayjs(timeToDate1(reservationData[0].endTime)), 'end')
-
-            console.log(dayjs(timeToDate1(appointment.startTime)), 'start appointment')
             for ( let i = 0 ; i < reservationData.length ; i++){
               const start = dayjs(timeToDate1(reservationData[i].startTime));
               const end = dayjs(timeToDate1(reservationData[i].endTime))
 
               if( dayjs(timeToDate1(appointment.startTime)).isSame(start) && dayjs(timeToDate1(appointment.endTime)).isSame(end)){
-                console.log('found same time start and start appointment')
                 continue;
               }
               
@@ -160,8 +143,6 @@ export default function ReservationCard({
                 || (dayjs(timeToDate1(time2.format("HH:mm"))).isBetween(start,end)) 
                 || dayjs(timeToDate1(time1.format("HH:mm"))).isSame(start) 
                 || dayjs(timeToDate1(time2.format("HH:mm"))).isSame(end) ){
-                    console.log('inside if condition')
-                    console.log(start, 'this start time')
                     Swal.fire({
                     title: "Reservation Failed",
                     text: "Time slot is already reserved",

@@ -93,7 +93,6 @@ export default function PaymentCard({
         }),
       });
       const res = await linkRes.json();
-      console.log(res.sessionUrl);
       if (res.sessionUrl){  
         window.location.href = res.sessionUrl;
       }

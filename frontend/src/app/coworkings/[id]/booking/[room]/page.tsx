@@ -15,7 +15,7 @@ export default async function Page({ params }: { params: { id: string , room : s
   }
   const room = await getRoom({token: session?.user?.token, id: params.room});
   return (
-    <main className=" min-h-[90vh]  flex justify-center items-center bg-main-100">
+    <main className=" min-h-[120vh]  flex justify-center items-center bg-main-100">
       <ReservationCard room={room.data} coworking={coworkingDetail.data} />
     </main>
   );

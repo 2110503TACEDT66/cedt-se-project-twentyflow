@@ -20,6 +20,16 @@ const RoomSchema=new mongoose.Schema({
     },
     
 
+},{
+    toJSON: {virtuals:true},
+    toObject: {virtuals:true}
+});
+
+RoomSchema.virtual('appointments', {
+    ref: 'Appointment',
+    localField: '_id',
+    foreignField: 'room',
+    justOne:false
 });
 
 module.exports=mongoose.model('Room' ,RoomSchema);

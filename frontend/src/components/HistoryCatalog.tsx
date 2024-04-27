@@ -1,7 +1,7 @@
 import HistoryCard from './HistoryCard';
 import CircularProgress from '@mui/material/CircularProgress';
 
-export default function HistoryCatalog({reservation, isLoading}: {reservation: Reservation[] , isLoading: boolean}) {
+export default function HistoryCatalog({reservation, isLoading}: {reservation: ReservationJson[] , isLoading: boolean}) {
     return (
         <>
         {
@@ -17,7 +17,7 @@ export default function HistoryCatalog({reservation, isLoading}: {reservation: R
                 (
                     <div className=" flex flex-col space-y-5 p-5">
                         {
-                            reservation.map((reservationItem:Reservation) => (
+                            reservation.map((reservationItem:ReservationJson) => (
                                 <HistoryCard key={reservationItem._id} reservation={reservationItem} />
                             ))
                         }

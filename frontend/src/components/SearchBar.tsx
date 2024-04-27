@@ -9,16 +9,14 @@ export default function SearchBar({search,sort} : {search : Function,sort : Func
    
     return(
         <div className=" p-5 w-full flex flex-row space-x-5">
-                <div className=" w-10/12 flex flex-row space-x-3 p-2 bg-gray-200 rounded-md">
+                <div className=" w-full flex flex-row h-16 p-2 bg-gray-200 rounded-md">
                     <div className=" flex justify-center items-center w-[5%]">
                         <FontAwesomeIcon icon={faMagnifyingGlass} className=" w-7 text-main-100 " />
                     </div>
                     <input
                     onChange={(e) => {search(e.target.value)}}
-                    className=" w-[85%] focus:outline-none rounded-md px-5" type="text"  />
-                    <button className=" w-[10%] bg-main-100 text-white font-bold py-3 rounded-md">
-                        SEARCH
-                    </button>
+                    className=" w-[95%] focus:outline-none rounded-md px-5" type="text"  />
+                    
 
                 </div>
                 <button onClick={() => {sort("asc")} }

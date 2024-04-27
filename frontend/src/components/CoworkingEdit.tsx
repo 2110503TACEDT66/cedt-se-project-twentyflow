@@ -44,6 +44,65 @@ export default function ReservationCard({
     
     );
   }
+
+  const [data, setData] = useState<Reservation[]>();
+  const [reservationData, setReservationData] = useState<any>();
+
+  useEffect(() => {
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/appointments`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${session?.user.token}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setData(data.data);
+      });
+
+      const reservationTime = dayjs(date?.format("YYYY-MM-DD") );
+      const roomId = appointment.room._id;
+      console.log(reservationTime, 'reservation time')
+      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/appointments/${roomId}/appointments`, {
+          method: "GET",
+          headers: {
+              authorization: `Bearer ${session?.user.token}`,
+          }
+      }).then((res) => res.json())
+      .then((data) => {
+        const datata:any = data.data.appointments.filter((appointment:any) => {
+          return dayjs(new Date(appointment.date)).isSame(reservationTime, 'day');
+        }).sort((a:any, b:any) => {
+          const startTimeA = dayjs(timeToDate(a.startTime));
+          const startTimeB = dayjs(timeToDate(b.startTime));
+          return startTimeA.isBefore(startTimeB) ? -1 : 1;
+        });
+        console.log(datata, 'datata')
+        
+        setReservationData(datata) ;
+      })
+
+  }, [date,time1,time2,add]);
+
+  console.log(reservationData, 'reservationData')
+  // console.log(data, 'here')
+  // if(reservationData)
+  // console.log(reservationData[0], 'here1')
+
+  function timeToDate1(tdate : string) {
+    let tempTime = tdate.split(":");
+    let dt = new Date();
+    dt.setDate(date?.date() || 0);
+    dt.setMonth(date?.month() || 0);
+    dt.setFullYear(date?.year() || 0);
+    dt.setHours(parseInt(tempTime[0]));
+    dt.setMinutes(parseInt(tempTime[1]));
+    dt.setSeconds(0);
+    return dt;
+  }
+
+
   const onsubmit = async () => {
     if ( date && time1 && time2 ){
       const startHour = parseInt(time1?.format('HH:mm').split(':')[0]);
@@ -79,13 +138,48 @@ export default function ReservationCard({
           return;
         }
         else{
+          if(reservationData) {
+            console.log(reservationData, 'reservationData')
+            console.log(dayjs(timeToDate1(time1.format("HH:mm"))), 'time1')
+            console.log(dayjs(timeToDate1(time2.format("HH:mm"))), 'time2')
+            
+            console.log(dayjs(timeToDate1(reservationData[0].startTime)), 'start')
+            console.log(dayjs(timeToDate1(reservationData[0].endTime)), 'end')
+
+            console.log(dayjs(timeToDate1(appointment.startTime)), 'start appointment')
+            for ( let i = 0 ; i < reservationData.length ; i++){
+              const start = dayjs(timeToDate1(reservationData[i].startTime));
+              const end = dayjs(timeToDate1(reservationData[i].endTime))
+
+              if( dayjs(timeToDate1(appointment.startTime)).isSame(start) && dayjs(timeToDate1(appointment.endTime)).isSame(end)){
+                console.log('found same time start and start appointment')
+                continue;
+              }
+              
+              if ( (dayjs(timeToDate1(time1.format("HH:mm"))).isBetween(start,end)) 
+                || (dayjs(timeToDate1(time2.format("HH:mm"))).isBetween(start,end)) 
+                || dayjs(timeToDate1(time1.format("HH:mm"))).isSame(start) 
+                || dayjs(timeToDate1(time2.format("HH:mm"))).isSame(end) ){
+                    console.log('inside if condition')
+                    console.log(start, 'this start time')
+                    Swal.fire({
+                    title: "Reservation Failed",
+                    text: "Time slot is already reserved",
+                    icon: "error",
+                  });
+                  return;
+                
+              }
+            }
+
+          }
           UpdateReservation(
-            time1.format("HH:mm"),
-            time2.format("HH:mm"),
             session.user.token,
             appointment._id,
-            new Date(date?.toDate()).toISOString(),
-            add
+            add,
+            time1.format("HH:mm"),
+            time2.format("HH:mm"),
+            
           );
           
           Swal.fire({
@@ -121,24 +215,24 @@ export default function ReservationCard({
         <div className="flex flex-col space-y-3 w-1/6 " >
           <h1 className=" font-bold text-xl">Room</h1>
           <h1 className=" font-semibold text-xl border-2 p-3 rounded-md border-gray-300">
-            2
+            {appointment.room.roomNumber}
           </h1>
         </div>
       </div>
       <div className=" flex flex-col w-full space-y-3">
         <h1 className=" font-bold text-xl">Date</h1>
         <div className=" flex flex-row space-y-3 w-full">
-          <DateReserve value={dayjs(new Date(appointment.date))} onChangeDate={(value: Dayjs) => setDate(value)} />
+          <DateReserve disable={false} value={dayjs(new Date(appointment.date))} onChangeDate={(value: Dayjs) => setDate(value)} />
         </div>
       </div>
       <div className=" flex flex-row w-full space-x-5">
         <div className="flex flex-col space-y-3 w-1/2 " >
           <h1 className=" font-bold text-xl">Start</h1>
-          <TimeReserve value={dayjs(timeToDate(appointment.startTime))} onChangeTime={(value : Dayjs) => setTime1(value)}/>
+          <TimeReserve disable={false} value={dayjs(timeToDate(appointment.startTime))} onChangeTime={(value : Dayjs) => setTime1(value)}/>
         </div>
         <div className="flex flex-col space-y-3 w-1/2 " >
           <h1 className=" font-bold text-xl">End</h1>
-          <TimeReserve value={dayjs(timeToDate(appointment.endTime))} onChangeTime={(value : Dayjs) => setTime2(value)}/>
+          <TimeReserve disable={false} value={dayjs(timeToDate(appointment.endTime))} onChangeTime={(value : Dayjs) => setTime2(value)}/>
         </div>
       </div>
       <div className=" flex flex-col w-full space-y-3">

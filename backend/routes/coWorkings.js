@@ -7,6 +7,7 @@ const {protect, authorize} = require('../middleware/auth');
 
 const router = express.Router();
 
+
 router.use('/:coWorkingId/appointments/',appointmentRouter);
 
 router.route('/').get(getCoWorkings).post(protect,authorize('admin'),createCoWorking);

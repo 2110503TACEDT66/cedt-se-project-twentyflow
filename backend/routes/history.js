@@ -1,5 +1,5 @@
 const express = require('express');
-const {getHistories, getHistory, addHistory, updateHistory, deleteHistory} = require('../controllers/history');
+const {getHistories, getHistory, addHistory, updateHistory, deleteHistory ,getHistoriesFromCoworkingAndRoom} = require('../controllers/history');
 
 const router = express.Router({mergeParams:true});
 

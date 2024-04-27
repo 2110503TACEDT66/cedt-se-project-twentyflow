@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import GetpriceId from "@/libs/getPriceId";
 import Swal from "sweetalert2";
 import TimeReserve from "./TimeReserve";
+import { time } from "console";
 
 export default function ReservationCard({
   coworking,
@@ -27,9 +28,9 @@ export default function ReservationCard({
   const [time1, setTime1] = useState<Dayjs | null>(null);
   const [time2, setTime2] = useState<Dayjs | null>(null);
   const [add, setAdd] = useState<string>("");
-
   const { data: session, status } = useSession();
   const [data, setData] = useState<Reservation[]>();
+  const [reservationData, setReservationData] = useState<any>();
 
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/appointments`, {
@@ -44,7 +45,48 @@ export default function ReservationCard({
         setData(data.data);
         
       });
-  }, []);
+
+    const reservationTime = dayjs(date?.format("YYYY-MM-DD") );
+    console.log(reservationTime, 'reservation time')
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/appointments/${room._id}/appointments`, {
+        method: "GET",
+        headers: {
+            authorization: `Bearer ${session?.user.token}`,
+        }
+    }).then((res) => res.json())
+    .then((data) => {
+      const datata:any = data.data.appointments.filter((appointment:any) => {
+        return dayjs(new Date(appointment.date)).isSame(reservationTime, 'day');
+      }).sort((a:any, b:any) => {
+        const startTimeA = dayjs(timeToDate(a.startTime));
+        const startTimeB = dayjs(timeToDate(b.startTime));
+        return startTimeA.isBefore(startTimeB) ? -1 : 1;
+      });
+      console.log(datata, 'datata')
+      
+      setReservationData(datata) ;
+    })
+
+    
+
+
+  }, [date,time1,time2,add]);
+  // console.log(data, 'here')
+  // if(reservationData)
+  // console.log(reservationData[0], 'here1')
+
+  function timeToDate(tdate : string) {
+    let tempTime = tdate.split(":");
+    let dt = new Date();
+    dt.setDate(date?.date() || 0);
+    dt.setMonth(date?.month() || 0);
+    dt.setFullYear(date?.year() || 0);
+    dt.setHours(parseInt(tempTime[0]));
+    dt.setMinutes(parseInt(tempTime[1]));
+    dt.setSeconds(0);
+    return dt;
+  }
+
 
   const onsubmit = async () => {
     if ( date && time1 && time2 ){
@@ -82,8 +124,33 @@ export default function ReservationCard({
               icon: "error",
             });
             return;
-          }
-          else{
+          } 
+          else {
+            if(reservationData) {
+              // console.log(dayjs(timeToDate(time1.format("HH:mm"))), 'time1')
+              // console.log(dayjs(timeToDate(time2.format("HH:mm"))), 'time2')
+              
+              // console.log(dayjs(timeToDate(reservationData[0].startTime)), 'start')
+              // console.log(dayjs(timeToDate(reservationData[0].endTime)), 'end')
+              for ( let i = 0 ; i < reservationData.length ; i++){
+                const start = dayjs(timeToDate(reservationData[i].startTime));
+                const end = dayjs(timeToDate(reservationData[i].endTime))
+                if ( (dayjs(timeToDate(time1.format("HH:mm"))).isBetween(start,end) ) 
+                  || (dayjs(timeToDate(time2.format("HH:mm"))).isBetween(start,end)) 
+                  || dayjs(timeToDate(time1.format("HH:mm"))).isSame(start) 
+                  || dayjs(timeToDate(time2.format("HH:mm"))).isSame(end) ){
+                    Swal.fire({
+                      title: "Reservation Failed",
+                      text: "Time slot is already reserved",
+                      icon: "error",
+                    });
+                    return;
+                  
+                }
+              }
+  
+            } 
+  
             const priceId = await GetpriceId(
               coworking.name,
               coworking.price_hourly,
@@ -150,17 +217,17 @@ export default function ReservationCard({
       <div className=" flex flex-col w-full space-y-3">
         <h1 className=" font-bold text-xl">Date</h1>
         <div className=" flex flex-row space-y-3 w-full">
-          <DateReserve value={null} onChangeDate={(value: Dayjs) => setDate(value)} />
+          <DateReserve disable={false} value={null} onChangeDate={(value: Dayjs) => setDate(value)} />
         </div>
       </div>
       <div className=" flex flex-row w-full space-x-5">
         <div className="flex flex-col space-y-3 w-1/2 " >
           <h1 className=" font-bold text-xl">Start</h1>
-          <TimeReserve value={null} onChangeTime={(value : Dayjs) => setTime1(value)}/>
+          <TimeReserve disable={false} value={null} onChangeTime={(value : Dayjs) => setTime1(value)}/>
         </div>
         <div className="flex flex-col space-y-3 w-1/2 " >
           <h1 className=" font-bold text-xl">End</h1>
-          <TimeReserve value={null} onChangeTime={(value : Dayjs) => setTime2(value)}/>
+          <TimeReserve disable={false} value={null} onChangeTime={(value : Dayjs) => setTime2(value)}/>
         </div>
       </div>
       <div className=" flex flex-col w-full space-y-3">

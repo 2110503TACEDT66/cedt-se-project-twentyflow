@@ -9,7 +9,7 @@ const rateLimit = require("express-rate-limit")
 const hpp = require('hpp')
 const cors = require('cors')
 const auth = require('./routes/auth');
-
+const rankingRouter = require('./routes/ranking');
 //Load env vars
 dotenv.config({path:'./config/config.env'});
 
@@ -24,6 +24,8 @@ const dashboard = require('./routes/dashboard');
 const coupon = require('./routes/coupon');
 const reward = require('./routes/reward');
 const payment = require('./routes/stripe');
+const users = require('./routes/user');
+const room = require('./routes/room');
 const app = express();
 
 //Body parser
@@ -45,7 +47,7 @@ app.use(xss());
 //Rate Limiting
 const limiter = rateLimit({
     window: 10*60*1000, //10 mins
-    max : 5000
+    max : 50000
 })
 app.use(limiter);
 
@@ -64,7 +66,11 @@ app.use('/api/v1/dashboard', dashboard)
 app.use('/api/v1/coupon',coupon);
 app.use('/api/v1/reward',reward);
 app.use('/api/v1/payment',payment);
-app.use('/api/v1/room',require('./routes/room'));
+app.use('/api/v1/user',users);
+app.use('/api/v1/room',room);
+
+app.use('/api/v1/ranking',rankingRouter);
+
 
 
 const PORT = process.env.PORT || 5000;

@@ -245,7 +245,6 @@ exports.updateAll = async (req, res, next) => {
         )
         const updatePoint = await User.findByIdAndUpdate(req.user.id, { $inc: { points: hourC * appointment.coWorking.price_hourly } });
         const upDate = await Appointment.findByIdAndUpdate(req.body.appointmentID, { status: "finished" });
-
     }
     catch(err){
         console.log(err)

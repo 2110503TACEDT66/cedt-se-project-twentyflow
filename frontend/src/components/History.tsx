@@ -7,7 +7,7 @@ import { useSession } from "next-auth/react"
 
 export default function History() {
     const { data: session, status } = useSession()
-    const [data,setData] = useState<Reservation[]>([])
+    const [data,setData] = useState<ReservationJson[]>([])
     const [isLoading, setLoading] = useState(true)
 
     useEffect(() => {
@@ -21,7 +21,6 @@ export default function History() {
         .then((data) => {
           setLoading(false)
           setData(data.data)
-        //   console.log(data.data)
 
         })
       },[data])

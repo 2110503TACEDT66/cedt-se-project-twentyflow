@@ -26,8 +26,6 @@ interface Room {
 
 }
 
-
-
 interface User {
     name: string,
     _id: string,
@@ -47,6 +45,21 @@ interface Reservation {
     additional : string,
     _id : string
 }
+
+interface ReservationJson {
+    startTime : string,
+    endTime : string,
+    date : string,
+    user : User,
+    coWorking : Coworking,
+    createAt : string,
+    priceId : string,
+    status : string,
+    room : string,
+    additional : string,
+    _id : string
+}
+
 
 interface Reward {
     rewardName : string,
@@ -72,3 +85,36 @@ interface StatCardProps {
     value: string;
     label: string;
   }
+
+interface HistoryDetails {
+    _id: string;
+    user: Object;
+    coWorking: Object;
+    appointment: string;
+    hour: number;
+    price: number;
+}
+
+interface RankItemPriceProps {
+    rank: number;
+    name: string;
+    price: string;
+}
+
+interface RankItemHourProps {
+    rank: number;
+    name: string;
+    hour: string;
+}
+
+interface UserSortByPrice {
+    _id: string;
+    name: string;
+    points: string;
+}
+
+interface UserSortByHour {
+    totalHours: number;
+    user: string;
+    userId: string;
+}

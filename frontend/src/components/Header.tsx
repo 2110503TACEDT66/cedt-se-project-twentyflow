@@ -82,7 +82,7 @@ export default function Header() {
           )}
         </div>
       </nav>
-      <nav className=" lg:hidden flex">
+      <nav className="lg:hidden flex">
         <FontAwesomeIcon
           icon={ !menuOpen ? faBars : faTimes}
           className="text-3xl text-main-100"
@@ -146,7 +146,6 @@ export default function Header() {
             </div>
           </div>
         )}
-
       </nav>
     </header>
   );

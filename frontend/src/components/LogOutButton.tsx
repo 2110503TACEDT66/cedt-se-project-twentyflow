@@ -24,7 +24,7 @@ export default function LogOutButton() {
 
 
     return (
-        <button onClick={handleLogoutClick} className=" text-xl font-bold text-white p-2 bg-main-100 rounded-md">
+        <button onClick={handleLogoutClick} className=" text-xl font-bold bg-white lg:text-white p-2 lg:bg-main-100 rounded-md">
             LOGOUT
         </button>
     )

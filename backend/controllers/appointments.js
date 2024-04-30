@@ -210,8 +210,6 @@ exports.updateAppointment=async (req,res,next)=>{
 
         //Make sure user is the appointment owner
         if(appointment.user.id !== req.user.id && req.user.role !== 'admin'){
-            console.log(appointment.user.id)    
-            console.log(req.user.id)
             return res.status(401).json({success:false,message:`User cannot access this appointment`});
         }
 

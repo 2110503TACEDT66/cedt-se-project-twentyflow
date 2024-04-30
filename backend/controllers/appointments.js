@@ -1,6 +1,9 @@
 const Appointment = require('../models/Appointment');
 const CoWorking = require('../models/CoWorking');
 const Room = require('../models/Room');
+const Stripe = require('stripe');
+
+const stripe = new Stripe(String(process.env.STRIPE_SECRET_KEY));
 
 //@desc      Get unfinished appointments
 //@route     GET /api/v1/appointments
@@ -106,6 +109,57 @@ exports.addAppointment=async (req,res,next)=>{
             return res.status(400).json({success:false,message: `The user with ID ${req.user.id} has already made 3 appointments`});
         }
 
+        const startTime = req.body.startTime;
+        const endTime = req.body.endTime;
+
+        const startHour = parseInt(startTime.split(":")[0])
+        const endHour = parseInt(endTime.split(":")[0])
+        const startMin = parseInt(startTime.split(":")[1])
+        const endMin = parseInt(endTime.split(":")[1])
+        let hourC = 0
+        if(startMin < endMin){hourC += 1}
+        hourC += endHour - startHour
+
+        const products = await stripe.products.list();
+        const prices = await stripe.prices.list();
+        const duration = hourC;
+
+        //filter product
+        var foundProduct = false;
+        var productId = "";
+        for (let i = 0; i < products.data.length; i++) {
+          if (
+            products.data[i].name === coWorking.name &&
+            products.data[i].description === String(duration)
+          ) {
+            foundProduct = true;
+            productId = products.data[i].id;
+            break;
+          }
+        }
+  
+        //find price
+        let priceId = "";
+        if (foundProduct) {
+          for (let i = 0; i < prices.data.length; i++) {
+            if (productId === prices.data[i].product)priceId = prices.data[i].id;
+          }
+        }else{
+            const product = await stripe.products.create({
+                name:coWorking.name,
+                description:String(duration),
+            });
+    
+            const price = await stripe.prices.create({
+                product: product.id,
+                unit_amount: String(coWorking.price_hourly * duration * 100),
+                currency: "thb",
+            });
+
+            priceId = price.id;
+        }
+
+        req.body.priceId = priceId;
 
         const appointment = await Appointment.create(req.body);
 

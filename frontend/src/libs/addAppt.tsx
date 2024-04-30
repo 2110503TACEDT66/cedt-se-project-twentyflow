@@ -4,14 +4,12 @@ export default async function addAppt(
   user: string,
   cid: string,
   token: string,
-  priceId: string,
   room: string,
-  date : string,
-  additional : string
-
+  date: string,
+  additional: string
 ) {
   const url = `${process.env.NEXT_PUBLIC_BACKEND_URL}/coworkings/${cid}/appointments`;
-  try{
+  try {
     const response = await fetch(url, {
       method: "POST",
       headers: {
@@ -22,16 +20,14 @@ export default async function addAppt(
         startTime,
         endTime,
         user: user,
-        room  ,
-        date ,
-        priceId: priceId,
-        additional : additional
+        room,
+        date,
+        additional: additional,
       }),
     });
     const body = await response.json();
     return body;
-  }
-  catch (error) {
-    console.error('Error:', error);
+  } catch (error) {
+    console.error("Error:", error);
   }
 }

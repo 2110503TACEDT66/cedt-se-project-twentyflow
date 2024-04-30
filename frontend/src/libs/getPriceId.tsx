@@ -8,16 +8,16 @@ export default async function GetpriceId(
   //get all products and prices to make list
   const urlGet = `${process.env.NEXT_PUBLIC_BACKEND_URL}/payment`;
 
-    const startHour = parseInt(startTime.split(":")[0])
-    const endHour = parseInt(endTime.split(":")[0])
-    const startMin = parseInt(startTime.split(":")[1])
-    const endMin = parseInt(endTime.split(":")[1])
-    let hourC = 0
+  const startHour = parseInt(startTime.split(":")[0]);
+  const endHour = parseInt(endTime.split(":")[0]);
+  const startMin = parseInt(startTime.split(":")[1]);
+  const endMin = parseInt(endTime.split(":")[1]);
+  let hourC = 0;
 
-    if(startMin < endMin){
-        hourC += 1
-    }
-    hourC += endHour - startHour
+  if (startMin < endMin) {
+    hourC += 1;
+  }
+  hourC += endHour - startHour;
 
   try {
     const resGet = await fetch(urlGet, {
@@ -67,6 +67,7 @@ export default async function GetpriceId(
           amount: String(price_hourly * duration * 100),
         }),
       });
+
       const bodyCreate = await resCreate.json();
       return bodyCreate.price.id;
     }

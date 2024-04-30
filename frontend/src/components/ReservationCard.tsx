@@ -91,6 +91,20 @@ export default function ReservationCard({
       const cowokingEndHour = parseInt(coworking.closetime.split(":")[0]);
       const cowokingStartMinute = parseInt(coworking.opentime.split(":")[1]);
       const cowokingEndMinute = parseInt(coworking.closetime.split(":")[1]);
+
+      //check additional has Special Characters
+      //check Exceeding Character Limit
+      const regex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
+      const str: Array<string> = add.split(" ");
+      if (regex.test(add) || str.length > 100) {
+        Swal.fire({
+          title: "Invalid input",
+          text: "Additional requirement",
+          icon: "error",
+        });
+        return;
+      }
+
       if (session?.user.role === "user") {
         if (data && data.length <= 2) {
           // check condition time overlap
@@ -323,6 +337,10 @@ export default function ReservationCard({
       </div>
       <div className=" flex flex-col w-full space-y-3">
         <h1 className=" font-bold text-xl">Additional requirement</h1>
+        <small className="font-medium">
+          - Don't includes special characters
+        </small>
+        <small className="font-medium">- Limit 100 words</small>
         <div className=" flex flex-row space-y-3 w-full">
           <textarea
             onChange={(e: any) => setAdd(e.target.value)}

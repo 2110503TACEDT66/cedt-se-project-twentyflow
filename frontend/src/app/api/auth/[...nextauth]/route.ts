@@ -6,6 +6,7 @@ import getUserProfile from "@/libs/getUserProfile";
 
 
 export const authOptions:AuthOptions = {
+    secret: process.env.NEEXTAUTH_SECRET as string,
     providers: [
         CredentialsProvider({
           // The name to display on the sign in form (e.g. "Sign in with...")
@@ -53,7 +54,7 @@ export const authOptions:AuthOptions = {
           }
           return session
         },
-        async redirect({url, baseUrl}) {
+        async redirect({ url, baseUrl }) {
           return url.startsWith(baseUrl) ? url : baseUrl
         }
       }

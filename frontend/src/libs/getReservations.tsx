@@ -21,8 +21,5 @@ export default async function getReservations(){
         
         
     }
-    else{
-        redirect("/api/auth/signin")
-    }
-        
+    
 }

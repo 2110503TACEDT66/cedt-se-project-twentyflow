@@ -1,4 +1,6 @@
 
+
+
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const Coupon = require('../models/Coupon');
 
@@ -76,8 +78,6 @@ exports.getCoupons = async (req,res,next) => {
             }
         }
         
-
-
         res.status(200).json({
             success: true,
             data: coupons

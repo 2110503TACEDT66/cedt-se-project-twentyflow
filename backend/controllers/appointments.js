@@ -72,8 +72,11 @@ exports.getAppointment=async (req,res,next) =>{
         
         });
 
-        if (!appointment || appointment.status === 'finished'){
+        if (!appointment){
             return res.status(404).json({success:false,message:`No appointment with the id of ${req.params.id}`});
+        }
+        if (req.user.role !== 'admin' && appointment.user.id !== req.user.id){
+            return res.status(401).json({success:false,message:`User cannot access this appointment`});
         }
 
         res.status(200).json({
@@ -86,7 +89,7 @@ exports.getAppointment=async (req,res,next) =>{
 };
 
 //@desc    Add appointment
-//@route   POST /api/v1/coWorkings/:coWorkingId/appointment
+//@route   POST /api/v1/coworkings/:coWorkingId/appointment
 //@access  Private
 exports.addAppointment=async (req,res,next)=>{
     try {
@@ -191,17 +194,25 @@ exports.addAppointment=async (req,res,next)=>{
 //@access  Private
 exports.updateAppointment=async (req,res,next)=>{
     try {
-        let appointment = await Appointment.findById(req.params.id);
+        let appointment = await Appointment.findById(req.params.id).populate({
+            path:'user',
+            select: 'name'
+        });
         
 
-        if(!appointment || appointment.status === 'finished'){
+        if(!appointment){
             return res.status(404).json({success:false,message:`No appointment with the id of ${req.params.id}`});
+        }
 
+        if (appointment.status === 'finished'){
+            return res.status(400).json({success:false,message:`The appointment with the id of ${req.params.id} has already been finished`});
         }
 
         //Make sure user is the appointment owner
-        if(appointment.user.toString() !== req.user.id && req.user.role !== 'admin'){
-            return res.status(401).json({success:false,message:`User ${req.user.id} is not authorized to update this appointment`});
+        if(appointment.user.id !== req.user.id && req.user.role !== 'admin'){
+            console.log(appointment.user.id)    
+            console.log(req.user.id)
+            return res.status(401).json({success:false,message:`User cannot access this appointment`});
         }
 
         appointment = await Appointment.findByIdAndUpdate(req.params.id, req.body,{
@@ -230,16 +241,21 @@ exports.updateAppointment=async (req,res,next)=>{
 //@access  Private
 exports.deleteAppointment=async (req,res,next)=>{
     try {
-        let appointment = await Appointment.findById(req.params.id);
-        
+        let appointment = await Appointment.findById(req.params.id).populate({
+            path:'user',
+            select: 'name'
+        });
 
-        if(!appointment || appointment.status === 'finished'){
+        if(!appointment ){
             return res.status(404).json({success:false,message:`No appointment with the id of ${req.params.id}`});
-
         }
 
-        if(appointment.user.toString() !== req.user.id && req.user.role !== 'admin'){
-            return res.status(401).json({success:false,message:`User ${req.user.id} is not authorized to delete this bootcamp`});
+        if (appointment.status === 'finished'){
+            return res.status(400).json({success:false,message:`The appointment with the id of ${req.params.id} has already been finished`});
+        }
+
+        if(appointment.user.id !== req.user.id && req.user.role !== 'admin'){
+            return res.status(401).json({success:false,message:`User cannot access this appointment`});
         }
 
         await appointment.deleteOne();
@@ -265,9 +281,10 @@ exports.getRoom=async (req,res,next)=>{
             path:'appointments',
             select: 'startTime endTime date'
         }).sort({roomNumber:1});
+        console.log(req.params.roomId)
 
         if (!room){
-            return res.status(404).json({success:false,message:`Yes No coWorking with the id of ${req.params.coWorkingId}`});
+            return res.status(404).json({success:false,message:`No room with the id of ${req.params.roomId}`});
         }
 
         res.status(200).json({

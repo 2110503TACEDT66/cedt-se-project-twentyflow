@@ -155,6 +155,21 @@ exports.updateAll = async (req, res, next) => {
             path: 'coWorking',
             select: 'name price_hourly'
         });
+        
+        if( !appointment ){
+            return res.status(404).json({
+                success:false,
+                error: "No appointment found"
+            });
+        }
+        
+        if(appointment.status === "finished"){
+            return res.status(400).json({
+                success:false,
+                error: "Appointment already finished"
+            });
+        }
+
 
         const startHour = parseInt(appointment.startTime.split(":")[0])
         const endHour = parseInt(appointment.endTime.split(":")[0])

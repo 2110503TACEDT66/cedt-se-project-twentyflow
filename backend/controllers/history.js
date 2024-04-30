@@ -88,6 +88,14 @@ exports.getHistory = async (req, res, next) => {
                 message: "Cannot find History"
             });
         }
+        
+        if (history.user.id !== req.user.id && req.user.role !== 'admin') {
+            return res.status(401).json({
+                success: false,
+                message: `User cannot access this history`
+            });
+        }
+
         res.status(200).json({
             success: true,
             HistoryDetails: history,
@@ -124,6 +132,13 @@ exports.updateHistory = async (req, res, next) => {
             return res.status(404).json({
                 success: false,
                 message: "Cannot find History"
+            });
+        }
+
+        if (history.user.id !== req.user.id && req.user.role !== 'admin') {
+            return res.status(401).json({
+                success: false,
+                message: `User cannot access this history`
             });
         }
 
@@ -172,6 +187,20 @@ exports.deleteHistory = async (req, res, next) => {
                 message: "Cannot find History"
             });
         }
+
+        if (history.user.id !== req.user.id && req.user.role !== 'admin') {
+            return res.status(401).json({
+                success: false,
+                message: `User cannot access this history`
+            });
+        }
+        if (history.user.id !== req.user.id && req.user.role !== 'admin') {
+            return res.status(401).json({
+                success: false,
+                message: `User cannot access this history`
+            });
+        }
+
         history.remove();
         res.status(200).json({
             success: true,

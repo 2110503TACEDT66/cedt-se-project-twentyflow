@@ -35,7 +35,7 @@ const swaggerOptions={
                     bearerFormat: 'JWT',
                 }
             }
-        }
+        },
     },
     
     apis:['./routes/*.js'],

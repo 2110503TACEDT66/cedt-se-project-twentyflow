@@ -8,12 +8,7 @@ exports.getRooms = async (req, res, next) => {
     let query;
 
     //General users can see only their rooms!
-    if (req.user.role !== 'admin') {
-        query = await Room.find({ coWorking: req.params.coWorkingId }).sort({ roomNumber: 1 });
-    } else {
-        //If you are an admin, you can see all!
-        query = await Room.find({ coWorking: req.params.coWorkingId }).sort({ roomNumber: 1 });
-    }
+    query = await Room.find().sort({ roomNumber: 1 });
     try {
         const rooms = query;
         res.status(200).json({

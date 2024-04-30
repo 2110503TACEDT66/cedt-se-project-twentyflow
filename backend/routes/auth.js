@@ -134,6 +134,109 @@
 *       500:
 *         description: Server error
 *
+* @swagger
+* /auth/updatepoints:
+*   put:
+*     summary: Update user points
+*     tags: [Users]
+*     security:
+*       - bearerAuth: []
+*     requestBody:
+*       required: true
+*       content:
+*         application/json:
+*           schema:
+*             type: object
+*             properties:
+*               points:
+*                 type: number
+*             example:
+*               points: 10
+*     responses:
+*       200:
+*         description: A user schema
+*         content:
+*           application/json:
+*             schema:
+*               $ref: '#/components/schemas/User'
+*       400:
+*         description: Invalid user
+*       500:
+*         description: Server error
+*
+* @swagger
+* /auth/updateall:
+*   post:
+*     summary: Update user points and role
+*     tags: [Users]
+*     security:
+*       - bearerAuth: []
+*     requestBody:
+*       required: true
+*       content:
+*         application/json:
+*           schema:
+*             type: object
+*             properties:
+*               appointmentId:
+*                 type: string
+*             example:
+*               appointmentId: "60f3f4f3b3f4b10015a7e4b5"
+*     responses:
+*       200:
+*         description: A user schema
+*         content:
+*           application/json:
+*             schema:
+*               $ref: '#/components/schemas/User'
+*       400:
+*         description: Invalid user
+*       500:
+*         description: Server error
+*
+* @swagger
+* /auth/{id}:
+*   put:
+*     summary: Update user by ID
+*     tags: [Users]
+*     security:
+*       - bearerAuth: []
+*     parameters:
+*       - in: path
+*         name: id
+*         schema:
+*           type: string
+*         required: true
+*         description: The user ID
+*     requestBody:
+*       required: true
+*       content:
+*         application/json:
+*           schema:
+*             type: object
+*             properties:
+*               name:
+*                 type: string
+*                 description: The name of the user
+*               telephone_number:
+*                 type: string
+*                 description: The telephone number of the user
+*             example:
+*               name: John Doe
+*               telephone_number: "08012345678"
+*     responses:
+*       200:
+*         description: A user schema
+*         content:
+*           application/json:
+*             schema:
+*               $ref: '#/components/schemas/User'
+*       400:
+*         description: Invalid user
+*       500:
+*         description: Server error
+*
+
 */
 
 
@@ -149,7 +252,6 @@ router.post('/register',register);
 router.post('/login',login);
 router.get('/me',protect,getMe);
 router.get('/logout',logout);
-// router.put('/updateprofile',(protect, authorize('admin','user'),updateProfile));
 router.put('/updatepoints',protect,updatePoints);
 router.post('/updateall',protect, updateAll);
 router.route('/:id').get(getMe).put(protect,authorize('user','admin'),updateUserProfile)

@@ -1,6 +1,9 @@
 const Appointment = require('../models/Appointment');
 const CoWorking = require('../models/CoWorking');
 const Room = require('../models/Room');
+const Stripe = require('stripe');
+
+const stripe = new Stripe(String(process.env.STRIPE_SECRET_KEY));
 
 //@desc      Get unfinished appointments
 //@route     GET /api/v1/appointments
@@ -88,15 +91,6 @@ exports.getAppointment=async (req,res,next) =>{
 exports.addAppointment=async (req,res,next)=>{
     try {
         const coWorking = await CoWorking.findById(req.params.coWorkingId);
-
-        const startHour = parseInt(req.body.startTime.split(':')[0]);
-        const endHour = parseInt(req.body.endTime.split(':')[0]);
-        const startMinute = parseInt(req.body.startTime.split(':')[1]);
-        const endMinute = parseInt(req.body.endTime.split(':')[1]);
-        const cowokingStartHour = parseInt(coWorking.opentime.split(':')[0]);
-        const cowokingEndHour = parseInt(coWorking.closetime.split(':')[0]);
-        const cowokingStartMinute = parseInt(coworking.opentime.split(':')[1]);
-        const cowokingEndMinute = parseInt(coworking.closetime.split(':')[1]);
         
         req.body.coWorking = req.params.coWorkingId;
 
@@ -125,18 +119,57 @@ exports.addAppointment=async (req,res,next)=>{
             return res.status(400).json({success:false,message: `The user with ID ${req.user.id} has already made 3 appointments`});
         }
 
-        if (coWorking.price_hourly * (req.body.endTime - req.body.startTime) < 0){
-            return res.status(400).json({success:false,message:"The time is invalid"});
+        const startTime = req.body.startTime;
+        const endTime = req.body.endTime;
+
+        const startHour = parseInt(startTime.split(":")[0])
+        const endHour = parseInt(endTime.split(":")[0])
+        const startMin = parseInt(startTime.split(":")[1])
+        const endMin = parseInt(endTime.split(":")[1])
+        let hourC = 0
+        if(startMin < endMin){hourC += 1}
+        hourC += endHour - startHour
+
+        const products = await stripe.products.list();
+        const prices = await stripe.prices.list();
+        const duration = hourC;
+
+        //filter product
+        var foundProduct = false;
+        var productId = "";
+        for (let i = 0; i < products.data.length; i++) {
+          if (
+            products.data[i].name === coWorking.name &&
+            products.data[i].description === String(duration)
+          ) {
+            foundProduct = true;
+            productId = products.data[i].id;
+            break;
+          }
+        }
+  
+        //find price
+        let priceId = "";
+        if (foundProduct) {
+          for (let i = 0; i < prices.data.length; i++) {
+            if (productId === prices.data[i].product)priceId = prices.data[i].id;
+          }
+        }else{
+            const product = await stripe.products.create({
+                name:coWorking.name,
+                description:String(duration),
+            });
+    
+            const price = await stripe.prices.create({
+                product: product.id,
+                unit_amount: String(coWorking.price_hourly * duration * 100),
+                currency: "thb",
+            });
+
+            priceId = price.id;
         }
 
-        if (startHour > endHour || (startHour == endHour && startMinute >= endMinute)){
-            return res.status(400).json({success:false,message:"The start time must be before the end time"});
-          }else if (startHour < cowokingStartHour || (startHour == cowokingStartHour && startMinute < cowokingStartMinute)){
-            return res.status(400).json({success:false,message:"Start time must be after coworking open time"});
-          }
-          else if (endHour > cowokingEndHour || (endHour == cowokingEndHour && endMinute > cowokingEndMinute)){
-            return res.status(400).json({success:false,message:"End time must be before coworking close time"});
-          } 
+        req.body.priceId = priceId;
 
         const appointment = await Appointment.create(req.body);
 

@@ -48,8 +48,6 @@
 *   get:
 *     summary: Get all users sorted by price
 *     tags: [Ranking]
-*     security:
-*       - bearerAuth: []
 *     responses:
 *       200:
 *         description: A list of users
@@ -75,8 +73,6 @@
 *   get:
 *     summary: Get all users sorted by hours
 *     tags: [Ranking]
-*     security:
-*       - bearerAuth: []
 *     responses:
 *       200:
 *         description: A list of users
@@ -106,9 +102,7 @@ const {getUserSortByPrice , sumUserBookingHours} = require('../controllers/user'
 
 const router = express.Router({mergeParams:true});
 
-const {protect} = require('../middleware/auth');
-
-router.route('/price').get( protect,getUserSortByPrice);
-router.route('/hour').get(protect,sumUserBookingHours);
+router.route('/price').get(getUserSortByPrice);
+router.route('/hour').get(sumUserBookingHours);
 
 module.exports=router;

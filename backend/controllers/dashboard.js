@@ -6,6 +6,9 @@ const History = require('../models/History');
 const Stripe = require('stripe');
 const stripe = new Stripe(String(process.env.STRIPE_SECRET_KEY));
 
+// @desc        Get dashboard
+// @route       GET /api/v1/dashboard
+// @access      Private
 exports.getDashboard = async (req,res,next) => {
     
     try{
@@ -28,6 +31,9 @@ exports.getDashboard = async (req,res,next) => {
 
 }
 
+// @desc        Get customer this month
+// @route       GET /api/v1/dashboard/customer
+// @access      Private
 exports.getCustomerThisMonth = async (req,res,next) => {
     try {
         const users = await User.find();
@@ -44,6 +50,9 @@ exports.getCustomerThisMonth = async (req,res,next) => {
     }
 }
 
+// @desc        Get customer monthly trend
+// @route       GET /api/v1/dashboard/customer/monthly
+// @access      Private
 exports.getCustomerMonthTrend = async (req,res,next) => {
     try {
         const users = await User.find();
@@ -74,6 +83,9 @@ exports.getCustomerMonthTrend = async (req,res,next) => {
     }
 }
 
+// @desc        Get customer daily trend
+// @route       GET /api/v1/dashboard/customer/daily
+// @access      Private
 exports.getCustomerDailyTrend = async (req,res,next) => {
     try {
         const users = await User.find();
@@ -105,6 +117,9 @@ exports.getCustomerDailyTrend = async (req,res,next) => {
     }
 }
 
+// @desc        Get yearly revenue
+// @route       GET /api/v1/dashboard/revenue/yearly
+// @access      Private
 exports.getYearlyRevenue = async (req,res,next) => {
     try {
         const yearlyRevenue = [
@@ -142,6 +157,9 @@ exports.getYearlyRevenue = async (req,res,next) => {
     }
 }
 
+// @desc        Get weekly revenue
+// @route       GET /api/v1/dashboard/revenue/weekly
+// @access      Private
 exports.getWeeklyRevenue = async (req,res,next) => {
     try {
         const weeklyRevenue = [
@@ -188,6 +206,9 @@ exports.getWeeklyRevenue = async (req,res,next) => {
     }
 }
 
+// @desc        Get daily revenue
+// @route       GET /api/v1/dashboard/revenue/daily
+// @access      Private
 exports.getActiveUser = async (req,res,next) => {
     try {
         const histories = await History.find();
@@ -242,6 +263,9 @@ exports.getActiveUser = async (req,res,next) => {
     }
 }
 
+// @desc        Get new and return customer
+// @route       GET /api/v1/dashboard/customer/new-return
+// @access      Private
 exports.getNewReturnCustomer = async (req,res,next) => {
     try {
         const customer = [
@@ -289,6 +313,9 @@ exports.getNewReturnCustomer = async (req,res,next) => {
     }
 }
 
+// @desc        Get revenue trend
+// @route       GET /api/v1/dashboard/revenue/trend 
+// @access      Private
 exports.getRevenueTrend = async (req,res,next) => {
     try {
         const histories = await History.find();

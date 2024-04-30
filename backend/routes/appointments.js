@@ -1,3 +1,5 @@
+
+
 const express = require('express');
 const {getAppointments, getAppointment, addAppointment, getRoom, deleteAppointment, updateAppointment} = require('../controllers/appointments');
 

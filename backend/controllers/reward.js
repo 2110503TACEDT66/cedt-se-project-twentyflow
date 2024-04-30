@@ -1,5 +1,8 @@
 const Reward = require('../models/Reward');
 
+//@desc      Create reward
+//@route     POST /api/v1/reward
+//@access    Private
 exports.createReward = async (req,res,next) => {
     try {
         const reward = await Reward.create(
@@ -19,6 +22,9 @@ exports.createReward = async (req,res,next) => {
     }
 }
 
+//@desc      Get rewards
+//@route     GET /api/v1/reward
+//@access    Private
 exports.getRewards = async (req,res,next) => {
     try {
         const rewards = await Reward.find({ user: req.user.id}).sort({createdAt: -1});

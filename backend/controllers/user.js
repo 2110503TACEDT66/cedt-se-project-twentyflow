@@ -3,6 +3,10 @@
 const User = require('../models/User');
 const Appointment = require('../models/Appointment');
 const History = require('../models/History');
+
+// @desc      Update user profile
+// @route     PUT /api/v1/auth/:id
+// @access    Private
 exports.updateUserProfile = async (req, res , next) => {
     try {
         let user = await User.findById(req.params.id);
@@ -39,8 +43,9 @@ exports.updateUserProfile = async (req, res , next) => {
     }
 };
 
-
-// i want to sum users booking hours
+// @desc      Get all sum of user's booking hours
+// @route     GET /api/v1/user/price
+// @access    Private
 exports.sumUserBookingHours = async (req, res, next) => {
     try {
         const userTotalHours = await History.aggregate([
@@ -94,15 +99,9 @@ exports.sumUserBookingHours = async (req, res, next) => {
 
 
 
-
-
-
-
-
-
-
-
-
+// @desc      Get all sum of user's booking price
+// @route     GET /api/v1/user/price
+// @access    Private
 exports.getUserSortByPrice = async (req, res, next) => {
     try {
         // Fetch users from the database and sort them by the 'price' field in ascending order

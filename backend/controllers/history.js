@@ -1,6 +1,9 @@
 const History = require('../models/History');
 const Appointment = require('../models/Appointment');
 
+//@desc      Get all histories
+//@route     GET /api/v1/histories
+//@access    Private
 exports.getHistories = async (req, res, next) => {
     let query;
 
@@ -61,6 +64,9 @@ exports.getHistories = async (req, res, next) => {
     }
 };
 
+//@desc      Get single history
+//@route     GET /api/v1/history/:id
+//@access    Private
 exports.getHistory = async (req, res, next) => {
     try {
 
@@ -90,6 +96,10 @@ exports.getHistory = async (req, res, next) => {
         return res.status(500).json({success:false,message:error.message});
     }
 };
+
+//@desc      Add history
+//@route     POST /api/v1/history
+//@access    Private
 exports.addHistory = async (req, res, next) => {
     try {
         const history = await History.create(req.body);
@@ -101,6 +111,10 @@ exports.addHistory = async (req, res, next) => {
         return res.status(500).json({success:false,message:"Cannot add History"});
     }
 };
+
+//@desc      Update history
+//@route     PUT /api/v1/history/:id
+//@access    Private
 exports.updateHistory = async (req, res, next) => {
     try {
         let history = await History.findById(req.params.id);
@@ -145,6 +159,10 @@ exports.updateHistory = async (req, res, next) => {
         return res.status(500).json({success:false,message:"Cannot update History"});
     }
 }
+
+//@desc      Delete history
+//@route     DELETE /api/v1/history/:id
+//@access    Private
 exports.deleteHistory = async (req, res, next) => {
     try {
         const history = await History.findById(req.params.id);

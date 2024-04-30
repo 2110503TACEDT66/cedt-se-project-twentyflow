@@ -87,9 +87,20 @@ exports.getAppointment=async (req,res,next) =>{
 //@access  Private
 exports.addAppointment=async (req,res,next)=>{
     try {
+        const coWorking = await CoWorking.findById(req.params.coWorkingId);
+
+        const startHour = parseInt(req.body.startTime.split(':')[0]);
+        const endHour = parseInt(req.body.endTime.split(':')[0]);
+        const startMinute = parseInt(req.body.startTime.split(':')[1]);
+        const endMinute = parseInt(req.body.endTime.split(':')[1]);
+        const cowokingStartHour = parseInt(coWorking.opentime.split(':')[0]);
+        const cowokingEndHour = parseInt(coWorking.closetime.split(':')[0]);
+        const cowokingStartMinute = parseInt(coworking.opentime.split(':')[1]);
+        const cowokingEndMinute = parseInt(coworking.closetime.split(':')[1]);
+        
         req.body.coWorking = req.params.coWorkingId;
 
-        const coWorking = await CoWorking.findById(req.params.coWorkingId);
+        
 
         if(!coWorking){
             return res.status(404).json({success:false,message:`No coWorking with the id of ${req.params.coWorkingId}`});
@@ -97,6 +108,14 @@ exports.addAppointment=async (req,res,next)=>{
         }
         //add user id to req.body
         req.body.user=req.user.id;
+
+
+
+
+        if (!req.body.startTime || !req.body.endTime || !req.body.date || !req.body.room)
+        {
+            return res.status(400).json({success:false,message:"Please provide all the information"});
+        }
 
         //Check for existed appointment
         const existedAppointment = await Appointment.find({user:req.user.id, status:"unfinished"});
@@ -106,6 +125,18 @@ exports.addAppointment=async (req,res,next)=>{
             return res.status(400).json({success:false,message: `The user with ID ${req.user.id} has already made 3 appointments`});
         }
 
+        if (coWorking.price_hourly * (req.body.endTime - req.body.startTime) < 0){
+            return res.status(400).json({success:false,message:"The time is invalid"});
+        }
+
+        if (startHour > endHour || (startHour == endHour && startMinute >= endMinute)){
+            return res.status(400).json({success:false,message:"The start time must be before the end time"});
+          }else if (startHour < cowokingStartHour || (startHour == cowokingStartHour && startMinute < cowokingStartMinute)){
+            return res.status(400).json({success:false,message:"Start time must be after coworking open time"});
+          }
+          else if (endHour > cowokingEndHour || (endHour == cowokingEndHour && endMinute > cowokingEndMinute)){
+            return res.status(400).json({success:false,message:"End time must be before coworking close time"});
+          } 
 
         const appointment = await Appointment.create(req.body);
 
@@ -192,6 +223,9 @@ exports.deleteAppointment=async (req,res,next)=>{
     }
 }
 
+//@desc    Get rooms
+//@route   GET /api/v1/appointments/:roomId/appointments
+//@access  Private
 exports.getRoom=async (req,res,next)=>{
     try {
         const room = await Room.findById(req.params.roomId).populate({

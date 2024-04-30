@@ -8,6 +8,7 @@ dotenv.config({path:'./config/config.env'});
 
 const stripe = new Stripe(String(process.env.STRIPE_SECRET_KEY));
 
+
 exports.createCustomer = async (email,name,id_mongo)=>{
     try {
         const customer = await stripe.customers.create({
@@ -21,6 +22,9 @@ exports.createCustomer = async (email,name,id_mongo)=>{
     }
 }
 
+//@desc     Get customer
+//@route    GET /api/v1/payment/user/:id
+//@access   Private
 exports.getUserInfo = async (req,res,next) => {
     try {
         const customer = await User.findById(req.params.id);
@@ -42,6 +46,9 @@ exports.getUserInfo = async (req,res,next) => {
     }
 }
 
+//@desc     Update customer
+//@route    PUT /api/v1/payment/user/:id
+//@access   Private
 exports.updateCustomer = async (req, res, next) => {
     try {
         const customer = await User.findById(req.params.id);
@@ -66,8 +73,9 @@ exports.updateCustomer = async (req, res, next) => {
     }
 };
 
-
-
+//@desc     Get Prices
+//@route    GET /api/v1/payment
+//@access   Private
 exports.getPrices = async (req,res,next)=>{
     try{
         const products = await stripe.products.list();
@@ -87,6 +95,9 @@ exports.getPrices = async (req,res,next)=>{
     }
 };
 
+//@desc     Create Price
+//@route    POST /api/v1/payment
+//@access   Private
 exports.createPrice = async (req,res,next)=>{
     try{
         const {name,description,amount} = req.body;
@@ -117,6 +128,9 @@ exports.createPrice = async (req,res,next)=>{
     }
 };
 
+//@desc     Create Payment Session
+//@route    POST /api/v1/payment/session
+//@access   Private
 exports.createPaymentSession = async (req, res) => {
     try {
         const stripeCustomerId = req.user.customerId;

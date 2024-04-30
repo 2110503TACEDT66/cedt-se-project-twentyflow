@@ -1,6 +1,9 @@
 const Room = require('../models/Room');
 const coworking = require('../models/CoWorking');
 
+//@desc      Get all rooms
+//@route     GET /api/v1/rooms
+//@access    Private
 exports.getRooms = async (req, res, next) => {
     let query;
 
@@ -23,6 +26,9 @@ exports.getRooms = async (req, res, next) => {
     }
 }
 
+//@desc      Get single room
+//@route     GET /api/v1/rooms/:id
+//@access    Private
 exports.getRoom = async (req, res, next) => {
     try {
         const room = await Room.findById(req.params.id);
@@ -35,6 +41,9 @@ exports.getRoom = async (req, res, next) => {
     }
 }
 
+//@desc      Add room
+//@route     POST /api/v1/rooms
+//@access    Private
 exports.addRoom = async (req, res, next) => {
     try {
         const room = await Room.create(req.body);

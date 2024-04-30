@@ -10,6 +10,38 @@ const hpp = require('hpp')
 const cors = require('cors')
 const auth = require('./routes/auth');
 const rankingRouter = require('./routes/ranking');
+const swaggerJsDoc = require('swagger-jsdoc');
+const swaggerUI = require('swagger-ui-express');
+
+const swaggerOptions={
+    swaggerDefinition:{
+        openapi: '3.0.0',
+        info: {
+            title: 'CEDT CO-WORKING API',
+            version: '1.0.0',
+            description: 'CEDT CO-WORKING API',
+        },
+        servers:
+            [
+                {
+                    url: 'http://localhost:5000/api/v1'
+                }
+            ],
+        components: {
+            securitySchemes: {
+                bearerAuth: {
+                    type: 'http',
+                    scheme: 'bearer',
+                    bearerFormat: 'JWT',
+                }
+            }
+        }
+    },
+    
+    apis:['./routes/*.js'],
+    
+};
+
 //Load env vars
 dotenv.config({path:'./config/config.env'});
 
@@ -70,6 +102,9 @@ app.use('/api/v1/user',users);
 app.use('/api/v1/room',room);
 
 app.use('/api/v1/ranking',rankingRouter);
+
+const swaggerDocs=swaggerJsDoc(swaggerOptions);
+app.use('/api-docs',swaggerUI.serve, swaggerUI.setup(swaggerDocs));
 
 
 

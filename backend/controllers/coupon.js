@@ -2,6 +2,10 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const Coupon = require('../models/Coupon');
 
+
+//@desc     Create coupon
+//@route    POST /api/v1/coupon
+//@access   Private
 exports.createCoupon = async (req,res,next) => {
     try {
         let couponStripe;
@@ -52,6 +56,9 @@ exports.createCoupon = async (req,res,next) => {
     }
 }
 
+//@desc     Get coupons
+//@route    GET /api/v1/coupon
+//@access   Private
 exports.getCoupons = async (req,res,next) => {
     try {
         const coupons = await Coupon.find({user: req.user.id});

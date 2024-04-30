@@ -90,9 +90,11 @@ exports.getAppointment=async (req,res,next) =>{
 //@access  Private
 exports.addAppointment=async (req,res,next)=>{
     try {
+        const coWorking = await CoWorking.findById(req.params.coWorkingId);
+        
         req.body.coWorking = req.params.coWorkingId;
 
-        const coWorking = await CoWorking.findById(req.params.coWorkingId);
+        
 
         if(!coWorking){
             return res.status(404).json({success:false,message:`No coWorking with the id of ${req.params.coWorkingId}`});
@@ -100,6 +102,14 @@ exports.addAppointment=async (req,res,next)=>{
         }
         //add user id to req.body
         req.body.user=req.user.id;
+
+
+
+
+        if (!req.body.startTime || !req.body.endTime || !req.body.date || !req.body.room)
+        {
+            return res.status(400).json({success:false,message:"Please provide all the information"});
+        }
 
         //Check for existed appointment
         const existedAppointment = await Appointment.find({user:req.user.id, status:"unfinished"});
@@ -246,6 +256,9 @@ exports.deleteAppointment=async (req,res,next)=>{
     }
 }
 
+//@desc    Get rooms
+//@route   GET /api/v1/appointments/:roomId/appointments
+//@access  Private
 exports.getRoom=async (req,res,next)=>{
     try {
         const room = await Room.findById(req.params.roomId).populate({

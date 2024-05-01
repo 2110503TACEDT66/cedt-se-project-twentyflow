@@ -11,9 +11,10 @@ services:
       - 3000:3000
     env_file:
       - ./frontend/.env.local
-    restart: always
     depends_on:
       - backend
+    networks:
+      - mynetwork
   backend:
     container_name: backend
     image: backend
@@ -24,6 +25,8 @@ services:
       - 5000:5000
     env_file:
       - ./backend/config/config.env
+    networks:
+      - mynetwork
   mongo:
     container_name: mongo
     environment:
@@ -34,7 +37,17 @@ services:
       - 27017:27017
     volumes:
       - mongodata:/data/db
+    networks:
+      - mynetwork
 
 volumes:
   mongodata:
     driver: local
+
+networks:
+  mynetwork:
+    name: mynetwork
+    driver: bridge
+
+
+  

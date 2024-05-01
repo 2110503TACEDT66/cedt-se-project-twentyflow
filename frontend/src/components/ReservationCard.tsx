@@ -139,7 +139,8 @@ export default function ReservationCard({
               icon: "error",
             });
             return;
-          } else {
+          } 
+          else {
             if (reservationData) {
               for (let i = 0; i < reservationData.length; i++) {
                 const start = dayjs(timeToDate(reservationData[i].startTime));
